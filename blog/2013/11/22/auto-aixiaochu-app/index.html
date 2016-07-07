@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>Qt+BlueStack实现自动天天爱消除 | Coding 4 Fun</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="前段时间玩天天爱消除，玩的实在弱渣了，感觉写个自动爱消除的程序应该很简单，闲来无事的时候就写了一个，效果还是蛮不错的，很容易就Rank1了。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Qt+BlueStack实现自动天天爱消除">
+<meta property="og:url" content="http://vimersu.win/blog/2013/11/22/auto-aixiaochu-app/index.html">
+<meta property="og:site_name" content="Coding 4 Fun">
+<meta property="og:description" content="前段时间玩天天爱消除，玩的实在弱渣了，感觉写个自动爱消除的程序应该很简单，闲来无事的时候就写了一个，效果还是蛮不错的，很容易就Rank1了。">
+<meta property="og:image" content="http://vimersu.win/images/blog_image/2013/11/20131101053858.jpg">
+<meta property="og:updated_time" content="2016-06-04T14:57:29.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Qt+BlueStack实现自动天天爱消除">
+<meta name="twitter:description" content="前段时间玩天天爱消除，玩的实在弱渣了，感觉写个自动爱消除的程序应该很简单，闲来无事的时候就写了一个，效果还是蛮不错的，很容易就Rank1了。">
+<meta name="twitter:image" content="http://vimersu.win/images/blog_image/2013/11/20131101053858.jpg">
+  
+    <link rel="alternative" href="/atom.xml" title="Coding 4 Fun" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  
+  <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+      <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <!-- 加载特效 -->
+    <script src="/js/pace.js"></script>
+    <link href="/css/pace/pace-theme-flash.css" rel="stylesheet" />
+  <script>
+      var yiliaConfig = {
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false
+      }
+  </script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            
+            <img lazy-src="/avator.jpg" class="js-avatar">
+            
+        </a>
+
+        <hgroup>
+          <h1 class="header-author"><a href="/">Vimer Su</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">Dream it, Believe it, Do IT!</p>
+        
+        
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">博客首页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fl mail" target="_blank" href="mailto:swm8023@gmail.com" title="mail">mail</a>
+                            
+                                <a class="fl github" target="_blank" href="https://github.com/swm8023" title="github">github</a>
+                            
+                                <a class="fl rss" target="_blank" href="/atom.xml" title="rss">rss</a>
+                            
+                                <a class="fl douban" target="_blank" href="https://www.douban.com/people/swm8023/" title="douban">douban</a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/AP/" style="font-size: 10px;">AP</a> <a href="/tags/Alcatraz/" style="font-size: 10px;">Alcatraz</a> <a href="/tags/Algorithm/" style="font-size: 17.5px;">Algorithm</a> <a href="/tags/Apache/" style="font-size: 10px;">Apache</a> <a href="/tags/C/" style="font-size: 15px;">C</a> <a href="/tags/Cmockery/" style="font-size: 10px;">Cmockery</a> <a href="/tags/DirectX-3D/" style="font-size: 12.5px;">DirectX 3D</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/I-O复用/" style="font-size: 10px;">I/O复用</a> <a href="/tags/Leetcode-OJ/" style="font-size: 15px;">Leetcode OJ</a> <a href="/tags/Libev/" style="font-size: 10px;">Libev</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/MAC/" style="font-size: 10px;">MAC</a> <a href="/tags/Makefile/" style="font-size: 15px;">Makefile</a> <a href="/tags/Maven/" style="font-size: 10px;">Maven</a> <a href="/tags/OSX/" style="font-size: 10px;">OSX</a> <a href="/tags/Octopress/" style="font-size: 12.5px;">Octopress</a> <a href="/tags/OpenGL/" style="font-size: 10px;">OpenGL</a> <a href="/tags/Proxy/" style="font-size: 10px;">Proxy</a> <a href="/tags/Python/" style="font-size: 15px;">Python</a> <a href="/tags/Sublime-text3/" style="font-size: 10px;">Sublime text3</a> <a href="/tags/Tools/" style="font-size: 10px;">Tools</a> <a href="/tags/Vim/" style="font-size: 10px;">Vim</a> <a href="/tags/Xcode/" style="font-size: 10px;">Xcode</a> <a href="/tags/epoll/" style="font-size: 10px;">epoll</a> <a href="/tags/iconv/" style="font-size: 10px;">iconv</a> <a href="/tags/madwifi/" style="font-size: 12.5px;">madwifi</a> <a href="/tags/wlanconfig/" style="font-size: 10px;">wlanconfig</a> <a href="/tags/二叉树/" style="font-size: 10px;">二叉树</a> <a href="/tags/单元测试/" style="font-size: 10px;">单元测试</a> <a href="/tags/堆/" style="font-size: 10px;">堆</a> <a href="/tags/外接显示器/" style="font-size: 10px;">外接显示器</a> <a href="/tags/天天爱消除/" style="font-size: 10px;">天天爱消除</a> <a href="/tags/宏/" style="font-size: 10px;">宏</a> <a href="/tags/正则表达式/" style="font-size: 10px;">正则表达式</a> <a href="/tags/游戏开发/" style="font-size: 12.5px;">游戏开发</a> <a href="/tags/线程同步/" style="font-size: 10px;">线程同步</a> <a href="/tags/结构体/" style="font-size: 10px;">结构体</a> <a href="/tags/驱动程序/" style="font-size: 12.5px;">驱动程序</a>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/swm8023">swm8023@github</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://blog.csdn.net/swm8023">swm8023@csdn</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.cnblogs.com/swm8023/">swm8023@cnblogs</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.cnblogs.com/CSGrandeur/">CSGrandeur</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://hujiaweibujidao.github.io/">Hujiawei Bujidao</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://blog.chinaunix.net/uid/28387257.html">Henrystark&#39;s CU blog</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://oxoo.org">OxOo社</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.cnblogs.com/staginner/">Staginner</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://zhangxc.com/">张学程</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://yangha.github.io/">小阳Space</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">Hello World</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Vimer Su</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                
+                    <img lazy-src="/avator.jpg" class="js-avatar">
+                
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Vimer Su</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">Dream it, Believe it, Do IT!</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">博客首页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a class="mail" target="_blank" href="mailto:swm8023@gmail.com" title="mail">mail</a>
+                    
+                        <a class="github" target="_blank" href="https://github.com/swm8023" title="github">github</a>
+                    
+                        <a class="rss" target="_blank" href="/atom.xml" title="rss">rss</a>
+                    
+                        <a class="douban" target="_blank" href="https://www.douban.com/people/swm8023/" title="douban">douban</a>
+                    
+                </div>
+            </nav>
+        </header>                
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-auto-aixiaochu-app" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/blog/2013/11/22/auto-aixiaochu-app/" class="article-date">
+      <time datetime="2013-11-22T05:07:11.000Z" itemprop="datePublished">2013-11-22</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Qt+BlueStack实现自动天天爱消除
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/小程序/">小程序</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/天天爱消除/">天天爱消除</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>前段时间玩天天爱消除，玩的实在弱渣了，感觉写个自动爱消除的程序应该很简单，闲来无事的时候就写了一个，效果还是蛮不错的，很容易就Rank1了。 </p>
+<p>因为对移动端开发并不是很熟悉，我是在Windows上用QT来实现的，运行游戏采用的是BlueStack安卓模拟器，程序只能算是Demo版，很多功能都不完善，只是实现了基本的功能。  </p>
+<a id="more"></a>
+<p>程序流程其实很简单，大致可以分为以下几步：<br>1.获得游戏区域图像<br>2.识别色快，转化成数组<br>3.找出交换后可以消除的两个色块<br>4.发出鼠标指令点击这两个色块<br>下面介绍一下各个步骤在Qt中的实现</p>
+<h3 id="获得游戏区域图像"><a href="#获得游戏区域图像" class="headerlink" title="获得游戏区域图像"></a><strong>获得游戏区域图像</strong></h3><p>不得不说Qt很方便，获得指定区域图像的代码仅一行而已，其中<code>qs</code>,<code>qe</code>都是<code>QPoint</code>类型，分别代表图像左上角和右下角在桌面上的位置。为了方便，我这里是写死的，因为BlueStack每次启动的初始化坐标都是一样的，每次游戏区域在我PC上的坐标都是一样的。<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">x=qs.x();</span><br><span class="line">y=qs.y();</span><br><span class="line">w=qe.x()-x;</span><br><span class="line">h=qe.y()-y;</span><br><span class="line">pix = QGuiApplication::primaryScreen()-&gt;grabWindow(QApplication::desktop()-&gt;winId(),x,y,w,h);</span><br></pre></td></tr></table></figure></p>
+<p>截取的图片部分如下所示，可以看到，是一个7*7的矩阵。（并没有真的截图存下来，只是放在内存里而已）<br><img src="/images/blog_image/2013/11/20131101053858.jpg" class="center">  </p>
+<h3 id="识别色块"><a href="#识别色块" class="headerlink" title="识别色块"></a><strong>识别色块</strong></h3><p>Qt中使用<code>QImage</code>类型可以方便的对色素点操作，而之前获得的图像是<code>QPixmap</code>类型，先进行转换。<br>因为实际上每个色块的边长不一定是等长整数，而且前面获得的左上角坐标也不一定准确，所以很难根据某个点的色素就判断是否是同一个色快。我这里对每个大块中取一个相对位置相同小块色素的R、G、B值进行平均，并且只要误差在一定范围内就认为是相同的色块。最后将相同的色块标记为同一个数字，存在col数组中。<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> ImageAna::initimage()&#123;</span><br><span class="line">    QImage img = pix.toImage();</span><br><span class="line">    <span class="built_in">memset</span>(col, <span class="number">-1</span>, <span class="keyword">sizeof</span> col);</span><br><span class="line">    <span class="keyword">int</span> wd = w/<span class="number">7</span>;</span><br><span class="line">    <span class="keyword">int</span> rgb[<span class="number">50</span>][<span class="number">3</span>];</span><br><span class="line">    <span class="keyword">int</span> rgbs= <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">7</span>; i++) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; <span class="number">7</span>; j++) &#123;</span><br><span class="line">            <span class="keyword">int</span> qr = <span class="number">0</span>, qg = <span class="number">0</span>, qb = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> k1 = <span class="number">0</span>;k1 &lt; <span class="number">5</span>; k1++) &#123;</span><br><span class="line">                <span class="keyword">for</span> (<span class="keyword">int</span> k2 = <span class="number">0</span>; k2 &lt; <span class="number">5</span>; k2++) &#123;</span><br><span class="line">                    <span class="keyword">int</span> RGB = img.pixel(wd*i+<span class="number">20</span>+k1, wd*j+<span class="number">20</span>+k2);</span><br><span class="line">                    qr += qRed(RGB);</span><br><span class="line">                    qg += qGreen(RGB);</span><br><span class="line">                    qb += qBlue(RGB);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            qr /= <span class="number">25</span>, qg /= <span class="number">25</span>, qb /= <span class="number">25</span>;</span><br><span class="line"></span><br><span class="line">            <span class="comment">//qDebug()&lt;&lt;i&lt;&lt;" "&lt;&lt;j&lt;&lt;" "&lt;&lt;qr&lt;&lt;" "&lt;&lt;qg&lt;&lt;" "&lt;&lt;qb;</span></span><br><span class="line">            <span class="keyword">int</span> k = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">for</span> (k = <span class="number">0</span>; k &lt; rgbs; k++) &#123;</span><br><span class="line">                <span class="keyword">if</span> (<span class="built_in">abs</span>(rgb[k][<span class="number">0</span>]-qr)&lt;=<span class="number">20</span>&amp;&amp;<span class="built_in">abs</span>(rgb[k][<span class="number">1</span>]-qg)&lt;=<span class="number">20</span>&amp;&amp;<span class="built_in">abs</span>(rgb[k][<span class="number">2</span>]-qb)&lt;=<span class="number">20</span>)</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (k == rgbs) &#123;</span><br><span class="line">                rgb[k][<span class="number">0</span>] = qr, rgb[k][<span class="number">1</span>] = qg, rgb[k][<span class="number">2</span>] = qb;</span><br><span class="line">                rgbs++;</span><br><span class="line">            &#125;</span><br><span class="line">            col[j][i] = k;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="找出可交换色块"><a href="#找出可交换色块" class="headerlink" title="找出可交换色块"></a><strong>找出可交换色块</strong></h3><p>这一块的代码没有什么好说的，就是暴力找就行了，复杂度也没有多高。做了一点小优化，就是会依次从四个角进行查找，这是因为如果刚从左上消了一个块，这时候还处于动画阶段，再从左上去搜可能会出现错误的识别，另外这也是为了尽可能的将能消的块都消除掉。<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> ImageAna::dir = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">bool</span> ImageAna::calswap()&#123;</span><br><span class="line">    <span class="keyword">int</span> dx[] = &#123;<span class="number">1</span>,<span class="number">-1</span>,<span class="number">0</span>,<span class="number">0</span>&#125;;</span><br><span class="line">    <span class="keyword">int</span> dy[] = &#123;<span class="number">0</span>,<span class="number">0</span>,<span class="number">1</span>,<span class="number">-1</span>&#125;;</span><br><span class="line">    <span class="keyword">int</span> tmp;</span><br><span class="line"></span><br><span class="line">    dir++;</span><br><span class="line">    <span class="keyword">if</span> (dir == <span class="number">4</span>) dir = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (dir == <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">7</span>; i++) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; <span class="number">7</span>; j++) &#123;</span><br><span class="line">                <span class="keyword">for</span> (<span class="keyword">int</span> k = <span class="number">0</span>; k &lt; <span class="number">4</span>; k++) &#123;</span><br><span class="line">                    <span class="keyword">int</span> ii = i + dx[k];</span><br><span class="line">                    <span class="keyword">int</span> jj = j + dy[k];</span><br><span class="line">                    <span class="keyword">if</span> (ii &lt; <span class="number">0</span> || ii &gt;= <span class="number">7</span> || jj &lt; <span class="number">0</span> || jj &gt;= <span class="number">7</span>) <span class="keyword">continue</span>;</span><br><span class="line"></span><br><span class="line">                    tmp = col[i][j];</span><br><span class="line">                    col[i][j] = col[ii][jj];</span><br><span class="line">                    col[ii][jj] = tmp;</span><br><span class="line"></span><br><span class="line">                    <span class="keyword">if</span> (comp(i, j) || comp(ii, jj)) &#123;</span><br><span class="line">                        swap1 = QPoint(i, j);</span><br><span class="line">                        swap2 = QPoint(ii, jj);</span><br><span class="line">                        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                    tmp = col[i][j];</span><br><span class="line">                    col[i][j] = col[ii][jj];</span><br><span class="line">                    col[ii][jj] = tmp;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (dir == <span class="number">1</span>)&#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">6</span>; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">6</span>; j &gt;= <span class="number">0</span>; j--) &#123;</span><br><span class="line">                <span class="keyword">for</span> (<span class="keyword">int</span> k = <span class="number">0</span>; k &lt; <span class="number">4</span>; k++) &#123;</span><br><span class="line">                    <span class="keyword">int</span> ii = i + dx[k];</span><br><span class="line">                    <span class="keyword">int</span> jj = j + dy[k];</span><br><span class="line">                    <span class="keyword">if</span> (ii &lt; <span class="number">0</span> || ii &gt;= <span class="number">7</span> || jj &lt; <span class="number">0</span> || jj &gt;= <span class="number">7</span>) <span class="keyword">continue</span>;</span><br><span class="line"></span><br><span class="line">                    tmp = col[i][j];</span><br><span class="line">                    col[i][j] = col[ii][jj];</span><br><span class="line">                    col[ii][jj] = tmp;</span><br><span class="line"></span><br><span class="line">                    <span class="keyword">if</span> (comp(i, j) || comp(ii, jj)) &#123;</span><br><span class="line">                        swap1 = QPoint(i, j);</span><br><span class="line">                        swap2 = QPoint(ii, jj);</span><br><span class="line">                        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                    tmp = col[i][j];</span><br><span class="line">                    col[i][j] = col[ii][jj];</span><br><span class="line">                    col[ii][jj] = tmp;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (dir == <span class="number">2</span>) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; <span class="number">7</span>; j++) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">6</span>; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">                <span class="keyword">for</span> (<span class="keyword">int</span> k = <span class="number">0</span>; k &lt; <span class="number">4</span>; k++) &#123;</span><br><span class="line">                    <span class="keyword">int</span> ii = i + dx[k];</span><br><span class="line">                    <span class="keyword">int</span> jj = j + dy[k];</span><br><span class="line">                    <span class="keyword">if</span> (ii &lt; <span class="number">0</span> || ii &gt;= <span class="number">7</span> || jj &lt; <span class="number">0</span> || jj &gt;= <span class="number">7</span>) <span class="keyword">continue</span>;</span><br><span class="line"></span><br><span class="line">                    tmp = col[i][j];</span><br><span class="line">                    col[i][j] = col[ii][jj];</span><br><span class="line">                    col[ii][jj] = tmp;</span><br><span class="line"></span><br><span class="line">                    <span class="keyword">if</span> (comp(i, j) || comp(ii, jj)) &#123;</span><br><span class="line">                        swap1 = QPoint(i, j);</span><br><span class="line">                        swap2 = QPoint(ii, jj);</span><br><span class="line">                        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                    tmp = col[i][j];</span><br><span class="line">                    col[i][j] = col[ii][jj];</span><br><span class="line">                    col[ii][jj] = tmp;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (dir == <span class="number">3</span>) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">6</span>; j &gt;= <span class="number">0</span>; j--) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">7</span>; i++) &#123;</span><br><span class="line">                <span class="keyword">for</span> (<span class="keyword">int</span> k = <span class="number">0</span>; k &lt; <span class="number">4</span>; k++) &#123;</span><br><span class="line">                    <span class="keyword">int</span> ii = i + dx[k];</span><br><span class="line">                    <span class="keyword">int</span> jj = j + dy[k];</span><br><span class="line">                    <span class="keyword">if</span> (ii &lt; <span class="number">0</span> || ii &gt;= <span class="number">7</span> || jj &lt; <span class="number">0</span> || jj &gt;= <span class="number">7</span>) <span class="keyword">continue</span>;</span><br><span class="line"></span><br><span class="line">                    tmp = col[i][j];</span><br><span class="line">                    col[i][j] = col[ii][jj];</span><br><span class="line">                    col[ii][jj] = tmp;</span><br><span class="line"></span><br><span class="line">                    <span class="keyword">if</span> (comp(i, j) || comp(ii, jj)) &#123;</span><br><span class="line">                        swap1 = QPoint(i, j);</span><br><span class="line">                        swap2 = QPoint(ii, jj);</span><br><span class="line">                        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                    tmp = col[i][j];</span><br><span class="line">                    col[i][j] = col[ii][jj];</span><br><span class="line">                    col[ii][jj] = tmp;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">bool</span> ImageAna::comp(<span class="keyword">int</span> i ,<span class="keyword">int</span> j) &#123;</span><br><span class="line">    <span class="keyword">if</span> (j&gt;<span class="number">0</span>&amp;&amp;j&lt;<span class="number">6</span> &amp;&amp; col[i][j] == col[i][j<span class="number">-1</span>] &amp;&amp; col[i][j] == col[i][j+<span class="number">1</span>]) <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    <span class="keyword">if</span> (j&gt;<span class="number">1</span>      &amp;&amp; col[i][j] == col[i][j<span class="number">-2</span>] &amp;&amp; col[i][j] == col[i][j<span class="number">-1</span>]) <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    <span class="keyword">if</span> (j&lt;<span class="number">5</span>      &amp;&amp; col[i][j] == col[i][j+<span class="number">2</span>] &amp;&amp; col[i][j] == col[i][j+<span class="number">1</span>]) <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (i&gt;<span class="number">0</span>&amp;&amp;i&lt;<span class="number">6</span> &amp;&amp; col[i][j] == col[i<span class="number">-1</span>][j] &amp;&amp; col[i][j] == col[i+<span class="number">1</span>][j]) <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    <span class="keyword">if</span> (i&gt;<span class="number">1</span>      &amp;&amp; col[i][j] == col[i<span class="number">-2</span>][j] &amp;&amp; col[i][j] == col[i<span class="number">-1</span>][j]) <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    <span class="keyword">if</span> (i&lt;<span class="number">5</span>      &amp;&amp; col[i][j] == col[i+<span class="number">2</span>][j] &amp;&amp; col[i][j] == col[i+<span class="number">1</span>][j]) <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="控制鼠标点击"><a href="#控制鼠标点击" class="headerlink" title="控制鼠标点击"></a><strong>控制鼠标点击</strong></h3><p>调用WindowsAPI来控制鼠标点击相应的坐标，注意API中的坐标是以整个屏幕长宽都是65536的，要将对应的像素点坐标进行转换。中间加sleep是为了给系统响应时间（太快了爱消除有时候会判游戏无效。。）。<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> ImageAna::clickit(<span class="keyword">int</span> xx, <span class="keyword">int</span> yy) &#123;</span><br><span class="line">    <span class="keyword">int</span> xxx = xx, yyy = yy;</span><br><span class="line">    xx = x + w/<span class="number">7</span> * yyy + <span class="number">30</span>;</span><br><span class="line">    yy = y + w/<span class="number">7</span> * xxx + <span class="number">30</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> msw = <span class="number">65536</span>;</span><br><span class="line">    <span class="keyword">int</span> scw = QApplication::desktop()-&gt;width();</span><br><span class="line">    <span class="keyword">int</span> sch = QApplication::desktop()-&gt;height();</span><br><span class="line"></span><br><span class="line">    xx = (<span class="keyword">int</span>)(xx * msw * <span class="number">1.0</span>/ scw);</span><br><span class="line">    yy = (<span class="keyword">int</span>)(yy * msw * <span class="number">1.0</span>/ sch);</span><br><span class="line"></span><br><span class="line">    mouse_event(</span><br><span class="line">        MOUSEEVENTF_LEFTDOWN|MOUSEEVENTF_ABSOLUTE|MOUSEEVENTF_MOVE,	<span class="comment">// flags specifying various motion/click variants</span></span><br><span class="line">        xx,	<span class="comment">// horizontal mouse position or position change</span></span><br><span class="line">        yy,	<span class="comment">// vertical mouse position or position change</span></span><br><span class="line">        <span class="number">0</span>,	<span class="comment">// amount of wheel movement</span></span><br><span class="line">        <span class="number">0</span> 	<span class="comment">// 32 bits of application-defined information</span></span><br><span class="line">       );</span><br><span class="line">    Sleep(<span class="number">10</span>);</span><br><span class="line">    mouse_event(</span><br><span class="line">        MOUSEEVENTF_LEFTUP|MOUSEEVENTF_ABSOLUTE,	<span class="comment">// flags specifying various motion/click variants</span></span><br><span class="line">        xx,	<span class="comment">// horizontal mouse position or position change</span></span><br><span class="line">        yy,	<span class="comment">// vertical mouse position or position change</span></span><br><span class="line">        <span class="number">0</span>,	<span class="comment">// amount of wheel movement</span></span><br><span class="line">        <span class="number">0</span> 	<span class="comment">// 32 bits of application-defined information</span></span><br><span class="line">       );</span><br><span class="line">    Sleep(<span class="number">5</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="游戏时间控制"><a href="#游戏时间控制" class="headerlink" title="游戏时间控制"></a><strong>游戏时间控制</strong></h3><p>我比较懒，没有写中断代码，我这边的PC每分钟大概能进行1000次交换操作，所以我就一个for循环写死了，基本是游戏结束差不多几秒钟程序就结束了。   </p>
+<h3 id="OVER"><a href="#OVER" class="headerlink" title="OVER"></a><strong>OVER</strong></h3><p>总的来说，这个程序还是十分简单的，感兴趣的同学无聊的时候也可以取写一个。具体能打多少分跟PC的配置有些关系，如果连BlueStack模拟器跑起来都卡的话。。。我这边不用道具一般在180W左右，用了道具一般都是200W+吧，另外友情提示一下，如果不幸打到250W的话，会被Tencent清空等级和金钱的（我就这么悲剧了一次，之后就不用道具了….=_=）。  </p>
+<p>最后，健康游戏，远离外挂。。（对那周被我抢走Rank1的DY童鞋表示道歉。。。）  </p>
+<p>最后的最后，附上顺便录的视频，230W的，勿喷。。  </p>
+<iframe height="498" width="510" src="http://player.youku.com/embed/XNjM4MTQ4NzM2" frameborder="0" allowfullscreen></iframe>
+
+
+
+
+
+
+
+
+
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/blog/2013/11/22/auto-aixiaochu-app/">Qt+BlueStack实现自动天天爱消除</a></p>
+        <p><span>文章作者:</span><a href="/" title="访问 Vimer Su 的个人博客">Vimer Su</a></p>
+        <p><span>发布时间:</span>2013年11月22日 - 13时07分</p>
+        <p><span>最后更新:</span>2016年06月04日 - 22时57分</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/blog/2013/11/22/auto-aixiaochu-app/" title="Qt+BlueStack实现自动天天爱消除">http://vimersu.win/blog/2013/11/22/auto-aixiaochu-app/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://vimersu.win/blog/2013/11/22/auto-aixiaochu-app/　　作者: Vimer Su" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script src="/js/clipboard.min.js"></script>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" title="中国大陆 (CC BY-NC-SA 3.0 CN)" target = "_blank">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+<nav id="article-nav">
+  
+    <a href="/blog/2013/11/23/wlanconfig-tools-source/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          wlanconfig工具分析
+        
+      </div>
+    </a>
+  
+  
+    <a href="/blog/2013/11/21/binary-tree-nonrecursive-traversal/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">另一种二叉树非递归遍历的实现</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#获得游戏区域图像"><span class="toc-number">1.</span> <span class="toc-text">获得游戏区域图像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#识别色块"><span class="toc-number">2.</span> <span class="toc-text">识别色块</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#找出可交换色块"><span class="toc-number">3.</span> <span class="toc-text">找出可交换色块</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#控制鼠标点击"><span class="toc-number">4.</span> <span class="toc-text">控制鼠标点击</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#游戏时间控制"><span class="toc-number">5.</span> <span class="toc-text">游戏时间控制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#OVER"><span class="toc-number">6.</span> <span class="toc-text">OVER</span></a></li></ol>
+</div>
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+        }
+    })
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+    }
+</script>
+
+
+
+
+
+
+
+    
+      <div class="duoshuo" id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="blog/2013/11/22/auto-aixiaochu-app/" data-title="Qt+BlueStack实现自动天天爱消除" data-url="http://vimersu.win/blog/2013/11/22/auto-aixiaochu-app/"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:"c4fun"};
+    (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = '/js/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+    </script>
+    <!-- 多说公共JS代码 end -->
+</div>
+
+    
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/blog/2013/11/23/wlanconfig-tools-source/" title="上一篇: wlanconfig工具分析">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+        
+            <a href="/blog/2013/11/21/binary-tree-nonrecursive-traversal/" title="下一篇: 另一种二叉树非递归遍历的实现">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/blog/2016/07/04/dx-lesson02-3dknowledge/">DirectX 3D学习笔记02——3D数学基础</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/07/03/dx-lesson01-window/">DirectX 3D学习笔记01——环境搭建与窗口创建</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2015/10/03/osx-xcode-opengl/">在OSX中进行OpenGL开发</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2015/06/23/xcode64-alactraz-bug/">Xcode6.4中Alcatraz无法启动</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2015/06/23/vim-base-operation/">Vim基础操作汇总</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2015/06/13/apache-reverse-proxy/">通过Apache反向代理访问本地Gogs服务</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2015/06/09/mac-another-screen/">Macbook修改外接显示器分辨率</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/12/12/how-to-use-define/">宏的拓展用法总结</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/12/06/cmockery/">C单元测试框架之Cmockery</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/10/10/maven-study/">Linux下Maven的安装与使用</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/05/06/python-threading/">python中的多线程</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/03/23/python-regular/">python正则表达式</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/03/20/leetcode-solution-02/">LeetCode题解整理版(二)</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/03/18/leetcode-solution-01/">LeetCode题解整理版(一) </a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/03/12/heap-template/">一个用宏实现的堆模板</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/03/06/libev-study/">Libev事件库源码阅读笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/03/04/linux-iconv/">在Linux下使用iconv转换字符串编码</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/03/03/use-hexo-blog/">使用Hexo搭建个人博客</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/01/30/common-makefile/">一个通用的C/C++ Makefile</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/01/23/gnu-make-study02/">GNU Make学习总结（二）</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/01/13/gnu-make-study01/">GNU Make学习总结（一）</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/01/11/struct-alignment/">C的结构体字节对齐</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/12/02/linuxdrivecode-cdev/">Linux设备驱动学习——简单字符设备驱动的实现</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/30/linux-sublimetext-chinese/">解决Linux下Sublime text 3的中文输入问题</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/25/start-leetcode-oj/">开始刷LeetCode OJ</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/24/octopress-generate-post-content/">让Octopress为文章自动生成目录</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/23/wlanconfig-tools-source/">wlanconfig工具分析</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/22/auto-aixiaochu-app/">Qt+BlueStack实现自动天天爱消除</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/21/binary-tree-nonrecursive-traversal/">另一种二叉树非递归遍历的实现</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/19/linux-io-reuse-interface/">Linux中的IO复用接口简介</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/19/linux-ap-by-madwifi/">Linux下使用无线网卡搭建AP</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/19/hello-octopress/">开启OctoPress之旅</a></li></ul>
+    <script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+    <script>
+        $(".post-list").addClass("toc-article");
+        $(".post-list-item a").attr("target","_blank");
+        $("#post-nav-button > a:nth-child(2)").click(function() {
+            $(".fa-bars, .fa-times").toggle();
+            $(".post-list").toggle(300);
+            if ($(".toc").length > 0) {
+                $("#toc, #tocButton").toggle(200, function() {
+                    if ($(".switch-area").is(":visible")) {
+                        $("#tocButton").attr("value", valueHide);
+                        }
+                    })
+            }
+            else {
+            }
+        })
+    </script>
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2016 Vimer Su
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/luuman/hexo-theme-spfk" target="_blank">spfk</a> by luuman
+            </div>
+        </div>
+        
+    </div>
+</footer>
+
+    </div>
+    <script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var backgroundnum = 24;
+            var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+            $("#mobile-nav").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+            $(".left-col").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    $(document).ready(function() {
+        if ($("#comments").length < 1) {
+            $("#scroll > a:nth-child(2)").hide();
+        };
+    })
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+  <script language="javascript">
+    $(function() {
+        $("a[title]").each(function() {
+            var a = $(this);
+            var title = a.attr('title');
+            if (title == undefined || title == "") return;
+            a.data('title', title).removeAttr('title').hover(
+
+            function() {
+                var offset = a.offset();
+                $("<div id=\"anchortitlecontainer\"></div>").appendTo($("body")).html(title).css({
+                    top: offset.top - a.outerHeight() - 15,
+                    left: offset.left + a.outerWidth()/2 + 1
+                }).fadeIn(function() {
+                    var pop = $(this);
+                    setTimeout(function() {
+                        pop.remove();
+                    }, pop.text().length * 800);
+                });
+            }, function() {
+                $("#anchortitlecontainer").remove();
+            });
+        });
+    });
+</script>
+
+
+  </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>

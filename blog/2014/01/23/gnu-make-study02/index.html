@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>GNU Make学习总结（二） | Coding 4 Fun</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="学习GNU Make的笔记，详细介绍了GNU Make中的变量、函数和命令。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GNU Make学习总结（二）">
+<meta property="og:url" content="http://vimersu.win/blog/2014/01/23/gnu-make-study02/index.html">
+<meta property="og:site_name" content="Coding 4 Fun">
+<meta property="og:description" content="学习GNU Make的笔记，详细介绍了GNU Make中的变量、函数和命令。">
+<meta property="og:updated_time" content="2016-06-04T14:57:29.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="GNU Make学习总结（二）">
+<meta name="twitter:description" content="学习GNU Make的笔记，详细介绍了GNU Make中的变量、函数和命令。">
+  
+    <link rel="alternative" href="/atom.xml" title="Coding 4 Fun" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  
+  <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+      <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <!-- 加载特效 -->
+    <script src="/js/pace.js"></script>
+    <link href="/css/pace/pace-theme-flash.css" rel="stylesheet" />
+  <script>
+      var yiliaConfig = {
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false
+      }
+  </script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            
+            <img lazy-src="/avator.jpg" class="js-avatar">
+            
+        </a>
+
+        <hgroup>
+          <h1 class="header-author"><a href="/">Vimer Su</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">Dream it, Believe it, Do IT!</p>
+        
+        
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">博客首页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fl mail" target="_blank" href="mailto:swm8023@gmail.com" title="mail">mail</a>
+                            
+                                <a class="fl github" target="_blank" href="https://github.com/swm8023" title="github">github</a>
+                            
+                                <a class="fl rss" target="_blank" href="/atom.xml" title="rss">rss</a>
+                            
+                                <a class="fl douban" target="_blank" href="https://www.douban.com/people/swm8023/" title="douban">douban</a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/AP/" style="font-size: 10px;">AP</a> <a href="/tags/Alcatraz/" style="font-size: 10px;">Alcatraz</a> <a href="/tags/Algorithm/" style="font-size: 17.5px;">Algorithm</a> <a href="/tags/Apache/" style="font-size: 10px;">Apache</a> <a href="/tags/C/" style="font-size: 15px;">C</a> <a href="/tags/Cmockery/" style="font-size: 10px;">Cmockery</a> <a href="/tags/DirectX-3D/" style="font-size: 12.5px;">DirectX 3D</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/I-O复用/" style="font-size: 10px;">I/O复用</a> <a href="/tags/Leetcode-OJ/" style="font-size: 15px;">Leetcode OJ</a> <a href="/tags/Libev/" style="font-size: 10px;">Libev</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/MAC/" style="font-size: 10px;">MAC</a> <a href="/tags/Makefile/" style="font-size: 15px;">Makefile</a> <a href="/tags/Maven/" style="font-size: 10px;">Maven</a> <a href="/tags/OSX/" style="font-size: 10px;">OSX</a> <a href="/tags/Octopress/" style="font-size: 12.5px;">Octopress</a> <a href="/tags/OpenGL/" style="font-size: 10px;">OpenGL</a> <a href="/tags/Proxy/" style="font-size: 10px;">Proxy</a> <a href="/tags/Python/" style="font-size: 15px;">Python</a> <a href="/tags/Sublime-text3/" style="font-size: 10px;">Sublime text3</a> <a href="/tags/Tools/" style="font-size: 10px;">Tools</a> <a href="/tags/Vim/" style="font-size: 10px;">Vim</a> <a href="/tags/Xcode/" style="font-size: 10px;">Xcode</a> <a href="/tags/epoll/" style="font-size: 10px;">epoll</a> <a href="/tags/iconv/" style="font-size: 10px;">iconv</a> <a href="/tags/madwifi/" style="font-size: 12.5px;">madwifi</a> <a href="/tags/wlanconfig/" style="font-size: 10px;">wlanconfig</a> <a href="/tags/二叉树/" style="font-size: 10px;">二叉树</a> <a href="/tags/单元测试/" style="font-size: 10px;">单元测试</a> <a href="/tags/堆/" style="font-size: 10px;">堆</a> <a href="/tags/外接显示器/" style="font-size: 10px;">外接显示器</a> <a href="/tags/天天爱消除/" style="font-size: 10px;">天天爱消除</a> <a href="/tags/宏/" style="font-size: 10px;">宏</a> <a href="/tags/正则表达式/" style="font-size: 10px;">正则表达式</a> <a href="/tags/游戏开发/" style="font-size: 12.5px;">游戏开发</a> <a href="/tags/线程同步/" style="font-size: 10px;">线程同步</a> <a href="/tags/结构体/" style="font-size: 10px;">结构体</a> <a href="/tags/驱动程序/" style="font-size: 12.5px;">驱动程序</a>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/swm8023">swm8023@github</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://blog.csdn.net/swm8023">swm8023@csdn</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.cnblogs.com/swm8023/">swm8023@cnblogs</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.cnblogs.com/CSGrandeur/">CSGrandeur</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://hujiaweibujidao.github.io/">Hujiawei Bujidao</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://blog.chinaunix.net/uid/28387257.html">Henrystark&#39;s CU blog</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://oxoo.org">OxOo社</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.cnblogs.com/staginner/">Staginner</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://zhangxc.com/">张学程</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://yangha.github.io/">小阳Space</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">Hello World</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Vimer Su</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                
+                    <img lazy-src="/avator.jpg" class="js-avatar">
+                
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Vimer Su</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">Dream it, Believe it, Do IT!</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">博客首页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a class="mail" target="_blank" href="mailto:swm8023@gmail.com" title="mail">mail</a>
+                    
+                        <a class="github" target="_blank" href="https://github.com/swm8023" title="github">github</a>
+                    
+                        <a class="rss" target="_blank" href="/atom.xml" title="rss">rss</a>
+                    
+                        <a class="douban" target="_blank" href="https://www.douban.com/people/swm8023/" title="douban">douban</a>
+                    
+                </div>
+            </nav>
+        </header>                
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-gnu-make-study02" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/blog/2014/01/23/gnu-make-study02/" class="article-date">
+      <time datetime="2014-01-23T07:56:05.000Z" itemprop="datePublished">2014-01-23</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      GNU Make学习总结（二）
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/Linux/">Linux</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Makefile/">Makefile</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h2 id="Intro"><a href="#Intro" class="headerlink" title="Intro"></a><strong>Intro</strong></h2><p>通过上一篇的内容，已经可以写出比较简洁的Makefile了。这一篇主要是详细介绍了Makefile中变量、函数及命令的使用。</p>
+<a id="more"></a>
+<h2 id="变量"><a href="#变量" class="headerlink" title="变量"></a><strong>变量</strong></h2><p>在前面的Makefile中，其实已经用到了很多变量，这一章节对变量的不同形式及用法进行了总结。 </p>
+<p>首先，在Makefile中变量由一个前导的$加上一个字符或者圆括号括起来的字符串表示，名称区分大小写。习惯上用全部大写字母来表示常量，用全部小写字母来表示变量，单词之间用下划线隔开。  </p>
+<h3 id="变量赋值"><a href="#变量赋值" class="headerlink" title="变量赋值"></a><strong>变量赋值</strong></h3><p>Make中的变量赋值有如下四种方式<br><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">CC = gcc</span><br><span class="line">CC := gcc</span><br><span class="line">CC ?= gcc</span><br><span class="line">CC += gcc</span><br></pre></td></tr></table></figure></p>
+<p>第一种方式的赋值和我们平时在语言中用的赋值有所不同，它并不会直接将右边的内容赋值给变量，而是在使用到这个变量的时候再进行赋值，这导致如果赋给该变量的是一个变值的话，那在不同时刻使用该变量将得到不同的值。<br>第二种方式和我们平时使用的赋值相同，当运行到这一行的时候，make就会将右值的内容复制到左边。<br>第三种方式称作条件赋值，只当该变量不存在的时候才进行赋值，使用这个功能可以和环境变量有很好的交互。<br>第四种赋值方式也比较容易理解，和c++中的字符串操作一样，将右值附加到原变量的后面。    </p>
+<p>除了用变量来储存单行的值之外，Makefile中还可以用define来定义一个宏保存一组操作，方便在不同的地方使用宏调用这组操作，下面定义了一个简单的宏<br><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">define newdir</span><br><span class="line">	mkdir tmp</span><br><span class="line">	cd tmp</span><br><span class="line">endef</span><br></pre></td></tr></table></figure></p>
+<h3 id="何时扩展变量"><a href="#何时扩展变量" class="headerlink" title="何时扩展变量"></a><strong>何时扩展变量</strong></h3><p>由于Makefile中的变量并不是都是即时扩展的，知道何时扩展变量就变的十分重要，因为这决定了这个变量在使用时的值。  </p>
+<p>make会分为两个阶段来完成工作，第一阶段读进makefile以及include进来的makefile，其中定义的变量和规则都会被加进make的内部数据库，并建立依存图，第二阶段会根据依存图判断需要进行哪些更新操作。<br>下面是用来处理何时扩展变量的几条准则：    </p>
+<ol>
+<li>在变量左侧的部分，会在第一阶段立即扩展。(变量左侧也可以是一个$x形式的变量，例如x=y,$(x)=z就等于y=z)  </li>
+<li>=和?=都在使用的时候，也就是第二阶段才扩展。  </li>
+<li>:=的右边的值会在第一阶段立即扩展。  </li>
+<li>+=左边如果是简单变量，右边就会立即扩展，否则会延到第二阶段扩展。(所谓简单变量就是指用:=赋值的变量，相对的，递归变量指用=赋值的变量)  </li>
+<li>宏定义的变量名会被立即扩展，宏的主体会被延后到使用时扩展。  </li>
+<li>对于每条规则，工作目标和必要条件都是立即扩展，命令总是延后扩展。<br>可以总结成下表<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">定义 		扩展a	扩展b</span><br><span class="line">a=b 		立即 	延后	</span><br><span class="line">a?=b 		立即 	延后</span><br><span class="line">a:=b 		立即 	立即</span><br><span class="line">a+=b 		立即 	立即或延后</span><br><span class="line">define a 	立即 	延后</span><br><span class="line">b..</span><br><span class="line">endef</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="专属变量"><a href="#专属变量" class="headerlink" title="专属变量"></a><strong>专属变量</strong></h3><p>有时候一个变量对于多数规则都适用，但在某条规则下需要对这个变量进行扩展或者改变，这时就可以用到条件专属变量。比如说我们在编译a.o时要DEFINE DEBUG，可以这样写<br><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">a.o: CFLAGS += -DDEBUG</span><br><span class="line">a.o: a.h</span><br></pre></td></tr></table></figure></p>
+<p>这样的话在编译a.o时CFLAGS会在原来的CFLAGS后面加上-DDEBUG，编译完a.o后就还原了。<br>扩展到不同的赋值方式，共有以下四种格式，注意这些赋值操作都会延后到开始处理工作目标的时候进行，变量的值也只在处理该工作目标的时候有效。<br><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">target...: v = value</span><br><span class="line">target...: v := value</span><br><span class="line">target...: v += value</span><br><span class="line">target...: v ?= value</span><br></pre></td></tr></table></figure></p>
+<h3 id="include"><a href="#include" class="headerlink" title="include"></a><strong>include</strong></h3><p>在上一章生成自动依赖的时候用到了include指令，这里对include指令详细介绍。<br>在make读到include指令的时候，如果include文件存在，则会读取文件内容并继续执行下去，若不存在，会在汇报问题后继续读取剩下的makefile。读取完成后，make会从规则库中找出任何可用来更新引入文件的规则，如果找到了就执行更新操作，如果一个引入文件被规则更新，则make会清除内部数据库并且重新读进整个makefile，如果这之后include的文件仍然不存在，则报错终止执行。<br>使用-include或者sinclude指令来代替include可以让make忽略无法加载的引入文件。  </p>
+<h3 id="条件指令"><a href="#条件指令" class="headerlink" title="条件指令"></a><strong>条件指令</strong></h3><p>条件指令也就是if-else指令，可以让make按条件选择执行哪一部分，有以下两种形式<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">if-condition</span><br><span class="line">	...</span><br><span class="line">endif</span><br><span class="line"></span><br><span class="line">if-condition</span><br><span class="line">	...</span><br><span class="line">else</span><br><span class="line">	...</span><br><span class="line">endif</span><br></pre></td></tr></table></figure></p>
+<p>其中if-condition可以是以下之一<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ifdef variable-name</span><br><span class="line">ifndef variable-name</span><br><span class="line">ifeq test</span><br><span class="line">ifneq test</span><br></pre></td></tr></table></figure></p>
+<p>注意的是variable-name不需要加前导$符，而test可以表示成”a” “b”或 (a,b)。    </p>
+<h3 id="标准make变量"><a href="#标准make变量" class="headerlink" title="标准make变量"></a><strong>标准make变量</strong></h3><p>除了自动变量之外，make会为自己的状态和内置规则的定义提供变量。<br>为内置规则提供的变量通过make -p可以看到，我们可以通过直接修改这些参数来改变内置规则参数，比如CFLAGS修改编译C时的参数，CC修改C编译器等等。<br>而为表示Makefile自己状态提供的变量主要有以下几个。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">MAKE_VERSION	GNU Make版本号</span><br><span class="line">CURDIR			正在执行make进程的工作目录</span><br><span class="line">MAKEFILE_LIST	make所读进的各个makefile文件名称构成的列表，最后一个是自身文件名</span><br><span class="line">MAKECMDGOALS	make命令指定了哪些工作目标</span><br><span class="line">.VARIABLES		make从各个makefile文件读进的名称所构成的列表</span><br></pre></td></tr></table></figure></p>
+<p>比如，我们在clean的时候是不执行include指令的，可以通过以下几行来完成<br><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ifneq "$(MAKECMDGOALS)" "clean"</span><br><span class="line"> -include ...</span><br><span class="line">endif</span><br></pre></td></tr></table></figure></p>
+<h2 id="函数"><a href="#函数" class="headerlink" title="函数"></a><strong>函数</strong></h2><p>Make中包含了很多十分有用的内置函数，用户也可以根据自己的需求自定义函数，本章对这两部分分别介绍。  </p>
+<h3 id="内置函数"><a href="#内置函数" class="headerlink" title="内置函数"></a><strong>内置函数</strong></h3><p>列举内置函数就跟列举API一样无聊，不过没办法，内置函数大多是要掌握的，以下只做简单的介绍，具体怎么用试一下就记住了。<br>内置函数在语法上基本都是如同<code>$(func-name arg1[, argn..])</code>的形式，不同参数之间用逗号隔开，需要注意的是，除了第一个参数，逗号后的空格都会被保留下来，如果不小心多个空格会引起各种问题。另外，对于处理单词或文件名的函数，参数经常是一串空格隔开的单词，函数对每个单词进行匹配或处理。 </p>
+<h4 id="杂项函数"><a href="#杂项函数" class="headerlink" title="杂项函数"></a><strong>杂项函数</strong></h4><p>这些函数一般是为其它的函数提供辅助作用的。<br><code>$(sort list)</code><br>对list参数排序并去重，此外，它还会删除前导及结尾的空格。虽然这个函数叫sort，但更多的时候是用它来去重。  </p>
+<p><code>$(shell command)</code><br>将command传递给subshell执行，并将标准输出值作为结果返回，其中换行符都会被替换为空格。  </p>
+<p><code>$(strip text)</code><br>去掉前导和后面空格，并将内部连续空格转化为单一空格。</p>
+<p><code>$(origin variable)</code><br>返回变量的来源，也可以测试变量是否定义，返回值有以下几个：<br>undefined 未定义<br>default 来自make内置数据库<br>environment 来自环境变量<br>environment override 来自环境变量，而且使用了–environment-overrides指令<br>file 来自makefile<br>command line 来自命令行<br>override 来自override指令<br>automatic make所定义的自动变量<br>这里override变量是指在变量赋值前加override，使得该赋值比命令行赋值优先级高，而–environment-overrides选项是使默认环境变量比makefile中环境变量赋值优先级高。  </p>
+<p><code>$(warning text)</code><br>打印警告信息。    </p>
+<h4 id="字符串函数"><a href="#字符串函数" class="headerlink" title="字符串函数"></a><strong>字符串函数</strong></h4><p><code>$(filter pattern ...,text)</code><br><code>$(filter-out pattern ...,text)</code><br>filter将text视为一系列空格隔开的单词，返回与pattern符合的单词，pattern中可以使用模式通配符。而filter-out找的是filter的补集。  </p>
+<p><code>$(findstring string...,text)</code><br>用处不是太大，在文本中找一个字符串，还不能使用通配符。。  </p>
+<p><code>$(subst search-string,replace-string,text)</code><br><code>$(patsubst search-string,replace-string,text)</code><br><code>$(variable:search-string=replace-string)</code><br>subst将text中出现search-string的地方全部替换成replace-string，而patsubst与subst的不同的是可以使用一个模式通配符%。第三个函数叫做替换引用，主要是用来替换文件后缀的，与subst不同的是，search-string一定出现在文件结尾。<br>以下尝试使用这三个函数替换文件后缀，以理解这几个函数之间的区别<br><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"><span class="meta-keyword">.PHONY</span>: test</span></span><br><span class="line">sc = a.c b.c c.c.c</span><br><span class="line">to1 = <span class="variable">$(subst .c,.o,$(sc)</span>);</span><br><span class="line">to2 = <span class="variable">$(patsubst %.c,%.o,$(sc)</span>);</span><br><span class="line">to3 = <span class="variable">$(sc:.c=.o)</span>;</span><br><span class="line"><span class="section">test:</span></span><br><span class="line">	@echo <span class="variable">$(to1)</span></span><br><span class="line">	@echo <span class="variable">$(to2)</span></span><br><span class="line">	@echo <span class="variable">$(to3)</span></span><br></pre></td></tr></table></figure></p>
+<p>输出结果如下，可以发现subst函数对于文件名中也出现.c的单词会更改文件名，另外两个函数的效果相同，都能替换文件后缀。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">a.o b.o c.o.o</span><br><span class="line">a.o b.o c.c.o</span><br><span class="line">a.o b.o c.c.o</span><br></pre></td></tr></table></figure></p>
+<p><code>$(words text)</code><br><code>$(words n,text)</code><br><code>$(firstword text)</code><br><code>$(wordlist start,end,text)</code><br>这几个函数中，text都是用空格隔开的单词列表。第一个函数返回单词的个数，第二个函数返回第n个单词，第三个函数返回第一个单词，第四个返回从start到end的单词。  </p>
+<h4 id="文件名函数"><a href="#文件名函数" class="headerlink" title="文件名函数"></a><strong>文件名函数</strong></h4><p>Makefile中很多时候都是在对文件名进行处理，这些函数经常会用一个变量包含一组文件名，中间用空格隔开，下面的函数中变量后加…都表示这个变量是一个由空格隔开的字符串。  </p>
+<p><code>$(wildcard pattern...)</code><br><code>$(dir list...)</code><br><code>$(notdir name...)</code><br>第一个函数比较常用，可以使用通配符来匹配一组文件，这些文件名之间用空格隔开作为函数返回值，比如<code>$(wildcard *.cpp)</code>可以获得当前目录下所有的cpp文件。第二个函数返回list中每个文件的目录部分，而第三个函数会返回文件名部分。  </p>
+<p><code>$(suffix name...)</code><br><code>$(basename name...)</code><br><code>$(addsuffix suffix,name...)</code><br><code>$(addprefix prefix,name...)</code><br><code>$(join prefix-list,suffix-list)</code><br>suffix函数返回name列表中的所有后缀，basename返回不带后缀的部分，而addsuffix和addprefix顾名思义，就是为name列表中所有单词添加后缀或前缀。而join就是将prefix-list和suffix-list中的单词按顺序组合，可用来重建被dir和notdir分解的列表。  </p>
+<p>下面举几个例子来看一下文件名函数的使用方法<br><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#当前目录下以.c和.h文件组成的变量</span></span><br><span class="line">sources := <span class="variable">$(wildcard *.c *.h)</span></span><br><span class="line"><span class="comment">#判断主目录下是否存在.emacs文件</span></span><br><span class="line">dot-eamcs-exists := $(wildcard ~/.emacs)</span><br><span class="line"><span class="comment">#显示包含C文件的子目录(使用find查找,sort去重)</span></span><br><span class="line">source-dirs := $(sort $(dir $(shell find . -name '*.c')))</span><br><span class="line"><span class="comment">#返回$JAVAFILE变量(a.java的形式之间用空格隔开组成)中的JAVA类名</span></span><br><span class="line">class-name := $(notdir $(subst .java,,$(JAVAFILE)))</span><br><span class="line"><span class="comment">#测试$files中是否所有单词具有相同的后缀(判断去重后是否只有一种后缀)</span></span><br><span class="line">same-suffix = $(filter 1,$(words $(sort $(suffix $files))))</span><br><span class="line"><span class="comment">#从Java文件名转换成class名(包含包名，a/b/c.java=&gt;a.b.c)</span></span><br><span class="line">ftc-name := $(subst /,.,$(basename $(JAVAFILE)))</span><br><span class="line"><span class="comment">#计算PATH环境变量中所有程序的数量。最后三行都是处理特殊情况的，处理完后使用空格替代冒号作为分隔符并去重，再在每个目录后加/*并作为wildcard的参数，最后用words统计wildcard匹配到的程序数目。</span></span><br><span class="line">program-nums =  $(words \</span><br><span class="line">		<span class="variable">$(wildcard  \</span><br><span class="line">			$(addsuffix /*,	\</span><br><span class="line">				$(sort	\</span><br><span class="line">					$(subst :, ,	\</span><br><span class="line">						$(subst ::,:.:,	\</span><br><span class="line">							$(patsubst :%,.:%,	\</span><br><span class="line">								$(patsubst %:,%:.,$(PATH)</span>))))))))</span><br></pre></td></tr></table></figure></p>
+<h4 id="流程控制"><a href="#流程控制" class="headerlink" title="流程控制"></a><strong>流程控制</strong></h4><p><code>$(error text)</code><br>输出错误信息，并在这之后结束make程序。  </p>
+<p><code>$(if condition,then-part,else-part)</code><br>与前面提到的条件指令不同，这里的condition可以是一个函数或者表达式，then-part和else-part也可以是宏或者函数，会根据condition返回的结果是否为空决定执行哪一部分，这里的为空指的是不包含任何字符（包括空格）。<br>下面这个例子用来判断make是否在3.81版本下执行<br><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$(if $(filter $(MAKE_VERSION),3.81),,$(error version not 3.8.1))</span><br></pre></td></tr></table></figure></p>
+<p><code>$(foreach variable,list,body)</code><br>对于list中的每个变量variable，执行body部分的内容。每次body部分的内容会被以空格为分隔符累计起来，最后作为返回值。  </p>
+<h3 id="自定义函数"><a href="#自定义函数" class="headerlink" title="自定义函数"></a><strong>自定义函数</strong></h3><p>其实make中定义函数的方式和定义变量的方式几乎一样，有单行定义和宏定义两种方式，单行定义一般用来替代一系列内置命令组合，而对于复杂一点的过程，就要用宏来定义。<br>make中函数的调用方法如下<br><code>$(call func-name[, param1...])</code><br>而在函数体中，则是用$0来表示func-name，$1~$n来表示传递的参数，这点和shell的传值是一样的。<br>下面通过一个实例来展示怎样自定义函数，这个makefile示例如何去写一个简单的调试追踪函数，样例在命令中调用了函数b，而b又调用了a。另外一个file-num则是一个单行定义的函数，返回src下指定格式的文件数。<br><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">debug_trace = 1</span><br><span class="line">echo-args = $(foreach a,1 2 3,'$($a)'))</span><br><span class="line">debug-enter = $(if $(debug_trace),$(warning Entering $0($(echo-args))))</span><br><span class="line">debug-leave = $(if $(debug_trace),$(warning Leaving $0))</span><br><span class="line">file-num = $(words $(wildcard src/*.$1))</span><br><span class="line">define a</span><br><span class="line"> 	$(debug-enter)</span><br><span class="line"> 	@echo $1 $2 $3</span><br><span class="line"> 	@echo $(call file-num,c)</span><br><span class="line"> 	$(debug-leave)</span><br><span class="line">endef</span><br><span class="line">define b</span><br><span class="line">	<span class="variable">$(debug-enter)</span></span><br><span class="line">	<span class="variable">$(call a,$1,$2,hello)</span></span><br><span class="line"> 	$(debug-leave)</span><br><span class="line">endef</span><br><span class="line"></span><br><span class="line"><span class="meta"><span class="meta-keyword">.PHONY</span>: test</span></span><br><span class="line"><span class="section">test:</span></span><br><span class="line">	<span class="variable">$(call b,123,$(CC)</span>)</span><br></pre></td></tr></table></figure></p>
+<p>make输出如下，通过输出可以看到这两个函数的运行过程。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Makefile:21: Entering b(&apos;123&apos; &apos;cc&apos; &apos;&apos;))</span><br><span class="line">Makefile:21: Entering a(&apos;123&apos; &apos;cc&apos; &apos;hello&apos;))</span><br><span class="line">Makefile:21: Leaving a</span><br><span class="line">Makefile:21: Leaving b</span><br><span class="line">123 cc hello</span><br><span class="line">3</span><br></pre></td></tr></table></figure></p>
+<p>接下来介绍eval函数，eval函数的用途是将文本直接放入make解析器，首先make会扫描eval参数中是否有变量需要进行替换，如果有的话先替换变量，接下来make会再解析文本并进行求值操作。<br>eval函数的理解有些困难，下面通过一个实例来说明。<br><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"><span class="meta-keyword">.PHONY</span>: test</span></span><br><span class="line"><span class="section">test:</span></span><br><span class="line">	@echo <span class="variable">$(obj)</span></span><br><span class="line"></span><br><span class="line">src = tt_a.c tt_b.c tt_c.c</span><br><span class="line">define func</span><br><span class="line"> head = $(patsubst %.c,%.h,$1)</span><br><span class="line"> obj = $(head:.h=.o)</span><br><span class="line"> $(obj):$(head)</span><br><span class="line">endef</span><br><span class="line"></span><br><span class="line">$(call func, $(src))</span><br></pre></td></tr></table></figure></p>
+<p>这个makefile的功能比较容易看懂，就是传进去.c文件,分别替换后缀成.h和.o，再建立依赖关系。但是悲剧的是，这个makefile是会报错的，原因是make不允许在顶层将一个宏扩展成多行（只有在命令的地方可以）。解决这个问题需要用到eval函数，将函数调用那一行改成<br><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$(eval $(call func,$(src)))</span><br></pre></td></tr></table></figure></p>
+<p>这次可以通过编译了，但是仍然悲剧的是，打印出的obj是空的，通过make –print-data-base也看不到我们定义的规则。这是因为在eval第一遍读取宏的时候，会对变量进行替换，这些替换只依赖于在调用这个宏之前就已经有的变量以及函数传递的变量，而在调用宏之前，head是空的，从而使$(obj)和$(head)都被替换为空。解决的方法是使用$$来表示变量，这样eval在第一遍读取的时候只会将$$变成$，接下来eval会进行第二遍读取并执行整个函数，再处理之前的变量。最后，经过改动的makefile如下<br><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"><span class="meta-keyword">.PHONY</span>: test</span></span><br><span class="line"><span class="section">test:</span></span><br><span class="line">	@echo <span class="variable">$(obj)</span></span><br><span class="line"></span><br><span class="line">src = tt_a.c tt_b.c tt_c.c</span><br><span class="line">define func</span><br><span class="line"> head = $(patsubst %.c,%.h,$1)</span><br><span class="line"> obj = $$(head:.h=.o)</span><br><span class="line"> $$(obj):$$(head)</span><br><span class="line">endef</span><br><span class="line"></span><br><span class="line">$(eval $(call func,$(src)))</span><br></pre></td></tr></table></figure></p>
+<p>make和<code>make --print-data-base | grep tt_</code> 结果如下，可以看到obj变量内容正确，也正确生成了依赖<br><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># make</span></span><br><span class="line">tt_a.o tt_b.o tt_c.o</span><br><span class="line"><span class="comment"># make --print-data-base|grep tt_</span></span><br><span class="line">tt_a.o tt_b.o tt_c.o</span><br><span class="line">head = tt_a.h tt_b.h tt_c.h</span><br><span class="line">src = tt_a.c tt_b.c tt_c.c</span><br><span class="line">tt_a.o: tt_a.h tt_b.h tt_c.h</span><br><span class="line">tt_c.h:</span><br><span class="line">tt_b.o: tt_a.h tt_b.h tt_c.h</span><br><span class="line">tt_a.h:</span><br><span class="line">tt_c.o: tt_a.h tt_b.h tt_c.h</span><br><span class="line">tt_b.h:</span><br><span class="line">```  </span><br><span class="line">  </span><br><span class="line"></span><br><span class="line"><span class="comment">## **命令**</span></span><br><span class="line">命令是每条规则的三种组成元素之一，它的实质就是一个单行的shell命令，对于大多数命令，make会将它传给subshell去执行，对于某些不会影响make程序行为的shell命令，make会避免去fork/exec，直接在make中执行。  </span><br><span class="line"></span><br><span class="line">make默认使用的是/bin/sh，用户也可以通过修改SHELL变量来更改使用的shell。为了编写具有可移植性的makefile，可以使用/usr/bin/bash，bash是GNU/Linux采用的标准shell，可以在大多数系统上运行。  </span><br><span class="line">  </span><br><span class="line">在makefile中所有以TAB开头的文本行都被认为是命令，但是像注释以及条件处理命令即使以TAB开头，也会被make识别出来并正确处理。而空行则会被Makefile直接忽略掉。  </span><br><span class="line">  </span><br><span class="line"><span class="comment">### **长命令**</span></span><br><span class="line">需要注意的是，make是以行为单位将命令输送到shell的，如果一个命令超过一行，需要进行处理，下面举一个简单的例子</span><br><span class="line">```makefile</span><br><span class="line"><span class="meta"><span class="meta-keyword">.PHONY</span>: test</span></span><br><span class="line"><span class="section">test:</span></span><br><span class="line">	cd src</span><br><span class="line">	ls</span><br></pre></td></tr></table></figure></p>
+<p>该makefile试图进入src目录并显示src下的文件列表（当然ls src是OK的，这里只是为了举例），但运行后会发现ls显示的还只是make所在目录下的文件，这是因为两行命令被传给了两个不同的subshell，从而变的不具有关联性。如果想要两条命令在一个subshell中执行，我们可以使用反斜杠符将命令连成一行并在命令间加上分隔符。下面两种写法都可以实现，但实际上是有所区别的，在后面的错误处理中会说这个问题。<br><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># way 1</span></span><br><span class="line"><span class="meta"><span class="meta-keyword">.PHONY</span>: test</span></span><br><span class="line"><span class="section">test:</span></span><br><span class="line">	cd src &amp;&amp;	\</span><br><span class="line">	ls</span><br><span class="line"><span class="comment"># way 2</span></span><br><span class="line"><span class="meta"><span class="meta-keyword">.PHONY</span>: test</span></span><br><span class="line"><span class="section">test:</span></span><br><span class="line">	cd src; 	\</span><br><span class="line">	ls</span><br></pre></td></tr></table></figure></p>
+<h3 id="命令修饰符"><a href="#命令修饰符" class="headerlink" title="命令修饰符"></a><strong>命令修饰符</strong></h3><p><code>@</code><br>Makefile默认会输出命令本身，而在命令前加上@可以禁止make的这种行为。加上@的好处是使make输出较容易阅读，坏处是使命令调试变的困难。建议使用一个含@的变量，并用在命令上，通过修改这个变量就可以决定程序的行为<br><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">QUIET = @</span><br><span class="line"><span class="section">test:</span></span><br><span class="line">	@(QUIET) shell script..</span><br></pre></td></tr></table></figure></p>
+<p><code>-</code><br>指示make忽视改行发生的错误，一般当make遇到一个命令返回错误时，会停止make脚本的执行。但如果命令前加上了破折号,make就会忽略错误并继续执行。  </p>
+<p><code>+</code><br>要求make执行命令，即使是–just-print或-n命令来执行make，在编写递归makefile时会用到这个功能。  </p>
+<h3 id="错误处理"><a href="#错误处理" class="headerlink" title="错误处理"></a><strong>错误处理</strong></h3><p>make每执行一条命令就会返回一个状态码，值为零代表命令执行成功，如果某一行命令返回非零时，make就会停止执行。这种情况下可以用破折号前缀或者–keep going命令让make继续执行下去，但是并不建议这么做，除非能保证这一行命令的错误无伤大雅。   </p>
+<p>在之前长命令的例子中，分别使用<code>&amp;&amp;</code>和<code>;</code>作为连接符，当src存在时执行结果是没有区别的，但如果这个目录不存在呢，我们将src改成srcs(不存在的目录)后看一下输出<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">#使用&amp;&amp;做连接符</span><br><span class="line">cd srcs &amp;&amp; \</span><br><span class="line">	ls</span><br><span class="line">/bin/sh: 1: cd: can&apos;t cd to srcs</span><br><span class="line">make: *** [test] Error 2</span><br><span class="line">#使用;作连接符</span><br><span class="line">cd srcs; \</span><br><span class="line">	ls</span><br><span class="line">/bin/sh: 1: cd: can&apos;t cd to srcs</span><br><span class="line">include  Makefile  src</span><br></pre></td></tr></table></figure></p>
+<p>可以看到，如果&amp;&amp;作连接符，其中某一条命令的错误会导致整个make的停止，而使用分号作连接符则不会因为中间某条命令的错误而使make停止。这里建议使用&amp;&amp;作连接符，在执行每一条命令之前都保证前一条命令执行成功。  </p>
+<p>另一种避免错误的方式就是使用程序内置的错误处理机制，比如使用rm -f来替代rm，这样在删除不存在的文件时就不会报错，与此相似的还有mkdir -p等。  </p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/blog/2014/01/23/gnu-make-study02/">GNU Make学习总结（二）</a></p>
+        <p><span>文章作者:</span><a href="/" title="访问 Vimer Su 的个人博客">Vimer Su</a></p>
+        <p><span>发布时间:</span>2014年01月23日 - 15时56分</p>
+        <p><span>最后更新:</span>2016年06月04日 - 22时57分</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/blog/2014/01/23/gnu-make-study02/" title="GNU Make学习总结（二）">http://vimersu.win/blog/2014/01/23/gnu-make-study02/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://vimersu.win/blog/2014/01/23/gnu-make-study02/　　作者: Vimer Su" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script src="/js/clipboard.min.js"></script>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" title="中国大陆 (CC BY-NC-SA 3.0 CN)" target = "_blank">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+<nav id="article-nav">
+  
+    <a href="/blog/2014/01/30/common-makefile/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          一个通用的C/C++ Makefile
+        
+      </div>
+    </a>
+  
+  
+    <a href="/blog/2014/01/13/gnu-make-study01/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">GNU Make学习总结（一）</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Intro"><span class="toc-number">1.</span> <span class="toc-text">Intro</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#变量"><span class="toc-number">2.</span> <span class="toc-text">变量</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#变量赋值"><span class="toc-number">2.1.</span> <span class="toc-text">变量赋值</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#何时扩展变量"><span class="toc-number">2.2.</span> <span class="toc-text">何时扩展变量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#专属变量"><span class="toc-number">2.3.</span> <span class="toc-text">专属变量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#include"><span class="toc-number">2.4.</span> <span class="toc-text">include</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#条件指令"><span class="toc-number">2.5.</span> <span class="toc-text">条件指令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#标准make变量"><span class="toc-number">2.6.</span> <span class="toc-text">标准make变量</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#函数"><span class="toc-number">3.</span> <span class="toc-text">函数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#内置函数"><span class="toc-number">3.1.</span> <span class="toc-text">内置函数</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#杂项函数"><span class="toc-number">3.1.1.</span> <span class="toc-text">杂项函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#字符串函数"><span class="toc-number">3.1.2.</span> <span class="toc-text">字符串函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#文件名函数"><span class="toc-number">3.1.3.</span> <span class="toc-text">文件名函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#流程控制"><span class="toc-number">3.1.4.</span> <span class="toc-text">流程控制</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#自定义函数"><span class="toc-number">3.2.</span> <span class="toc-text">自定义函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#命令修饰符"><span class="toc-number">3.3.</span> <span class="toc-text">命令修饰符</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#错误处理"><span class="toc-number">3.4.</span> <span class="toc-text">错误处理</span></a></li></ol></li></ol>
+</div>
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+        }
+    })
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+    }
+</script>
+
+
+
+
+
+
+
+    
+      <div class="duoshuo" id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="blog/2014/01/23/gnu-make-study02/" data-title="GNU Make学习总结（二）" data-url="http://vimersu.win/blog/2014/01/23/gnu-make-study02/"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:"c4fun"};
+    (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = '/js/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+    </script>
+    <!-- 多说公共JS代码 end -->
+</div>
+
+    
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/blog/2014/01/30/common-makefile/" title="上一篇: 一个通用的C/C++ Makefile">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+        
+            <a href="/blog/2014/01/13/gnu-make-study01/" title="下一篇: GNU Make学习总结（一）">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/blog/2016/07/04/dx-lesson02-3dknowledge/">DirectX 3D学习笔记02——3D数学基础</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/07/03/dx-lesson01-window/">DirectX 3D学习笔记01——环境搭建与窗口创建</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2015/10/03/osx-xcode-opengl/">在OSX中进行OpenGL开发</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2015/06/23/xcode64-alactraz-bug/">Xcode6.4中Alcatraz无法启动</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2015/06/23/vim-base-operation/">Vim基础操作汇总</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2015/06/13/apache-reverse-proxy/">通过Apache反向代理访问本地Gogs服务</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2015/06/09/mac-another-screen/">Macbook修改外接显示器分辨率</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/12/12/how-to-use-define/">宏的拓展用法总结</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/12/06/cmockery/">C单元测试框架之Cmockery</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/10/10/maven-study/">Linux下Maven的安装与使用</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/05/06/python-threading/">python中的多线程</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/03/23/python-regular/">python正则表达式</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/03/20/leetcode-solution-02/">LeetCode题解整理版(二)</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/03/18/leetcode-solution-01/">LeetCode题解整理版(一) </a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/03/12/heap-template/">一个用宏实现的堆模板</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/03/06/libev-study/">Libev事件库源码阅读笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/03/04/linux-iconv/">在Linux下使用iconv转换字符串编码</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/03/03/use-hexo-blog/">使用Hexo搭建个人博客</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/01/30/common-makefile/">一个通用的C/C++ Makefile</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/01/23/gnu-make-study02/">GNU Make学习总结（二）</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/01/13/gnu-make-study01/">GNU Make学习总结（一）</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/01/11/struct-alignment/">C的结构体字节对齐</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/12/02/linuxdrivecode-cdev/">Linux设备驱动学习——简单字符设备驱动的实现</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/30/linux-sublimetext-chinese/">解决Linux下Sublime text 3的中文输入问题</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/25/start-leetcode-oj/">开始刷LeetCode OJ</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/24/octopress-generate-post-content/">让Octopress为文章自动生成目录</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/23/wlanconfig-tools-source/">wlanconfig工具分析</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/22/auto-aixiaochu-app/">Qt+BlueStack实现自动天天爱消除</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/21/binary-tree-nonrecursive-traversal/">另一种二叉树非递归遍历的实现</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/19/linux-io-reuse-interface/">Linux中的IO复用接口简介</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/19/linux-ap-by-madwifi/">Linux下使用无线网卡搭建AP</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/19/hello-octopress/">开启OctoPress之旅</a></li></ul>
+    <script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+    <script>
+        $(".post-list").addClass("toc-article");
+        $(".post-list-item a").attr("target","_blank");
+        $("#post-nav-button > a:nth-child(2)").click(function() {
+            $(".fa-bars, .fa-times").toggle();
+            $(".post-list").toggle(300);
+            if ($(".toc").length > 0) {
+                $("#toc, #tocButton").toggle(200, function() {
+                    if ($(".switch-area").is(":visible")) {
+                        $("#tocButton").attr("value", valueHide);
+                        }
+                    })
+            }
+            else {
+            }
+        })
+    </script>
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2016 Vimer Su
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/luuman/hexo-theme-spfk" target="_blank">spfk</a> by luuman
+            </div>
+        </div>
+        
+    </div>
+</footer>
+
+    </div>
+    <script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var backgroundnum = 24;
+            var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+            $("#mobile-nav").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+            $(".left-col").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    $(document).ready(function() {
+        if ($("#comments").length < 1) {
+            $("#scroll > a:nth-child(2)").hide();
+        };
+    })
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+  <script language="javascript">
+    $(function() {
+        $("a[title]").each(function() {
+            var a = $(this);
+            var title = a.attr('title');
+            if (title == undefined || title == "") return;
+            a.data('title', title).removeAttr('title').hover(
+
+            function() {
+                var offset = a.offset();
+                $("<div id=\"anchortitlecontainer\"></div>").appendTo($("body")).html(title).css({
+                    top: offset.top - a.outerHeight() - 15,
+                    left: offset.left + a.outerWidth()/2 + 1
+                }).fadeIn(function() {
+                    var pop = $(this);
+                    setTimeout(function() {
+                        pop.remove();
+                    }, pop.text().length * 800);
+                });
+            }, function() {
+                $("#anchortitlecontainer").remove();
+            });
+        });
+    });
+</script>
+
+
+  </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>

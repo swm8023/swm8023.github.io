@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>python中的多线程 | Coding 4 Fun</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="本文主要介绍了在Python中使用threading模块实现多线程的方法。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="python中的多线程">
+<meta property="og:url" content="http://vimersu.win/blog/2014/05/06/python-threading/index.html">
+<meta property="og:site_name" content="Coding 4 Fun">
+<meta property="og:description" content="本文主要介绍了在Python中使用threading模块实现多线程的方法。">
+<meta property="og:updated_time" content="2016-06-04T14:57:29.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="python中的多线程">
+<meta name="twitter:description" content="本文主要介绍了在Python中使用threading模块实现多线程的方法。">
+  
+    <link rel="alternative" href="/atom.xml" title="Coding 4 Fun" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  
+  <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+      <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <!-- 加载特效 -->
+    <script src="/js/pace.js"></script>
+    <link href="/css/pace/pace-theme-flash.css" rel="stylesheet" />
+  <script>
+      var yiliaConfig = {
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false
+      }
+  </script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            
+            <img lazy-src="/avator.jpg" class="js-avatar">
+            
+        </a>
+
+        <hgroup>
+          <h1 class="header-author"><a href="/">Vimer Su</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">Dream it, Believe it, Do IT!</p>
+        
+        
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">博客首页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fl mail" target="_blank" href="mailto:swm8023@gmail.com" title="mail">mail</a>
+                            
+                                <a class="fl github" target="_blank" href="https://github.com/swm8023" title="github">github</a>
+                            
+                                <a class="fl rss" target="_blank" href="/atom.xml" title="rss">rss</a>
+                            
+                                <a class="fl douban" target="_blank" href="https://www.douban.com/people/swm8023/" title="douban">douban</a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/AP/" style="font-size: 10px;">AP</a> <a href="/tags/Alcatraz/" style="font-size: 10px;">Alcatraz</a> <a href="/tags/Algorithm/" style="font-size: 17.5px;">Algorithm</a> <a href="/tags/Apache/" style="font-size: 10px;">Apache</a> <a href="/tags/C/" style="font-size: 15px;">C</a> <a href="/tags/Cmockery/" style="font-size: 10px;">Cmockery</a> <a href="/tags/DirectX-3D/" style="font-size: 12.5px;">DirectX 3D</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/I-O复用/" style="font-size: 10px;">I/O复用</a> <a href="/tags/Leetcode-OJ/" style="font-size: 15px;">Leetcode OJ</a> <a href="/tags/Libev/" style="font-size: 10px;">Libev</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/MAC/" style="font-size: 10px;">MAC</a> <a href="/tags/Makefile/" style="font-size: 15px;">Makefile</a> <a href="/tags/Maven/" style="font-size: 10px;">Maven</a> <a href="/tags/OSX/" style="font-size: 10px;">OSX</a> <a href="/tags/Octopress/" style="font-size: 12.5px;">Octopress</a> <a href="/tags/OpenGL/" style="font-size: 10px;">OpenGL</a> <a href="/tags/Proxy/" style="font-size: 10px;">Proxy</a> <a href="/tags/Python/" style="font-size: 15px;">Python</a> <a href="/tags/Sublime-text3/" style="font-size: 10px;">Sublime text3</a> <a href="/tags/Tools/" style="font-size: 10px;">Tools</a> <a href="/tags/Vim/" style="font-size: 10px;">Vim</a> <a href="/tags/Xcode/" style="font-size: 10px;">Xcode</a> <a href="/tags/epoll/" style="font-size: 10px;">epoll</a> <a href="/tags/iconv/" style="font-size: 10px;">iconv</a> <a href="/tags/madwifi/" style="font-size: 12.5px;">madwifi</a> <a href="/tags/wlanconfig/" style="font-size: 10px;">wlanconfig</a> <a href="/tags/二叉树/" style="font-size: 10px;">二叉树</a> <a href="/tags/单元测试/" style="font-size: 10px;">单元测试</a> <a href="/tags/堆/" style="font-size: 10px;">堆</a> <a href="/tags/外接显示器/" style="font-size: 10px;">外接显示器</a> <a href="/tags/天天爱消除/" style="font-size: 10px;">天天爱消除</a> <a href="/tags/宏/" style="font-size: 10px;">宏</a> <a href="/tags/正则表达式/" style="font-size: 10px;">正则表达式</a> <a href="/tags/游戏开发/" style="font-size: 12.5px;">游戏开发</a> <a href="/tags/线程同步/" style="font-size: 10px;">线程同步</a> <a href="/tags/结构体/" style="font-size: 10px;">结构体</a> <a href="/tags/驱动程序/" style="font-size: 12.5px;">驱动程序</a>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/swm8023">swm8023@github</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://blog.csdn.net/swm8023">swm8023@csdn</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.cnblogs.com/swm8023/">swm8023@cnblogs</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.cnblogs.com/CSGrandeur/">CSGrandeur</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://hujiaweibujidao.github.io/">Hujiawei Bujidao</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://blog.chinaunix.net/uid/28387257.html">Henrystark&#39;s CU blog</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://oxoo.org">OxOo社</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.cnblogs.com/staginner/">Staginner</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://zhangxc.com/">张学程</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://yangha.github.io/">小阳Space</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">Hello World</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Vimer Su</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                
+                    <img lazy-src="/avator.jpg" class="js-avatar">
+                
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Vimer Su</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">Dream it, Believe it, Do IT!</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">博客首页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a class="mail" target="_blank" href="mailto:swm8023@gmail.com" title="mail">mail</a>
+                    
+                        <a class="github" target="_blank" href="https://github.com/swm8023" title="github">github</a>
+                    
+                        <a class="rss" target="_blank" href="/atom.xml" title="rss">rss</a>
+                    
+                        <a class="douban" target="_blank" href="https://www.douban.com/people/swm8023/" title="douban">douban</a>
+                    
+                </div>
+            </nav>
+        </header>                
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-python-threading" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/blog/2014/05/06/python-threading/" class="article-date">
+      <time datetime="2014-05-06T09:48:04.000Z" itemprop="datePublished">2014-05-06</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      python中的多线程
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/Python/">Python</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/">Python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/线程同步/">线程同步</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>python中关于多线程的操作可以使用thread和threading模块来实现，其中thread模块在Py3中已经改名为_thread，不再推荐使用。而threading模块是在thread之上进行了封装，也是推荐使用的多线程模块，本文主要基于threading模块进行介绍。在某些版本中thread模块可能不存在，要使用dump_threading来代替threading模块。  </p>
+<a id="more"></a>
+<h2 id="线程创建"><a href="#线程创建" class="headerlink" title="线程创建"></a><strong>线程创建</strong></h2><p>threading模块中每个线程都是一个Thread对象，创建一个线程有两种方式，一种是将函数传递到Thread对象中执行，另一种是从Thread继承，然后重写run方法（是不是跟Java很像）。  </p>
+<p>下面使用这两种方法分别创建一个线程并同时执行<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">threadFunction</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">10</span>):</span><br><span class="line">        <span class="keyword">print</span> <span class="string">'ThreadFuction - %d'</span>%i</span><br><span class="line">        time.sleep(random.randrange(<span class="number">0</span>,<span class="number">2</span>))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ThreadClass</span><span class="params">(threading.Thread)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        threading.Thread.__init__(self);</span><br><span class="line">        </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">run</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">10</span>):</span><br><span class="line">            <span class="keyword">print</span> <span class="string">'ThreadClass - %d'</span>%i</span><br><span class="line">            time.sleep(random.randrange(<span class="number">0</span>,<span class="number">2</span>))</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    tFunc = threading.Thread(target = threadFunction);</span><br><span class="line">    tCls  = ThreadClass()</span><br><span class="line">    tFunc.start()</span><br><span class="line">    tCls.start()</span><br></pre></td></tr></table></figure></p>
+<p>执行结果如下，可以看到两个线程在交替打印。至于空行和一行多个输出，是因为Py的print并不是线程安全的，在当前线程的print打印了部分内容后，准备打印换行之前，被别的线程中的print抢先，在换行之前打印了其它的内容。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">ThreadFuction - 0</span><br><span class="line">ThreadFuction - 1</span><br><span class="line">ThreadFuction - 2</span><br><span class="line">ThreadClass - 0</span><br><span class="line">ThreadFuction - 3</span><br><span class="line">ThreadClass - 1</span><br><span class="line">ThreadFuction - 4</span><br><span class="line">ThreadClass - 2</span><br><span class="line">ThreadClass - 3</span><br><span class="line">ThreadClass - 4ThreadFuction - 5</span><br><span class="line"></span><br><span class="line">ThreadClass - 5</span><br><span class="line">ThreadClass - 6</span><br><span class="line">ThreadClass - 7</span><br><span class="line">ThreadClass - 8</span><br><span class="line">ThreadFuction - 6ThreadClass - 9</span><br><span class="line"></span><br><span class="line">ThreadFuction - 7</span><br><span class="line">ThreadFuction - 8</span><br><span class="line">ThreadFuction - 9</span><br></pre></td></tr></table></figure></p>
+<p>Thread类的构造函数定义如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">class threading.Thread(group=None, target=None, name=None, args=(), kwargs=&#123;&#125;)</span><br><span class="line">group： 留作ThreadGroup扩展使用，一般没什么用</span><br><span class="line">target：新线程的任务函数名</span><br><span class="line">name：  线程名，一般也没什么用</span><br><span class="line">args：  tuple参数</span><br><span class="line">kwargs：dictionary参数</span><br></pre></td></tr></table></figure></p>
+<p>Thread类的成员变量和函数如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">start()         启动一个线程</span><br><span class="line">run()           线程执行体，也是一般要重写的内容</span><br><span class="line">join([timeout]) 等待线程结束</span><br><span class="line">name            线程名</span><br><span class="line">ident           线程ID</span><br><span class="line">daemon          是否守护线程</span><br><span class="line">isAlive()、is_alive()    线程是否存活</span><br><span class="line">getName()、setName()     Name的get&amp;set方法</span><br><span class="line">isDaemon()、setDaemon()  daemon的get&amp;set方法</span><br></pre></td></tr></table></figure></p>
+<p>这里的守护线程与Linux中的守护进程并不是一个概念。这里是指当所有守护线程退出后主程序才会退出，否则即使线程任务没有结束，只要不是守护线程，都会跟着主程序一起退出。而Linux中的守护进程定义正好相反，守护进程已经脱离父进程，不会随着父进程的结束而退出。</p>
+<h2 id="线程同步"><a href="#线程同步" class="headerlink" title="线程同步"></a><strong>线程同步</strong></h2><p>线程同步是多线程中的一个核心问题，threading模块对线程同步有着良好的支持、包括线程特定数据、信号量、互斥锁、条件变量等。  </p>
+<h3 id="线程特定数据"><a href="#线程特定数据" class="headerlink" title="线程特定数据"></a><strong>线程特定数据</strong></h3><p>简而言之，线程特定数据就是线程独自持有的全局变量，相互之间的修改不会造成影响。  </p>
+<p>threading模块中使用local()方法生成一个线程独立对象，举例如下，其中sleep(1)是为了保证让子线程先运行完再运行接下来的语句。<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">data = threading.local()</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">threadFunction</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">global</span> data</span><br><span class="line">    data.x = <span class="number">3</span></span><br><span class="line">    <span class="keyword">print</span> threading.currentThread(), data.x</span><br><span class="line">    </span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    data.x = <span class="number">1</span></span><br><span class="line">    tFunc = threading.Thread(target = threadFunction).start();</span><br><span class="line">    time.sleep(<span class="number">1</span>)</span><br><span class="line">    <span class="keyword">print</span> threading.current_thread(), data.x</span><br></pre></td></tr></table></figure></p>
+<p>输出如下，可以看到，Thread-1中对data.x的修改并没有影响到主线程中data.x的值。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;Thread(Thread-1, started 36208)&gt; 3</span><br><span class="line">&lt;_MainThread(MainThread, started 35888)&gt; 1</span><br></pre></td></tr></table></figure></p>
+<h3 id="互斥锁"><a href="#互斥锁" class="headerlink" title="互斥锁"></a><strong>互斥锁</strong></h3><p>threading中定义了两种锁：threading.Lock和threading.RLock。两者的不同在于后者是可重入锁，也就是说在一个线程内重复LOCK同一个锁不会发生死锁，这与POSIX中的PTHREAD_MUTEX_RECURSIVE也就是可递归锁的概念是相同的。  </p>
+<p>关于互斥锁的API很简单，只有三个函数————分配锁，上锁，解锁。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">threading.Lock()        分配一个互斥锁</span><br><span class="line">acquire([blocking=1])   上锁(阻塞或者非阻塞，非阻塞时相当于try_lock，通过返回False表示已经被其它线程锁住。)</span><br><span class="line">release()               解锁</span><br></pre></td></tr></table></figure></p>
+<p>下面通过一个例子来说明互斥锁的使用。在之前的例子中，多线程print会造成混乱的输出，这里使用一个互斥锁，来保证每行一定只有一个输出。<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">threadFunction</span><span class="params">(arg)</span>:</span></span><br><span class="line">    <span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">        lock.acquire()</span><br><span class="line">        <span class="keyword">print</span> <span class="string">'ThreadFuction - %d'</span>%arg</span><br><span class="line">        lock.release()</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    lock = threading.Lock()</span><br><span class="line">    threading.Thread(target = threadFunction, args=(<span class="number">1</span>,)).start();</span><br><span class="line">    threading.Thread(target = threadFunction, args=(<span class="number">2</span>,)).start();</span><br></pre></td></tr></table></figure></p>
+<h3 id="条件变量"><a href="#条件变量" class="headerlink" title="条件变量"></a><strong>条件变量</strong></h3><p>条件变量总是与互斥锁一起使用的，threading中的条件变量默认绑定了一个RLock，也可以在初始化条件变量的时候传进去一个自己定义的锁。  </p>
+<p>可用的函数如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">threading.Condition([lock])  分配一个条件变量</span><br><span class="line">acquire(*args)               条件变量上锁</span><br><span class="line">release()                    条件变量解锁</span><br><span class="line">wait([timeout])              等待唤醒，timeout表示超时</span><br><span class="line">notify(n=1)                  唤醒最大n个等待的线程</span><br><span class="line">notifyAll()、notify_all()    唤醒所有等待的线程</span><br></pre></td></tr></table></figure></p>
+<p>下面这个例子使用条件变量来控制两个线程交替运行<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">num = <span class="number">0</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">threadFunction</span><span class="params">(arg)</span>:</span></span><br><span class="line">    <span class="keyword">global</span> num</span><br><span class="line">    <span class="keyword">while</span> num &lt; <span class="number">10</span>:</span><br><span class="line">        cond.acquire()</span><br><span class="line">        <span class="keyword">while</span> num % <span class="number">2</span> != arg:</span><br><span class="line">            cond.wait()</span><br><span class="line">        <span class="keyword">print</span> <span class="string">'Thread %d - %d'</span> %(arg, num)</span><br><span class="line">        num += <span class="number">1</span></span><br><span class="line">        cond.notify()</span><br><span class="line">        cond.release()</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    cond = threading.Condition()</span><br><span class="line">    threading.Thread(target = threadFunction, args=(<span class="number">0</span>,)).start();</span><br><span class="line">    threading.Thread(target = threadFunction, args=(<span class="number">1</span>,)).start();</span><br></pre></td></tr></table></figure></p>
+<p>输出如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Thread 0 - 0</span><br><span class="line">Thread 1 - 1</span><br><span class="line">Thread 0 - 2</span><br><span class="line">Thread 1 - 3</span><br><span class="line">Thread 0 - 4</span><br><span class="line">Thread 1 - 5</span><br><span class="line">Thread 0 - 6</span><br><span class="line">Thread 1 - 7</span><br><span class="line">Thread 0 - 8</span><br><span class="line">Thread 1 - 9</span><br><span class="line">Thread 0 - 10</span><br></pre></td></tr></table></figure></p>
+<p>其实上面这个程序是有问题的，我们想打印的是0~9，但实际上10也被打印了出来，原因很简单，因为两个线程交替打印，使得num在一个线程中可能加2，从而导致10被打印出来，所以必须在打印前再次check。  </p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/blog/2014/05/06/python-threading/">python中的多线程</a></p>
+        <p><span>文章作者:</span><a href="/" title="访问 Vimer Su 的个人博客">Vimer Su</a></p>
+        <p><span>发布时间:</span>2014年05月06日 - 17时48分</p>
+        <p><span>最后更新:</span>2016年06月04日 - 22时57分</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/blog/2014/05/06/python-threading/" title="python中的多线程">http://vimersu.win/blog/2014/05/06/python-threading/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://vimersu.win/blog/2014/05/06/python-threading/　　作者: Vimer Su" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script src="/js/clipboard.min.js"></script>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" title="中国大陆 (CC BY-NC-SA 3.0 CN)" target = "_blank">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+<nav id="article-nav">
+  
+    <a href="/blog/2014/10/10/maven-study/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          Linux下Maven的安装与使用
+        
+      </div>
+    </a>
+  
+  
+    <a href="/blog/2014/03/23/python-regular/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">python正则表达式</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#线程创建"><span class="toc-number">1.</span> <span class="toc-text">线程创建</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#线程同步"><span class="toc-number">2.</span> <span class="toc-text">线程同步</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#线程特定数据"><span class="toc-number">2.1.</span> <span class="toc-text">线程特定数据</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#互斥锁"><span class="toc-number">2.2.</span> <span class="toc-text">互斥锁</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#条件变量"><span class="toc-number">2.3.</span> <span class="toc-text">条件变量</span></a></li></ol></li></ol>
+</div>
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+        }
+    })
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+    }
+</script>
+
+
+
+
+
+
+
+    
+      <div class="duoshuo" id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="blog/2014/05/06/python-threading/" data-title="python中的多线程" data-url="http://vimersu.win/blog/2014/05/06/python-threading/"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:"c4fun"};
+    (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = '/js/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+    </script>
+    <!-- 多说公共JS代码 end -->
+</div>
+
+    
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/blog/2014/10/10/maven-study/" title="上一篇: Linux下Maven的安装与使用">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+        
+            <a href="/blog/2014/03/23/python-regular/" title="下一篇: python正则表达式">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/blog/2016/07/04/dx-lesson02-3dknowledge/">DirectX 3D学习笔记02——3D数学基础</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/07/03/dx-lesson01-window/">DirectX 3D学习笔记01——环境搭建与窗口创建</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2015/10/03/osx-xcode-opengl/">在OSX中进行OpenGL开发</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2015/06/23/xcode64-alactraz-bug/">Xcode6.4中Alcatraz无法启动</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2015/06/23/vim-base-operation/">Vim基础操作汇总</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2015/06/13/apache-reverse-proxy/">通过Apache反向代理访问本地Gogs服务</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2015/06/09/mac-another-screen/">Macbook修改外接显示器分辨率</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/12/12/how-to-use-define/">宏的拓展用法总结</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/12/06/cmockery/">C单元测试框架之Cmockery</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/10/10/maven-study/">Linux下Maven的安装与使用</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/05/06/python-threading/">python中的多线程</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/03/23/python-regular/">python正则表达式</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/03/20/leetcode-solution-02/">LeetCode题解整理版(二)</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/03/18/leetcode-solution-01/">LeetCode题解整理版(一) </a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/03/12/heap-template/">一个用宏实现的堆模板</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/03/06/libev-study/">Libev事件库源码阅读笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/03/04/linux-iconv/">在Linux下使用iconv转换字符串编码</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/03/03/use-hexo-blog/">使用Hexo搭建个人博客</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/01/30/common-makefile/">一个通用的C/C++ Makefile</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/01/23/gnu-make-study02/">GNU Make学习总结（二）</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/01/13/gnu-make-study01/">GNU Make学习总结（一）</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/01/11/struct-alignment/">C的结构体字节对齐</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/12/02/linuxdrivecode-cdev/">Linux设备驱动学习——简单字符设备驱动的实现</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/30/linux-sublimetext-chinese/">解决Linux下Sublime text 3的中文输入问题</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/25/start-leetcode-oj/">开始刷LeetCode OJ</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/24/octopress-generate-post-content/">让Octopress为文章自动生成目录</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/23/wlanconfig-tools-source/">wlanconfig工具分析</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/22/auto-aixiaochu-app/">Qt+BlueStack实现自动天天爱消除</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/21/binary-tree-nonrecursive-traversal/">另一种二叉树非递归遍历的实现</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/19/linux-io-reuse-interface/">Linux中的IO复用接口简介</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/19/linux-ap-by-madwifi/">Linux下使用无线网卡搭建AP</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/19/hello-octopress/">开启OctoPress之旅</a></li></ul>
+    <script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+    <script>
+        $(".post-list").addClass("toc-article");
+        $(".post-list-item a").attr("target","_blank");
+        $("#post-nav-button > a:nth-child(2)").click(function() {
+            $(".fa-bars, .fa-times").toggle();
+            $(".post-list").toggle(300);
+            if ($(".toc").length > 0) {
+                $("#toc, #tocButton").toggle(200, function() {
+                    if ($(".switch-area").is(":visible")) {
+                        $("#tocButton").attr("value", valueHide);
+                        }
+                    })
+            }
+            else {
+            }
+        })
+    </script>
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2016 Vimer Su
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/luuman/hexo-theme-spfk" target="_blank">spfk</a> by luuman
+            </div>
+        </div>
+        
+    </div>
+</footer>
+
+    </div>
+    <script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var backgroundnum = 24;
+            var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+            $("#mobile-nav").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+            $(".left-col").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    $(document).ready(function() {
+        if ($("#comments").length < 1) {
+            $("#scroll > a:nth-child(2)").hide();
+        };
+    })
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+  <script language="javascript">
+    $(function() {
+        $("a[title]").each(function() {
+            var a = $(this);
+            var title = a.attr('title');
+            if (title == undefined || title == "") return;
+            a.data('title', title).removeAttr('title').hover(
+
+            function() {
+                var offset = a.offset();
+                $("<div id=\"anchortitlecontainer\"></div>").appendTo($("body")).html(title).css({
+                    top: offset.top - a.outerHeight() - 15,
+                    left: offset.left + a.outerWidth()/2 + 1
+                }).fadeIn(function() {
+                    var pop = $(this);
+                    setTimeout(function() {
+                        pop.remove();
+                    }, pop.text().length * 800);
+                });
+            }, function() {
+                $("#anchortitlecontainer").remove();
+            });
+        });
+    });
+</script>
+
+
+  </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>

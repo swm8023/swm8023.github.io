@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>C的结构体字节对齐 | Coding 4 Fun</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="关于C中结构体字节对齐遵循的规则，给出了一个计算结构体大小的方法。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C的结构体字节对齐">
+<meta property="og:url" content="http://vimersu.win/blog/2014/01/11/struct-alignment/index.html">
+<meta property="og:site_name" content="Coding 4 Fun">
+<meta property="og:description" content="关于C中结构体字节对齐遵循的规则，给出了一个计算结构体大小的方法。">
+<meta property="og:updated_time" content="2016-06-04T14:57:29.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="C的结构体字节对齐">
+<meta name="twitter:description" content="关于C中结构体字节对齐遵循的规则，给出了一个计算结构体大小的方法。">
+  
+    <link rel="alternative" href="/atom.xml" title="Coding 4 Fun" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  
+  <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+      <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <!-- 加载特效 -->
+    <script src="/js/pace.js"></script>
+    <link href="/css/pace/pace-theme-flash.css" rel="stylesheet" />
+  <script>
+      var yiliaConfig = {
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false
+      }
+  </script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            
+            <img lazy-src="/avator.jpg" class="js-avatar">
+            
+        </a>
+
+        <hgroup>
+          <h1 class="header-author"><a href="/">Vimer Su</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">Dream it, Believe it, Do IT!</p>
+        
+        
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">博客首页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fl mail" target="_blank" href="mailto:swm8023@gmail.com" title="mail">mail</a>
+                            
+                                <a class="fl github" target="_blank" href="https://github.com/swm8023" title="github">github</a>
+                            
+                                <a class="fl rss" target="_blank" href="/atom.xml" title="rss">rss</a>
+                            
+                                <a class="fl douban" target="_blank" href="https://www.douban.com/people/swm8023/" title="douban">douban</a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/AP/" style="font-size: 10px;">AP</a> <a href="/tags/Alcatraz/" style="font-size: 10px;">Alcatraz</a> <a href="/tags/Algorithm/" style="font-size: 17.5px;">Algorithm</a> <a href="/tags/Apache/" style="font-size: 10px;">Apache</a> <a href="/tags/C/" style="font-size: 15px;">C</a> <a href="/tags/Cmockery/" style="font-size: 10px;">Cmockery</a> <a href="/tags/DirectX-3D/" style="font-size: 12.5px;">DirectX 3D</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/I-O复用/" style="font-size: 10px;">I/O复用</a> <a href="/tags/Leetcode-OJ/" style="font-size: 15px;">Leetcode OJ</a> <a href="/tags/Libev/" style="font-size: 10px;">Libev</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/MAC/" style="font-size: 10px;">MAC</a> <a href="/tags/Makefile/" style="font-size: 15px;">Makefile</a> <a href="/tags/Maven/" style="font-size: 10px;">Maven</a> <a href="/tags/OSX/" style="font-size: 10px;">OSX</a> <a href="/tags/Octopress/" style="font-size: 12.5px;">Octopress</a> <a href="/tags/OpenGL/" style="font-size: 10px;">OpenGL</a> <a href="/tags/Proxy/" style="font-size: 10px;">Proxy</a> <a href="/tags/Python/" style="font-size: 15px;">Python</a> <a href="/tags/Sublime-text3/" style="font-size: 10px;">Sublime text3</a> <a href="/tags/Tools/" style="font-size: 10px;">Tools</a> <a href="/tags/Vim/" style="font-size: 10px;">Vim</a> <a href="/tags/Xcode/" style="font-size: 10px;">Xcode</a> <a href="/tags/epoll/" style="font-size: 10px;">epoll</a> <a href="/tags/iconv/" style="font-size: 10px;">iconv</a> <a href="/tags/madwifi/" style="font-size: 12.5px;">madwifi</a> <a href="/tags/wlanconfig/" style="font-size: 10px;">wlanconfig</a> <a href="/tags/二叉树/" style="font-size: 10px;">二叉树</a> <a href="/tags/单元测试/" style="font-size: 10px;">单元测试</a> <a href="/tags/堆/" style="font-size: 10px;">堆</a> <a href="/tags/外接显示器/" style="font-size: 10px;">外接显示器</a> <a href="/tags/天天爱消除/" style="font-size: 10px;">天天爱消除</a> <a href="/tags/宏/" style="font-size: 10px;">宏</a> <a href="/tags/正则表达式/" style="font-size: 10px;">正则表达式</a> <a href="/tags/游戏开发/" style="font-size: 12.5px;">游戏开发</a> <a href="/tags/线程同步/" style="font-size: 10px;">线程同步</a> <a href="/tags/结构体/" style="font-size: 10px;">结构体</a> <a href="/tags/驱动程序/" style="font-size: 12.5px;">驱动程序</a>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/swm8023">swm8023@github</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://blog.csdn.net/swm8023">swm8023@csdn</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.cnblogs.com/swm8023/">swm8023@cnblogs</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.cnblogs.com/CSGrandeur/">CSGrandeur</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://hujiaweibujidao.github.io/">Hujiawei Bujidao</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://blog.chinaunix.net/uid/28387257.html">Henrystark&#39;s CU blog</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://oxoo.org">OxOo社</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.cnblogs.com/staginner/">Staginner</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://zhangxc.com/">张学程</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://yangha.github.io/">小阳Space</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">Hello World</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Vimer Su</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                
+                    <img lazy-src="/avator.jpg" class="js-avatar">
+                
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Vimer Su</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">Dream it, Believe it, Do IT!</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">博客首页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a class="mail" target="_blank" href="mailto:swm8023@gmail.com" title="mail">mail</a>
+                    
+                        <a class="github" target="_blank" href="https://github.com/swm8023" title="github">github</a>
+                    
+                        <a class="rss" target="_blank" href="/atom.xml" title="rss">rss</a>
+                    
+                        <a class="douban" target="_blank" href="https://www.douban.com/people/swm8023/" title="douban">douban</a>
+                    
+                </div>
+            </nav>
+        </header>                
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-struct-alignment" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/blog/2014/01/11/struct-alignment/" class="article-date">
+      <time datetime="2014-01-11T06:37:05.000Z" itemprop="datePublished">2014-01-11</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      C的结构体字节对齐
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/C-C/">C/C++</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/结构体/">结构体</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h2 id="作用"><a href="#作用" class="headerlink" title="作用"></a><strong>作用</strong></h2><p>结构体对齐主要是为了提高处理器读取内存的效率。举个例子来说，假设一个处理器每次读写内存都是从4字节的倍数处读写，并且每次能读写4字节的数据，如果一个int型数据起始地址在4字节倍数处，那么一次CPU操作就可以取出这个int型数据，否则至少要进行两次读取操作，并需要进行位操作才能拼凑出这个int型数据。所以，对于包含多个成员变量的结构体来说，要在不同的变量之间填充空白字节以使每个字段的首字节保持对齐，也就是所谓的结构体对齐。可见，结构体对齐是一种以空间换时间的优化方式。<br>需要注意的是，在Linux与Windows之间，32位OS和64位OS之间，甚至GCC和VC++之间，结构体的对齐方式都是有区别的，所以在不同环境下<code>sizeof(struct)</code>操作得到的结果经常是不同的，本文的测试环境基于32位Ubuntu，GCC4.7。  </p>
+<a id="more"></a>
+<h2 id="规则"><a href="#规则" class="headerlink" title="规则"></a><strong>规则</strong></h2><h3 id="对齐值"><a href="#对齐值" class="headerlink" title="对齐值"></a><strong>对齐值</strong></h3><p>首先，为了方便阐述，将对齐值分为以下几种：<br>1）基本数据自身对齐值:基本数据类型的自身对齐值，一般由编译器及系统决定;<br>2）结构体自身对齐值:取决于结构体成员中自身对齐值的最大值;<br>3）指定对齐值:通过<code>#pragma pack(n)</code>宏指定的对齐值;<br>4）有效对齐值:取决于自身对齐值和指定对齐值中的较小值。    </p>
+<p>对于每种基本数据类型，都有一个自身对齐值，<strong>而结构体的自身对齐值将取成员中自身对齐值最大的</strong><br>32位OS下Linux/GCC与Windwos/VC++中基本数据类型自身对齐值(来自Wiki)    </p>
+<table border="2"><br>    <tr><br>        <td rowspan="2" width="300">类型</td><br>        <td colspan="2">Windows/VC++</td><br>        <td colspan="2">Linux/GCC</td><br>    </tr><br>    <tr><br>        <td width="150">长度</td><br>        <td width="150">对齐值</td><br>        <td width="150">长度</td><br>        <td width="150">对齐值</td><br>    </tr><br>    <tr><br>        <td>char</td><br>        <td>1</td><br>        <td>1</td><br>        <td>1</td><br>        <td>1</td><br>    </tr><br>    <tr><br>        <td>short</td><br>        <td>2</td><br>        <td>2</td><br>        <td>2</td><br>        <td>2</td><br>    </tr><br>    <tr><br>        <td>int,long,float,pointer</td><br>        <td>4</td><br>        <td>4</td><br>        <td>4</td><br>        <td>4</td><br>    </tr><br>    <tr><br>        <td>double</td><br>        <td>8</td><br>        <td>8</td><br>        <td>8</td><br>        <td>4</td><br>    </tr><br>    <tr><br>        <td>long double</td><br>        <td>8</td><br>        <td>8</td><br>        <td>12</td><br>        <td>4</td><br>    </tr><br>    <tr><br>        <td>long long</td><br>        <td>8</td><br>        <td>8</td><br>        <td>8</td><br>        <td>8</td><br>    </tr><br><br></table>  
+
+<p>以下几种基本数据类型在64位OS下自身对齐值有所不同  </p>
+<table border="2"><br>    <tr><br>        <td rowspan="2" width="300">类型</td><br>        <td colspan="2">Windows/VC++</td><br>        <td colspan="2">Linux/GCC</td><br>    </tr><br>    <tr><br>        <td width="150">长度</td><br>        <td width="150">对齐值</td><br>        <td width="150">长度</td><br>        <td width="150">对齐值</td><br>    </tr><br>    <tr><br>        <td>long</td><br>        <td>8</td><br>        <td>8</td><br>        <td>8</td><br>        <td>8</td><br>    </tr><br>    <tr><br>        <td>double</td><br>        <td>8</td><br>        <td>8</td><br>        <td>8</td><br>        <td>8</td><br>    </tr><br>    <tr><br>        <td>long double</td><br>        <td>8</td><br>        <td>8</td><br>        <td>16</td><br>        <td>16</td><br>    </tr><br>    <tr><br>        <td>pointer</td><br>        <td>8</td><br>        <td>8</td><br>        <td>8</td><br>        <td>8</td><br>    </tr><br></table>  
+
+<p>另外，有些编译器可以通过<code>#pragma pack(n)</code>宏来指定结构体的对齐方式，n的取值范围是{1,2,4,8,16}，(GCC中默认是4,VC++中默认是8)<strong>基本数据类型的有效对齐值将取n和自身对齐值中较小的，而结构体的有效对齐值将取决于n和结构体自身对齐值中较小的</strong>，也就是说如果前面算出来结构体的自身对齐值是4,那么指定n为8或者16都是没用的。</p>
+<h3 id="计算方法"><a href="#计算方法" class="headerlink" title="计算方法"></a><strong>计算方法</strong></h3><p>结构体大小的计算方法遵循以下两条规则:<br>1)假设结构体的起始位置为0，结束位置为n，n必须是结构体有效对齐值的倍数。<br>2)假设某成员的起始对齐值是m，m必须是该成员有效对齐值的倍数。  </p>
+<h2 id="样例"><a href="#样例" class="headerlink" title="样例"></a><strong>样例</strong></h2><h3 id="样例一"><a href="#样例一" class="headerlink" title="样例一"></a><strong>样例一</strong></h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> _C&#123;</span><br><span class="line">    <span class="keyword">int</span> a;</span><br><span class="line">    <span class="keyword">char</span> b;</span><br><span class="line">    <span class="keyword">int</span>* c;</span><br><span class="line">    <span class="keyword">short</span> d;</span><br><span class="line">&#125;C;</span><br></pre></td></tr></table></figure>
+<p>首先，int,char,pointer,short的自身对齐值分别为4,1,4,2,所以结构体自身对齐值为4。<br>a起始位置0,结束位置4,0%4=0,占4个字节。<br>b起始位置4,结束位置5,4%1=0,占1个字节。<br>c起始位置8,结束位置12,8%4=0,占4个字节，需要在前面填充3个字节。<br>d起始位置12,结束位置14,12%4=0,占2个字节。<br>最后结构体结束位置16,16%4=0,需要在d后填充2个字节，结构体共占16个字节。  </p>
+<h3 id="样例二"><a href="#样例二" class="headerlink" title="样例二"></a><strong>样例二</strong></h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">pragma</span> pack(2)</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> _C&#123;</span><br><span class="line">	<span class="keyword">int</span> a;</span><br><span class="line">	<span class="keyword">char</span> b;</span><br><span class="line">	<span class="keyword">int</span> *c</span><br><span class="line">	<span class="keyword">short</span> d;</span><br><span class="line">&#125;C;</span><br></pre></td></tr></table></figure>
+<p>该结构体与样例一中相同，不同的是指定了对齐值为2，那么int,char,pointer,short的有效对齐值变为2,1,2,2,结构体有效对齐值为2。<br>a起始位置0,结束位置4,0%2=0,占4个字节。<br>b起始位置4,结束位置5,4%1=0,占1个字节。<br>c起始位置6,结束位置10,6%2=0,占4个字节，需要在前面填充1个字节。<br>d起始位置10,结束位置12,12%4=2,占2个字节。<br>最后结构体结束位置12,12%2=0,结构体共占12个字节。  </p>
+<h3 id="样例三"><a href="#样例三" class="headerlink" title="样例三"></a><strong>样例三</strong></h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> _C&#123;</span><br><span class="line">	<span class="keyword">int</span> a;</span><br><span class="line">	<span class="keyword">int</span> *b;</span><br><span class="line">	<span class="keyword">short</span> c;</span><br><span class="line">	<span class="keyword">char</span> d;</span><br><span class="line">&#125;C;</span><br></pre></td></tr></table></figure>
+<p>该结构体与样例一中相同，只是更改了成员的排列方式。<br>a起始位置0,结束位置4,0%4=0,占4个字节。<br>b起始位置4,结束位置8,4%4=0,占4个字节。<br>c起始位置8,结束位置10,8%2=0,占2个字节。<br>d起始位置10,结束位置11,10%1=0,占1个字节。<br>最后结构体结束位置12,12%4=0,需要在d后填充1个字节，结构体共占12个字节。<br>可以看到，通过更改结构体成员的排列方式，可以节省内存空间，所以往往要精心设计结构体排列来达到节省内存的目的。  </p>
+<h2 id="引用"><a href="#引用" class="headerlink" title="引用"></a><strong>引用</strong></h2><p><a href="">http://blog.csdn.net/han_xiaoyang/article/details/11596001</a><br><a href="">http://en.wikipedia.org/wiki/Data_structure_alignment</a></p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/blog/2014/01/11/struct-alignment/">C的结构体字节对齐</a></p>
+        <p><span>文章作者:</span><a href="/" title="访问 Vimer Su 的个人博客">Vimer Su</a></p>
+        <p><span>发布时间:</span>2014年01月11日 - 14时37分</p>
+        <p><span>最后更新:</span>2016年06月04日 - 22时57分</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/blog/2014/01/11/struct-alignment/" title="C的结构体字节对齐">http://vimersu.win/blog/2014/01/11/struct-alignment/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://vimersu.win/blog/2014/01/11/struct-alignment/　　作者: Vimer Su" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script src="/js/clipboard.min.js"></script>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" title="中国大陆 (CC BY-NC-SA 3.0 CN)" target = "_blank">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+<nav id="article-nav">
+  
+    <a href="/blog/2014/01/13/gnu-make-study01/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          GNU Make学习总结（一）
+        
+      </div>
+    </a>
+  
+  
+    <a href="/blog/2013/12/02/linuxdrivecode-cdev/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Linux设备驱动学习——简单字符设备驱动的实现</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#作用"><span class="toc-number">1.</span> <span class="toc-text">作用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#规则"><span class="toc-number">2.</span> <span class="toc-text">规则</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#对齐值"><span class="toc-number">2.1.</span> <span class="toc-text">对齐值</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#计算方法"><span class="toc-number">2.2.</span> <span class="toc-text">计算方法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#样例"><span class="toc-number">3.</span> <span class="toc-text">样例</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#样例一"><span class="toc-number">3.1.</span> <span class="toc-text">样例一</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#样例二"><span class="toc-number">3.2.</span> <span class="toc-text">样例二</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#样例三"><span class="toc-number">3.3.</span> <span class="toc-text">样例三</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#引用"><span class="toc-number">4.</span> <span class="toc-text">引用</span></a></li></ol>
+</div>
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+        }
+    })
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+    }
+</script>
+
+
+
+
+
+
+
+    
+      <div class="duoshuo" id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="blog/2014/01/11/struct-alignment/" data-title="C的结构体字节对齐" data-url="http://vimersu.win/blog/2014/01/11/struct-alignment/"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:"c4fun"};
+    (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = '/js/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+    </script>
+    <!-- 多说公共JS代码 end -->
+</div>
+
+    
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/blog/2014/01/13/gnu-make-study01/" title="上一篇: GNU Make学习总结（一）">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+        
+            <a href="/blog/2013/12/02/linuxdrivecode-cdev/" title="下一篇: Linux设备驱动学习——简单字符设备驱动的实现">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/blog/2016/07/04/dx-lesson02-3dknowledge/">DirectX 3D学习笔记02——3D数学基础</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/07/03/dx-lesson01-window/">DirectX 3D学习笔记01——环境搭建与窗口创建</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2015/10/03/osx-xcode-opengl/">在OSX中进行OpenGL开发</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2015/06/23/xcode64-alactraz-bug/">Xcode6.4中Alcatraz无法启动</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2015/06/23/vim-base-operation/">Vim基础操作汇总</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2015/06/13/apache-reverse-proxy/">通过Apache反向代理访问本地Gogs服务</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2015/06/09/mac-another-screen/">Macbook修改外接显示器分辨率</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/12/12/how-to-use-define/">宏的拓展用法总结</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/12/06/cmockery/">C单元测试框架之Cmockery</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/10/10/maven-study/">Linux下Maven的安装与使用</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/05/06/python-threading/">python中的多线程</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/03/23/python-regular/">python正则表达式</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/03/20/leetcode-solution-02/">LeetCode题解整理版(二)</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/03/18/leetcode-solution-01/">LeetCode题解整理版(一) </a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/03/12/heap-template/">一个用宏实现的堆模板</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/03/06/libev-study/">Libev事件库源码阅读笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/03/04/linux-iconv/">在Linux下使用iconv转换字符串编码</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/03/03/use-hexo-blog/">使用Hexo搭建个人博客</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/01/30/common-makefile/">一个通用的C/C++ Makefile</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/01/23/gnu-make-study02/">GNU Make学习总结（二）</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/01/13/gnu-make-study01/">GNU Make学习总结（一）</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/01/11/struct-alignment/">C的结构体字节对齐</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/12/02/linuxdrivecode-cdev/">Linux设备驱动学习——简单字符设备驱动的实现</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/30/linux-sublimetext-chinese/">解决Linux下Sublime text 3的中文输入问题</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/25/start-leetcode-oj/">开始刷LeetCode OJ</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/24/octopress-generate-post-content/">让Octopress为文章自动生成目录</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/23/wlanconfig-tools-source/">wlanconfig工具分析</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/22/auto-aixiaochu-app/">Qt+BlueStack实现自动天天爱消除</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/21/binary-tree-nonrecursive-traversal/">另一种二叉树非递归遍历的实现</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/19/linux-io-reuse-interface/">Linux中的IO复用接口简介</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/19/linux-ap-by-madwifi/">Linux下使用无线网卡搭建AP</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/19/hello-octopress/">开启OctoPress之旅</a></li></ul>
+    <script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+    <script>
+        $(".post-list").addClass("toc-article");
+        $(".post-list-item a").attr("target","_blank");
+        $("#post-nav-button > a:nth-child(2)").click(function() {
+            $(".fa-bars, .fa-times").toggle();
+            $(".post-list").toggle(300);
+            if ($(".toc").length > 0) {
+                $("#toc, #tocButton").toggle(200, function() {
+                    if ($(".switch-area").is(":visible")) {
+                        $("#tocButton").attr("value", valueHide);
+                        }
+                    })
+            }
+            else {
+            }
+        })
+    </script>
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2016 Vimer Su
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/luuman/hexo-theme-spfk" target="_blank">spfk</a> by luuman
+            </div>
+        </div>
+        
+    </div>
+</footer>
+
+    </div>
+    <script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var backgroundnum = 24;
+            var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+            $("#mobile-nav").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+            $(".left-col").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    $(document).ready(function() {
+        if ($("#comments").length < 1) {
+            $("#scroll > a:nth-child(2)").hide();
+        };
+    })
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+  <script language="javascript">
+    $(function() {
+        $("a[title]").each(function() {
+            var a = $(this);
+            var title = a.attr('title');
+            if (title == undefined || title == "") return;
+            a.data('title', title).removeAttr('title').hover(
+
+            function() {
+                var offset = a.offset();
+                $("<div id=\"anchortitlecontainer\"></div>").appendTo($("body")).html(title).css({
+                    top: offset.top - a.outerHeight() - 15,
+                    left: offset.left + a.outerWidth()/2 + 1
+                }).fadeIn(function() {
+                    var pop = $(this);
+                    setTimeout(function() {
+                        pop.remove();
+                    }, pop.text().length * 800);
+                });
+            }, function() {
+                $("#anchortitlecontainer").remove();
+            });
+        });
+    });
+</script>
+
+
+  </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>

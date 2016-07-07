@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>GNU Make学习总结（一） | Coding 4 Fun</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="学习GNU Make的笔记，详细介绍了GNU Make中的规则。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GNU Make学习总结（一）">
+<meta property="og:url" content="http://vimersu.win/blog/2014/01/13/gnu-make-study01/index.html">
+<meta property="og:site_name" content="Coding 4 Fun">
+<meta property="og:description" content="学习GNU Make的笔记，详细介绍了GNU Make中的规则。">
+<meta property="og:updated_time" content="2016-06-04T14:57:29.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="GNU Make学习总结（一）">
+<meta name="twitter:description" content="学习GNU Make的笔记，详细介绍了GNU Make中的规则。">
+  
+    <link rel="alternative" href="/atom.xml" title="Coding 4 Fun" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  
+  <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+      <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <!-- 加载特效 -->
+    <script src="/js/pace.js"></script>
+    <link href="/css/pace/pace-theme-flash.css" rel="stylesheet" />
+  <script>
+      var yiliaConfig = {
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false
+      }
+  </script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            
+            <img lazy-src="/avator.jpg" class="js-avatar">
+            
+        </a>
+
+        <hgroup>
+          <h1 class="header-author"><a href="/">Vimer Su</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">Dream it, Believe it, Do IT!</p>
+        
+        
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">博客首页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fl mail" target="_blank" href="mailto:swm8023@gmail.com" title="mail">mail</a>
+                            
+                                <a class="fl github" target="_blank" href="https://github.com/swm8023" title="github">github</a>
+                            
+                                <a class="fl rss" target="_blank" href="/atom.xml" title="rss">rss</a>
+                            
+                                <a class="fl douban" target="_blank" href="https://www.douban.com/people/swm8023/" title="douban">douban</a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/AP/" style="font-size: 10px;">AP</a> <a href="/tags/Alcatraz/" style="font-size: 10px;">Alcatraz</a> <a href="/tags/Algorithm/" style="font-size: 17.5px;">Algorithm</a> <a href="/tags/Apache/" style="font-size: 10px;">Apache</a> <a href="/tags/C/" style="font-size: 15px;">C</a> <a href="/tags/Cmockery/" style="font-size: 10px;">Cmockery</a> <a href="/tags/DirectX-3D/" style="font-size: 12.5px;">DirectX 3D</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/I-O复用/" style="font-size: 10px;">I/O复用</a> <a href="/tags/Leetcode-OJ/" style="font-size: 15px;">Leetcode OJ</a> <a href="/tags/Libev/" style="font-size: 10px;">Libev</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/MAC/" style="font-size: 10px;">MAC</a> <a href="/tags/Makefile/" style="font-size: 15px;">Makefile</a> <a href="/tags/Maven/" style="font-size: 10px;">Maven</a> <a href="/tags/OSX/" style="font-size: 10px;">OSX</a> <a href="/tags/Octopress/" style="font-size: 12.5px;">Octopress</a> <a href="/tags/OpenGL/" style="font-size: 10px;">OpenGL</a> <a href="/tags/Proxy/" style="font-size: 10px;">Proxy</a> <a href="/tags/Python/" style="font-size: 15px;">Python</a> <a href="/tags/Sublime-text3/" style="font-size: 10px;">Sublime text3</a> <a href="/tags/Tools/" style="font-size: 10px;">Tools</a> <a href="/tags/Vim/" style="font-size: 10px;">Vim</a> <a href="/tags/Xcode/" style="font-size: 10px;">Xcode</a> <a href="/tags/epoll/" style="font-size: 10px;">epoll</a> <a href="/tags/iconv/" style="font-size: 10px;">iconv</a> <a href="/tags/madwifi/" style="font-size: 12.5px;">madwifi</a> <a href="/tags/wlanconfig/" style="font-size: 10px;">wlanconfig</a> <a href="/tags/二叉树/" style="font-size: 10px;">二叉树</a> <a href="/tags/单元测试/" style="font-size: 10px;">单元测试</a> <a href="/tags/堆/" style="font-size: 10px;">堆</a> <a href="/tags/外接显示器/" style="font-size: 10px;">外接显示器</a> <a href="/tags/天天爱消除/" style="font-size: 10px;">天天爱消除</a> <a href="/tags/宏/" style="font-size: 10px;">宏</a> <a href="/tags/正则表达式/" style="font-size: 10px;">正则表达式</a> <a href="/tags/游戏开发/" style="font-size: 12.5px;">游戏开发</a> <a href="/tags/线程同步/" style="font-size: 10px;">线程同步</a> <a href="/tags/结构体/" style="font-size: 10px;">结构体</a> <a href="/tags/驱动程序/" style="font-size: 12.5px;">驱动程序</a>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/swm8023">swm8023@github</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://blog.csdn.net/swm8023">swm8023@csdn</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.cnblogs.com/swm8023/">swm8023@cnblogs</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.cnblogs.com/CSGrandeur/">CSGrandeur</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://hujiaweibujidao.github.io/">Hujiawei Bujidao</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://blog.chinaunix.net/uid/28387257.html">Henrystark&#39;s CU blog</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://oxoo.org">OxOo社</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.cnblogs.com/staginner/">Staginner</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://zhangxc.com/">张学程</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://yangha.github.io/">小阳Space</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">Hello World</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Vimer Su</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                
+                    <img lazy-src="/avator.jpg" class="js-avatar">
+                
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Vimer Su</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">Dream it, Believe it, Do IT!</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">博客首页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a class="mail" target="_blank" href="mailto:swm8023@gmail.com" title="mail">mail</a>
+                    
+                        <a class="github" target="_blank" href="https://github.com/swm8023" title="github">github</a>
+                    
+                        <a class="rss" target="_blank" href="/atom.xml" title="rss">rss</a>
+                    
+                        <a class="douban" target="_blank" href="https://www.douban.com/people/swm8023/" title="douban">douban</a>
+                    
+                </div>
+            </nav>
+        </header>                
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-gnu-make-study01" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/blog/2014/01/13/gnu-make-study01/" class="article-date">
+      <time datetime="2014-01-13T08:15:05.000Z" itemprop="datePublished">2014-01-13</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      GNU Make学习总结（一）
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/Linux/">Linux</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Makefile/">Makefile</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h2 id="Intro"><a href="#Intro" class="headerlink" title="Intro"></a><strong>Intro</strong></h2><p>写Linux代码也有段时间了，一直都是采用make的方式来编译工程，但对Makefile掌握的并不是很全面。前段时间看到了《GNU Make项目管理》这本书，决定系统的学习一下Makefile语法，这几篇博客是对学习内容的总结。</p>
+<a id="more"></a>
+<h2 id="入门"><a href="#入门" class="headerlink" title="入门"></a><strong>入门</strong></h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a><strong>简介</strong></h3><p>Make是一种将源代码转换成可执行文件的自动化工具，通过Make语言，描述了源文件、中间文件、可执行文件之间的关系。与此同时，Make工具可以对编译过程进行优化，在重新编译时会根据时间戳来决定哪些文件需要重新生成，在编译大型工程时，这会省下不少时间（每次第一次编内核都是输完Make后先睡一觉再说…）。Make有多种变种，其中GNU Make使用相对广泛，在大多Linux/UNIX系统都对其提供支持。  </p>
+<p>Make一般将细节放在Makefile中，make命令会自动在当前文件夹下找到Makefile并执行，而Makefile的核心内容就是规则，它是Makefile的主要组成。每项规则可以由三部分组成：目标（target）,必要条件（prerequisite）,命令(command)。书写格式如下所示，目标和条件之间由冒号隔开，命令写在下一行，并以<code>TAB</code>开头，每条规则中可以有多个目标，多个条件以及多条命令。<br><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">target1 target2: prereq1 prereq2</span><br><span class="line">	command1</span><br><span class="line">	command2</span><br></pre></td></tr></table></figure></p>
+<p>对于规则的理解，就是如果目标文件不存在或者必要条件中的某个文件时间戳比目标文件的时间戳要新，那么就执行下面的若干条命令，最后生成新的目标文件。  </p>
+<h3 id="样例"><a href="#样例" class="headerlink" title="样例"></a><strong>样例</strong></h3><p>下面通过一个简单的样例来说明如何书写Makefile。这是一个简单的评估打字速度和打字正确率的程序（其实就是给出一段英文单词看多久敲完~）。目录结构如下，其中main.c是主程序入口，timeutil.c中封装了关于时间的操作,wdshow.c中是主要的代码。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">|-- InputSpeed</span><br><span class="line">	|-- main.c</span><br><span class="line">	|-- timeutil.c</span><br><span class="line">	|-- timeutil.h</span><br><span class="line">	|-- wdshow.c</span><br><span class="line">	|-- wdshow.h</span><br></pre></td></tr></table></figure></p>
+<p>代码都很短，为了方便，就放在一起了，前面的注释表明属于哪一个文件<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//------------timeutil.h------------</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> _TIMEUTIL_H_</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> _TIMEUTIL_H_</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">long</span> <span class="keyword">long</span> LL;</span><br><span class="line"><span class="function">LL <span class="title">getTimeMS</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">//------------timeutil.c------------</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="string">"timeutil.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/time.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function">LL <span class="title">getTimeMs</span><span class="params">()</span></span>&#123;	<span class="comment">//返回当前时间对应的毫秒数</span></span><br><span class="line">	<span class="keyword">struct</span> timeval tm;</span><br><span class="line">	gettimeofday(&amp;tm, <span class="literal">NULL</span>);</span><br><span class="line">	<span class="keyword">return</span> (LL)tm.tv_sec*<span class="number">1000</span>+tm.tv_usec/<span class="number">1000</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//------------wdshow.h------------</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> _WDSHOW_H_</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> _WDSHOW_H_</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">extern</span> <span class="keyword">int</span> runTime;</span><br><span class="line"><span class="keyword">extern</span> <span class="keyword">int</span> chError;</span><br><span class="line"><span class="keyword">extern</span> <span class="keyword">int</span> chTotal;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">wdShow</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">outResult</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">//------------wdshow.c------------</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="string">"wdshow.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="string">"timeutil.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> chError = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">int</span> chTotal = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">int</span> runTime = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">wdShow</span><span class="params">(<span class="keyword">int</span> num)</span></span>&#123;	<span class="comment">//生成随机串显示,计算完成输入的时间,num表示字符的数目</span></span><br><span class="line">	<span class="keyword">char</span> *wdShow = (<span class="keyword">char</span>*)<span class="built_in">calloc</span>(<span class="number">1</span>, num + <span class="number">1</span>);</span><br><span class="line">	<span class="keyword">char</span> *wdInput = (<span class="keyword">char</span>*)<span class="built_in">calloc</span>(<span class="number">1</span>, num + <span class="number">1</span>);</span><br><span class="line">	<span class="keyword">int</span> i;</span><br><span class="line">	chTotal = num;</span><br><span class="line">	<span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; num; i++) </span><br><span class="line">		wdShow[i] = rand()%<span class="number">26</span>+<span class="string">'a'</span>;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"%s\n"</span>, wdShow);</span><br><span class="line">	runTime = getTimeMs();</span><br><span class="line">	fgets(wdInput, num + <span class="number">1</span>, <span class="built_in">stdin</span>);</span><br><span class="line">	<span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; num; i++)</span><br><span class="line">		<span class="keyword">if</span> (wdInput[i] != wdShow[i]) chError++;</span><br><span class="line">	runTime = getTimeMs() - runTime;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">outResult</span><span class="params">()</span></span>&#123;	<span class="comment">//输出结果</span></span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"\nword Total: %d\nword Error: %d\ntime Total: %dms\n"</span>,</span><br><span class="line">		 chTotal, chError, runTime);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//------------main.c------------</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="string">"wdshow.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span> </span>&#123;</span><br><span class="line">	sleep(<span class="number">1</span>);</span><br><span class="line">	wdShow(<span class="number">10</span>);</span><br><span class="line">	outResult();</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>如果手动编译这份工程，首先要将三个.c源文件编译成.o目标文件，再将.o文件链接起来变为可执行文件，一共需要四条gcc命令（当然，一条命令是可以搞定的，这只是编译器默默做了其它的过程而已）。似乎我们可以写一个包含这几条gcc命令的脚本，然后通过执行脚本来完成自动编译，其实不然，在我们修改了某个.c文件后执行脚本重新编译时，脚本里的四条命令会依次执行，而实际上我们运行其中两条命令就可以了（重新生成该.c对应的.o并重新链接程序），这是因为脚本并不能判断哪些步骤不需要再做。这时，Makefile就登场了，它可以根据规则知道哪些命令需要执行，哪些命令不需要执行。<br>我们根据文件之间的依赖关系可以写出四条规则，每条规则对应一条命令，将这四条规则放在一起，该工程的对应的Makefile就完成了。<br><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">main: main.o timeutil.o wdshow.o</span><br><span class="line">	gcc timeutil.o wdshow.o main.o -o main </span><br><span class="line"></span><br><span class="line">main.o: main.c wdshow.h</span><br><span class="line">	gcc -c main.c</span><br><span class="line"></span><br><span class="line">wdshow.o: wdshow.c wdshow.h timeutil.h</span><br><span class="line">	gcc -c wdshow.c</span><br><span class="line"></span><br><span class="line">timeutil.o: timeutil.c timeutil.h</span><br><span class="line">	gcc -c timeutil.c</span><br></pre></td></tr></table></figure></p>
+<p>Make会将第一条规则中的目标作为最终目标，也就是我们的可执行文件main，在生成main的时候，需要三个对象文件作为必要条件文件，如果对象文件不存在或不是最新，Make会继续去找是否有规则以该文件为目标文件，找到的话就执行对应的命令，否则就会报错。这个过程大致如下，是一个递归的算法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">make(rule) &#123;</span><br><span class="line">	for target in rule</span><br><span class="line">		for each prerequisite file in rule</span><br><span class="line">			if file exist and is up-to-date</span><br><span class="line">				return &quot;ok&quot;;</span><br><span class="line">			else if there is a rule(called rule-file) for file</span><br><span class="line">				make(rule-file);</span><br><span class="line">			else</span><br><span class="line">				return &quot;error&quot;</span><br><span class="line">	for each command in rule</span><br><span class="line">		run command</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>执行make命令，输出如下。可以看到，第一条命令是最后执行的，这不难理解，因为Make查找的过程是一个递归过程，最先入栈的程序将在最后被执行。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">gcc -c main.c</span><br><span class="line">gcc -c timeutil.c</span><br><span class="line">gcc -c wdshow.c</span><br><span class="line">gcc main.o timeutil.o wdshow.o -o main</span><br></pre></td></tr></table></figure></p>
+<p>接下来执行./main就可以运行程序了，以下是运行结果， 手速慢勿喷，最后一个字母是为了显示错误结果故意打错的。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">nwlrbbmqbh</span><br><span class="line">nwlrbbmqba</span><br><span class="line"></span><br><span class="line">word Total: 10</span><br><span class="line">word Error: 1</span><br><span class="line">time Total: 3787ms</span><br></pre></td></tr></table></figure></p>
+<p>通过以上这个样例我们看到了怎样通过Makefile来编译一个简单的小项目。但是，这个Makefile是有很多缺点的，当在一个有成百上千文件的大工程中编写Makefile时，如果要手工分析依赖关系并一条条写下来，工作量可想而知，而且当工程结构发生变化时，修改起来也是十分麻烦。一个书写良好的Makefile应该是有较好的可扩展性和兼容性的，工程中有所变化往往不需要修改Makefile，甚至对于一些结构固定的小项目，一份Makefile可以做到通用。  </p>
+<h2 id="规则"><a href="#规则" class="headerlink" title="规则"></a><strong>规则</strong></h2><p>这一章主要对生成规则进行了详细介绍，主要分为具体规则、模式规则、静态模式规则、隐含规则、后缀规则等等。在了解这些规则之前，首先了解一些其它的前提知识。  </p>
+<h3 id="变量及自动变量"><a href="#变量及自动变量" class="headerlink" title="变量及自动变量"></a><strong>变量及自动变量</strong></h3><p>在Makefile中，使用$后跟一个字符或者一个加圆括号的单词表示变量，比如$x，$(xx)。关于变量的使用会在下一章详细介绍，这里主要说一下自动变量。自动变量一般用在命令中，会根据目标和条件自动替换成对应的内容。以下是几个常用的自动变量：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$@	目标文件名</span><br><span class="line">$%	档案文件成员，是指以a.o(b.o)这种形式作为目标时，括号中的内容</span><br><span class="line">$&lt;	第一个必要条件文件名</span><br><span class="line">$?	时间戳在目标文件之后的所有必要条件文件名,空格隔开</span><br><span class="line">$^	所有必要条件的文件名,空格隔开,这份列表删除了重复的文件名</span><br><span class="line">$+	和$^一样，只是未删除重复的文件名</span><br><span class="line">$*	目标的主文件名(即不包括后缀)</span><br></pre></td></tr></table></figure></p>
+<p>以上变量都有两个变体，加D表示文件的目录部分，加F表示文件的文件名部分，注意要加括号，如$(@D),$($F)等。<br>我们可以使用自动变量来修改之前的Makefile，简化命令部分的书写<br><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">main: main.o timeutil.o wdshow.o</span><br><span class="line">	gcc $^ -o $@ </span><br><span class="line"></span><br><span class="line">main.o: main.c wdshow.h</span><br><span class="line">	gcc -c $&lt;</span><br><span class="line"></span><br><span class="line">wdshow.o: wdshow.c wdshow.h timeutil.h</span><br><span class="line">	gcc -c $&lt;</span><br><span class="line"></span><br><span class="line">timeutil.o: timeutil.c timeutil.h</span><br><span class="line">	gcc -c $&lt;</span><br></pre></td></tr></table></figure></p>
+<h3 id="假想目标"><a href="#假想目标" class="headerlink" title="假想目标"></a><strong>假想目标</strong></h3><p>所谓假想目标，就是指不指向实际文件的目标。这类目标因为其不指向任何文件，所以总是要被更新的，也就是说他们对应的命令总会被执行，依赖的必要文件也总要保持最新，我们可以利用这个特性扩展Makefile的功能。比如使用一个目标为clean的规则来删除生成的目标文件，用一个目标为all的规则来指定多个需要生成的可执行文件。<br>但是需要注意的是，假如我们的工程中恰好有一个叫clean文件，那么<code>make clean</code>将总会返回文件已是最新的，因为make并不知道clean是一个假想目标还是一个实际文件，如果有clean文件存在make会将clean作为一个目标文件，而clean本身也没有任何条件，所以总是不需要进行更新。为了告诉编译器clean是一个假想目标，我们需要将clean指定成<code>.PHONY</code>的一个必要条件，这样clean就总会被更新了，这里<code>.PHONY</code>是一个特殊目标，它告诉Make它的必要条件都是假想目标。于是我们可以在原来的Makefile中加入以下几行：</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"><span class="meta-keyword">.PHONY</span>: clean all</span></span><br><span class="line">all: main</span><br><span class="line"><span class="section">clean:</span></span><br><span class="line">	rm main *.o</span><br></pre></td></tr></table></figure>
+<p>all和clean是通用的假想目标，all用于指定所有需要生成的可执行文件，clean用于指定清除操作，另外还有以下几个比较常用的通用假想目标<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">install		经过make all步骤后，在系统中安装生成的二进制程序</span><br><span class="line">distclean	比clean更彻底的删除，包括由configure生成的Makefile文件</span><br><span class="line">TAGS		提供可供编辑的标记表</span><br><span class="line">info 		从Textinfo源码创建GNU info源码</span><br><span class="line">check		执行相关测试</span><br></pre></td></tr></table></figure></p>
+<p>和<code>.PHONY</code>类似的常用特殊目标还有以下几个<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">.SUFFIXES		指定Makefile已知后缀列表，用于后缀规则</span><br><span class="line">.INTERMEDIATE	必要条件视为中间文件，make过程如果生成了指定的中间文件，完成后会被删除</span><br><span class="line">.SECONDARY		同样指定中间文件，但make完成后不会被删除</span><br><span class="line">.PRECIOUS		make运行中断时不删除指定的目标文件</span><br><span class="line">.DELETE_ON_ERROR	make运行中断时删除指定的目标文件</span><br></pre></td></tr></table></figure></p>
+<h3 id="VPATH和vpath"><a href="#VPATH和vpath" class="headerlink" title="VPATH和vpath"></a><strong>VPATH和vpath</strong></h3><p>在工程中，很少会把所有的文件都放在同一个文件夹下，常见的就是将头文件放在include下，将.c文件放在src下，我们可以将前一章样例中的代码更改为以下结构<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">|-- InputSpeed</span><br><span class="line">	\-- include</span><br><span class="line">		|-- wdshow.h</span><br><span class="line">		|-- timeutil.h</span><br><span class="line">	\-- src</span><br><span class="line">		|-- timeutil.c</span><br><span class="line">		|-- wdshow.c</span><br><span class="line">		|-- main.c</span><br><span class="line">	Makefile</span><br></pre></td></tr></table></figure></p>
+<p>这时候再在InputSpeed目录下执行make就会报找不到文件的错误，解决的方法之一是通过<code>VPATH = src include</code>将源文件加入到Make的搜索路径中，但这样并不是最好的方法，因为不同的文件夹下可能有同名的文件，VPATH只会返回第一个找到的文件，并不一定是我们想要的文件，我们可以使用<code>vpath pattern directory</code>的形式来指定在哪个目录下搜索哪个文件，具体用法可以看下面给出的Makefile，其中<code>%</code>类似于通配符，告诉Make在src下找.c文件，在include下找.h文件。现在make已经可以找到所有的文件了，但还不行，因为gcc命令找不到函数的原型，我们通过-I命令把头文件的位置告诉GCC。修改后的Makefile文件如下所示<br><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#VAPTH src include</span></span><br><span class="line">vpath %.c src</span><br><span class="line">vpath %.h include</span><br><span class="line">CFLAGS = -I include</span><br><span class="line"></span><br><span class="line">main: main.o timeutil.o wdshow.o</span><br><span class="line">	gcc $^ -o $@ </span><br><span class="line"></span><br><span class="line">main.o: main.c wdshow.h</span><br><span class="line">	gcc <span class="variable">$(CFLAGS)</span> -c $&lt; -o $@</span><br><span class="line"></span><br><span class="line">wdshow.o: wdshow.c wdshow.h timeutil.h</span><br><span class="line">	gcc <span class="variable">$(CFLAGS)</span> -c $&lt; -o $@</span><br><span class="line"></span><br><span class="line">timeutil.o: timeutil.c timeutil.h</span><br><span class="line">	gcc <span class="variable">$(CFLAGS)</span> -c $&lt; -o $@</span><br></pre></td></tr></table></figure></p>
+<p>再次执行make，已经可以成功编译了。观察打印信息，我们发现自动变量也已经自动加上了文件路径。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">gcc -I include -c src/main.c -o main.o</span><br><span class="line">gcc -I include -c src/timeutil.c -o timeutil.o</span><br><span class="line">gcc -I include -c src/wdshow.c -o wdshow.o</span><br><span class="line">gcc main.o timeutil.o wdshow.o -o main</span><br></pre></td></tr></table></figure></p>
+<p>接下来介绍各种规则  </p>
+<h3 id="具体规则"><a href="#具体规则" class="headerlink" title="具体规则"></a><strong>具体规则</strong></h3><p>在上一章的样例中写的几条规则都属于具体规则，所谓具体规则，就是目标、条件、命令都明确给出的规则。</p>
+<h3 id="模式规则"><a href="#模式规则" class="headerlink" title="模式规则"></a><strong>模式规则</strong></h3><p>在gcc编译器中一般使用后缀表示文件类型，gcc会将x.c文件认为是C源文件，并翻译成对应的x.o，这种文件名的对应关系是模式规则的基础，使得Makefile对于目标x.o会自动去寻找对应的x.c文件，因此对于很多规则，我们都可以简化。<br>在一个规则中，如果主文件名中包含了%就表示这是一个模式规则。所谓模式规则，是指对符合这个模式的目标都采用这个规则，注意%和通配符的不同，在Makefile中是可以使用通配符的，*.c表示的是所有以c结尾的文件的集合，而%.c表示所有以c结尾的文件都匹配这条规则，一定要注意区分。<br>所有的内置规则都是模式规则，使用make -p可以看到这些内置规则，用其中生成%.o的这一条作为例子<br><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">%.o: %.c</span><br><span class="line"><span class="comment">#  commands to execute (built-in):</span></span><br><span class="line">	<span class="variable">$(COMPILE.c)</span> <span class="variable">$(OUTPUT_OPTION)</span> $&lt;</span><br></pre></td></tr></table></figure></p>
+<p>其中<code>COMPILE.c = $(CC) $(CFLAGS) $(CPPFLAGS) $(TARGET_ARCH) -c</code>,<code>OUTPUT_OPTION = -o $@</code>，这条语句中用变量来定义了一些操作，这些变量都有默认值，我们也可以自己修改变量来更改执行的语句，比如CC=gcc,CFLAGS=-I include，那这条命令就是<code>gcc -I include -c -o $@ $&lt;</code>，对于大多数.o文件，确实只要执行这一条命令就足够了。<br>当然，我们也可以编写自己的模式规则，格式与上面的内置规则完全一样。  </p>
+<h3 id="静态模式规则"><a href="#静态模式规则" class="headerlink" title="静态模式规则"></a><strong>静态模式规则</strong></h3><p>与模式规则基本一样，只是规定了模式的范围，格式如下，模式目标文件必须在指定的变量中<br><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$(OBJECTS): %.o: %c</span><br><span class="line">	.......</span><br></pre></td></tr></table></figure></p>
+<h3 id="后缀规则"><a href="#后缀规则" class="headerlink" title="后缀规则"></a><strong>后缀规则</strong></h3><p>这是一个已经过时的规则，在一些老的Makefile中可能会看到，目标名使用一个或者两个后缀，比如<code>.c.o</code>，相当于模式规则中的<code>%.o: %.c</code>，或者<code>.p</code>,相当于模式规则中的<code>%: %.p</code>。</p>
+<h3 id="隐含规则"><a href="#隐含规则" class="headerlink" title="隐含规则"></a><strong>隐含规则</strong></h3><p>就是make自带的内置规则，不是模式规则就是后缀规则。在我们没有为规则编写命令时，make会自动去内置规则中找是否有对应的规则，上面模式规则中举的例子就是一个隐含规则，利用该隐含规则，我们可以进一步简化我们的Makefile，<br><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">vpath %.c src</span><br><span class="line">vpath %.h include</span><br><span class="line">CFLAGS = -I include</span><br><span class="line"></span><br><span class="line">main: main.o timeutil.o wdshow.o</span><br><span class="line">main.o: wdshow.h</span><br><span class="line">wdshow.o: wdshow.h timeutil.h</span><br><span class="line">timeutil.o: timeutil.h</span><br></pre></td></tr></table></figure></p>
+<p>隐含规则的出现，使我们的Makefile一句命令都没有用就完成了编译，也简洁了很多，实在是十分强大。</p>
+<h3 id="自动生成依赖"><a href="#自动生成依赖" class="headerlink" title="自动生成依赖"></a><strong>自动生成依赖</strong></h3><p>确实，隐含规则已经十分强大了，但还不够，因为我们还是要自己去填写头文件的依赖关系，对于小项目工作量不大，但对于大型项目，头文件包含头文件形成复杂的树形结构，人工添加依赖实在是十分吃力的事情。gcc中有一个神奇的选项-MM，我们来看看<code>gcc -I include -MM main.c timeutil.c wdshow.c</code>会输出什么<br><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">main.o: src/main.c include/wdshow.h</span><br><span class="line">timeutil.o: src/timeutil.c include/timeutil.h</span><br><span class="line">wdshow.o: src/wdshow.c include/wdshow.h include/timeutil.h</span><br></pre></td></tr></table></figure></p>
+<p>没错，它帮我们生成了依赖关系,所以只要将依赖关系导入到Makefile就真的解放了！那怎样导入呢？下面先给出一个比较容易想到的方法，Makefile内容如下。先执行<code>make depend</code>将依赖关系写入到depend文件中，再运行make命令，这时depend文件会被include到Makefile中从而完成编译。<br><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">vpath %.c src</span><br><span class="line">vpath %.h include</span><br><span class="line">CFLAGS = -I include</span><br><span class="line">CC = gcc</span><br><span class="line">main: main.o timeutil.o wdshow.o</span><br><span class="line">depend: main.c timeutil.c wdshow.c</span><br><span class="line">	<span class="variable">$(CC)</span> -MM <span class="variable">$(CFLAGS)</span> $^ &gt; $@</span><br><span class="line">include depend</span><br></pre></td></tr></table></figure></p>
+<p>但是，这个脚本还是有缺点的，每次一点改动都有可能要重新生成depend文件才能保持正确性，有没有更好的方法呢？GNU Make手册中给了一个晦涩难懂但十分强大的写法，先看看使用该方法的Makefile<br><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">vpath %.c src</span><br><span class="line">vpath %.h include</span><br><span class="line">CFLAGS = -I include</span><br><span class="line">CC = gcc</span><br><span class="line">main: main.o timeutil.o wdshow.o</span><br><span class="line">sources = main.c timeutil.c wdshow.c</span><br><span class="line">include $(sources:.c=.d)</span><br><span class="line">%.d: %.c</span><br><span class="line">	@set -e;rm -f $@; \</span><br><span class="line">	<span class="variable">$(CC)</span> -MM <span class="variable">$(CFLAGS)</span> $&lt; &gt; $@.$$$$; \</span><br><span class="line">	sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' &lt; $@.$$$$ &gt; $@; \</span><br><span class="line">	rm -f $@.$$$$</span><br><span class="line"><span class="meta"><span class="meta-keyword">.PHONY</span>: clean</span></span><br><span class="line"><span class="section">clean:</span></span><br><span class="line">	rm main *.o *.d</span><br></pre></td></tr></table></figure></p>
+<p>首先，<code>include $(sources:.c=.d)</code>展开后变成<code>include main.d timeutil.d wdshow.d</code>。然后make有一个特性，就是在include一个文件的时候，会将这个文件作为目标，也就是说会执行规则<code>%.d: %.c</code>，而这个规则对应的命令实际上就是先用gcc生成依赖规则后，再用sed命令将<code>%.o:...</code>改成<code>%.o %.d:...</code>，最后输出到%.d文件中，这样就将%.d和%.o依赖相同的文件。在之后项目的开发过程中，如果某个文件有所改动，以它为目标的.d文件中的规则就会自动更改，从而保持规则的正确性。</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/blog/2014/01/13/gnu-make-study01/">GNU Make学习总结（一）</a></p>
+        <p><span>文章作者:</span><a href="/" title="访问 Vimer Su 的个人博客">Vimer Su</a></p>
+        <p><span>发布时间:</span>2014年01月13日 - 16时15分</p>
+        <p><span>最后更新:</span>2016年06月04日 - 22时57分</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/blog/2014/01/13/gnu-make-study01/" title="GNU Make学习总结（一）">http://vimersu.win/blog/2014/01/13/gnu-make-study01/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://vimersu.win/blog/2014/01/13/gnu-make-study01/　　作者: Vimer Su" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script src="/js/clipboard.min.js"></script>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" title="中国大陆 (CC BY-NC-SA 3.0 CN)" target = "_blank">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+<nav id="article-nav">
+  
+    <a href="/blog/2014/01/23/gnu-make-study02/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          GNU Make学习总结（二）
+        
+      </div>
+    </a>
+  
+  
+    <a href="/blog/2014/01/11/struct-alignment/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">C的结构体字节对齐</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Intro"><span class="toc-number">1.</span> <span class="toc-text">Intro</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#入门"><span class="toc-number">2.</span> <span class="toc-text">入门</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#简介"><span class="toc-number">2.1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#样例"><span class="toc-number">2.2.</span> <span class="toc-text">样例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#规则"><span class="toc-number">3.</span> <span class="toc-text">规则</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#变量及自动变量"><span class="toc-number">3.1.</span> <span class="toc-text">变量及自动变量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#假想目标"><span class="toc-number">3.2.</span> <span class="toc-text">假想目标</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#VPATH和vpath"><span class="toc-number">3.3.</span> <span class="toc-text">VPATH和vpath</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#具体规则"><span class="toc-number">3.4.</span> <span class="toc-text">具体规则</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#模式规则"><span class="toc-number">3.5.</span> <span class="toc-text">模式规则</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#静态模式规则"><span class="toc-number">3.6.</span> <span class="toc-text">静态模式规则</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#后缀规则"><span class="toc-number">3.7.</span> <span class="toc-text">后缀规则</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#隐含规则"><span class="toc-number">3.8.</span> <span class="toc-text">隐含规则</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#自动生成依赖"><span class="toc-number">3.9.</span> <span class="toc-text">自动生成依赖</span></a></li></ol></li></ol>
+</div>
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+        }
+    })
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+    }
+</script>
+
+
+
+
+
+
+
+    
+      <div class="duoshuo" id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="blog/2014/01/13/gnu-make-study01/" data-title="GNU Make学习总结（一）" data-url="http://vimersu.win/blog/2014/01/13/gnu-make-study01/"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:"c4fun"};
+    (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = '/js/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+    </script>
+    <!-- 多说公共JS代码 end -->
+</div>
+
+    
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/blog/2014/01/23/gnu-make-study02/" title="上一篇: GNU Make学习总结（二）">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+        
+            <a href="/blog/2014/01/11/struct-alignment/" title="下一篇: C的结构体字节对齐">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/blog/2016/07/04/dx-lesson02-3dknowledge/">DirectX 3D学习笔记02——3D数学基础</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/07/03/dx-lesson01-window/">DirectX 3D学习笔记01——环境搭建与窗口创建</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2015/10/03/osx-xcode-opengl/">在OSX中进行OpenGL开发</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2015/06/23/xcode64-alactraz-bug/">Xcode6.4中Alcatraz无法启动</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2015/06/23/vim-base-operation/">Vim基础操作汇总</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2015/06/13/apache-reverse-proxy/">通过Apache反向代理访问本地Gogs服务</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2015/06/09/mac-another-screen/">Macbook修改外接显示器分辨率</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/12/12/how-to-use-define/">宏的拓展用法总结</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/12/06/cmockery/">C单元测试框架之Cmockery</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/10/10/maven-study/">Linux下Maven的安装与使用</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/05/06/python-threading/">python中的多线程</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/03/23/python-regular/">python正则表达式</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/03/20/leetcode-solution-02/">LeetCode题解整理版(二)</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/03/18/leetcode-solution-01/">LeetCode题解整理版(一) </a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/03/12/heap-template/">一个用宏实现的堆模板</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/03/06/libev-study/">Libev事件库源码阅读笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/03/04/linux-iconv/">在Linux下使用iconv转换字符串编码</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/03/03/use-hexo-blog/">使用Hexo搭建个人博客</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/01/30/common-makefile/">一个通用的C/C++ Makefile</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/01/23/gnu-make-study02/">GNU Make学习总结（二）</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/01/13/gnu-make-study01/">GNU Make学习总结（一）</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/01/11/struct-alignment/">C的结构体字节对齐</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/12/02/linuxdrivecode-cdev/">Linux设备驱动学习——简单字符设备驱动的实现</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/30/linux-sublimetext-chinese/">解决Linux下Sublime text 3的中文输入问题</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/25/start-leetcode-oj/">开始刷LeetCode OJ</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/24/octopress-generate-post-content/">让Octopress为文章自动生成目录</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/23/wlanconfig-tools-source/">wlanconfig工具分析</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/22/auto-aixiaochu-app/">Qt+BlueStack实现自动天天爱消除</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/21/binary-tree-nonrecursive-traversal/">另一种二叉树非递归遍历的实现</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/19/linux-io-reuse-interface/">Linux中的IO复用接口简介</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/19/linux-ap-by-madwifi/">Linux下使用无线网卡搭建AP</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/19/hello-octopress/">开启OctoPress之旅</a></li></ul>
+    <script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+    <script>
+        $(".post-list").addClass("toc-article");
+        $(".post-list-item a").attr("target","_blank");
+        $("#post-nav-button > a:nth-child(2)").click(function() {
+            $(".fa-bars, .fa-times").toggle();
+            $(".post-list").toggle(300);
+            if ($(".toc").length > 0) {
+                $("#toc, #tocButton").toggle(200, function() {
+                    if ($(".switch-area").is(":visible")) {
+                        $("#tocButton").attr("value", valueHide);
+                        }
+                    })
+            }
+            else {
+            }
+        })
+    </script>
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2016 Vimer Su
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/luuman/hexo-theme-spfk" target="_blank">spfk</a> by luuman
+            </div>
+        </div>
+        
+    </div>
+</footer>
+
+    </div>
+    <script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var backgroundnum = 24;
+            var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+            $("#mobile-nav").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+            $(".left-col").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    $(document).ready(function() {
+        if ($("#comments").length < 1) {
+            $("#scroll > a:nth-child(2)").hide();
+        };
+    })
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+  <script language="javascript">
+    $(function() {
+        $("a[title]").each(function() {
+            var a = $(this);
+            var title = a.attr('title');
+            if (title == undefined || title == "") return;
+            a.data('title', title).removeAttr('title').hover(
+
+            function() {
+                var offset = a.offset();
+                $("<div id=\"anchortitlecontainer\"></div>").appendTo($("body")).html(title).css({
+                    top: offset.top - a.outerHeight() - 15,
+                    left: offset.left + a.outerWidth()/2 + 1
+                }).fadeIn(function() {
+                    var pop = $(this);
+                    setTimeout(function() {
+                        pop.remove();
+                    }, pop.text().length * 800);
+                });
+            }, function() {
+                $("#anchortitlecontainer").remove();
+            });
+        });
+    });
+</script>
+
+
+  </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>

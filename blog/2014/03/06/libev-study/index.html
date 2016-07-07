@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>Libev事件库源码阅读笔记 | Coding 4 Fun</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Libev事件库学习笔记。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Libev事件库源码阅读笔记">
+<meta property="og:url" content="http://vimersu.win/blog/2014/03/06/libev-study/index.html">
+<meta property="og:site_name" content="Coding 4 Fun">
+<meta property="og:description" content="Libev事件库学习笔记。">
+<meta property="og:updated_time" content="2016-06-04T14:57:29.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Libev事件库源码阅读笔记">
+<meta name="twitter:description" content="Libev事件库学习笔记。">
+  
+    <link rel="alternative" href="/atom.xml" title="Coding 4 Fun" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  
+  <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+      <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <!-- 加载特效 -->
+    <script src="/js/pace.js"></script>
+    <link href="/css/pace/pace-theme-flash.css" rel="stylesheet" />
+  <script>
+      var yiliaConfig = {
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false
+      }
+  </script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            
+            <img lazy-src="/avator.jpg" class="js-avatar">
+            
+        </a>
+
+        <hgroup>
+          <h1 class="header-author"><a href="/">Vimer Su</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">Dream it, Believe it, Do IT!</p>
+        
+        
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">博客首页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fl mail" target="_blank" href="mailto:swm8023@gmail.com" title="mail">mail</a>
+                            
+                                <a class="fl github" target="_blank" href="https://github.com/swm8023" title="github">github</a>
+                            
+                                <a class="fl rss" target="_blank" href="/atom.xml" title="rss">rss</a>
+                            
+                                <a class="fl douban" target="_blank" href="https://www.douban.com/people/swm8023/" title="douban">douban</a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/AP/" style="font-size: 10px;">AP</a> <a href="/tags/Alcatraz/" style="font-size: 10px;">Alcatraz</a> <a href="/tags/Algorithm/" style="font-size: 17.5px;">Algorithm</a> <a href="/tags/Apache/" style="font-size: 10px;">Apache</a> <a href="/tags/C/" style="font-size: 15px;">C</a> <a href="/tags/Cmockery/" style="font-size: 10px;">Cmockery</a> <a href="/tags/DirectX-3D/" style="font-size: 12.5px;">DirectX 3D</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/I-O复用/" style="font-size: 10px;">I/O复用</a> <a href="/tags/Leetcode-OJ/" style="font-size: 15px;">Leetcode OJ</a> <a href="/tags/Libev/" style="font-size: 10px;">Libev</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/MAC/" style="font-size: 10px;">MAC</a> <a href="/tags/Makefile/" style="font-size: 15px;">Makefile</a> <a href="/tags/Maven/" style="font-size: 10px;">Maven</a> <a href="/tags/OSX/" style="font-size: 10px;">OSX</a> <a href="/tags/Octopress/" style="font-size: 12.5px;">Octopress</a> <a href="/tags/OpenGL/" style="font-size: 10px;">OpenGL</a> <a href="/tags/Proxy/" style="font-size: 10px;">Proxy</a> <a href="/tags/Python/" style="font-size: 15px;">Python</a> <a href="/tags/Sublime-text3/" style="font-size: 10px;">Sublime text3</a> <a href="/tags/Tools/" style="font-size: 10px;">Tools</a> <a href="/tags/Vim/" style="font-size: 10px;">Vim</a> <a href="/tags/Xcode/" style="font-size: 10px;">Xcode</a> <a href="/tags/epoll/" style="font-size: 10px;">epoll</a> <a href="/tags/iconv/" style="font-size: 10px;">iconv</a> <a href="/tags/madwifi/" style="font-size: 12.5px;">madwifi</a> <a href="/tags/wlanconfig/" style="font-size: 10px;">wlanconfig</a> <a href="/tags/二叉树/" style="font-size: 10px;">二叉树</a> <a href="/tags/单元测试/" style="font-size: 10px;">单元测试</a> <a href="/tags/堆/" style="font-size: 10px;">堆</a> <a href="/tags/外接显示器/" style="font-size: 10px;">外接显示器</a> <a href="/tags/天天爱消除/" style="font-size: 10px;">天天爱消除</a> <a href="/tags/宏/" style="font-size: 10px;">宏</a> <a href="/tags/正则表达式/" style="font-size: 10px;">正则表达式</a> <a href="/tags/游戏开发/" style="font-size: 12.5px;">游戏开发</a> <a href="/tags/线程同步/" style="font-size: 10px;">线程同步</a> <a href="/tags/结构体/" style="font-size: 10px;">结构体</a> <a href="/tags/驱动程序/" style="font-size: 12.5px;">驱动程序</a>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/swm8023">swm8023@github</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://blog.csdn.net/swm8023">swm8023@csdn</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.cnblogs.com/swm8023/">swm8023@cnblogs</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.cnblogs.com/CSGrandeur/">CSGrandeur</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://hujiaweibujidao.github.io/">Hujiawei Bujidao</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://blog.chinaunix.net/uid/28387257.html">Henrystark&#39;s CU blog</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://oxoo.org">OxOo社</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.cnblogs.com/staginner/">Staginner</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://zhangxc.com/">张学程</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://yangha.github.io/">小阳Space</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">Hello World</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Vimer Su</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                
+                    <img lazy-src="/avator.jpg" class="js-avatar">
+                
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Vimer Su</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">Dream it, Believe it, Do IT!</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">博客首页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a class="mail" target="_blank" href="mailto:swm8023@gmail.com" title="mail">mail</a>
+                    
+                        <a class="github" target="_blank" href="https://github.com/swm8023" title="github">github</a>
+                    
+                        <a class="rss" target="_blank" href="/atom.xml" title="rss">rss</a>
+                    
+                        <a class="douban" target="_blank" href="https://www.douban.com/people/swm8023/" title="douban">douban</a>
+                    
+                </div>
+            </nav>
+        </header>                
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-libev-study" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/blog/2014/03/06/libev-study/" class="article-date">
+      <time datetime="2014-03-06T14:52:05.000Z" itemprop="datePublished">2014-03-06</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Libev事件库源码阅读笔记
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/Linux/">Linux</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Libev/">Libev</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h2 id="Intro"><a href="#Intro" class="headerlink" title="Intro"></a><strong>Intro</strong></h2><p>Libev是一个基于Reactor模式的事件库，效率较高(<a href="http://libev.schmorp.de/bench.html" target="_blank" rel="external">Benchmark</a>)并且代码精简（4.15版本8000多行），是学习事件驱动编程的很好的资源。  </p>
+<p>本文不会介绍Reactor模式，也不会介绍Libev的API，主要内容是我学习libev后的一些总结，介绍了Livev的设计方法和实现方法，并对一部分核心代码进行了注解。  </p>
+<p>如需更详尽的API介绍，可以参见Libev的<a href="http://pod.tst.eu/http://cvs.schmorp.de/libev/ev.pod" target="_blank" rel="external">手册</a>。</p>
+<a id="more"></a>
+<h2 id="Feature"><a href="#Feature" class="headerlink" title="Feature"></a>Feature</h2><p>Libev是一个用C编写的功能齐全的高性能的轻量级事件驱动库，其支持多种后台IO复用接口，并且可以注册多达十几种事件。  </p>
+<p>支持的后台IO复用接口: </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">select</span><br><span class="line">poll</span><br><span class="line">epoll</span><br><span class="line">kqueue</span><br><span class="line">solaris event port</span><br></pre></td></tr></table></figure>
+<p>支持的事件类型:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">ev_io                 <span class="comment">// IO可读可写</span></span><br><span class="line">ev_stat               <span class="comment">// 文件属性变化</span></span><br><span class="line">ev_signal             <span class="comment">// 信号处理</span></span><br><span class="line">ev_timer              <span class="comment">// 相对定时器</span></span><br><span class="line">ev_periodic           <span class="comment">// 绝对定时器</span></span><br><span class="line">ev_child              <span class="comment">// 子进程状态变化</span></span><br><span class="line">ev_fork               <span class="comment">// fork事件</span></span><br><span class="line">ev_cleanup            <span class="comment">// event loop退出触发事件</span></span><br><span class="line">ev_idle               <span class="comment">// event loop空闲触发事件</span></span><br><span class="line">ev_embed              <span class="comment">// 嵌入另一个后台循环</span></span><br><span class="line">ev_prepare            <span class="comment">// event loop之前事件</span></span><br><span class="line">ev_check              <span class="comment">// event loop之后事件</span></span><br><span class="line">ev_async              <span class="comment">// 线程间异步事件</span></span><br></pre></td></tr></table></figure>
+<h2 id="Sample"><a href="#Sample" class="headerlink" title="Sample"></a><strong>Sample</strong></h2><p>在介绍Libev的代码结构之前，先看一个Libev手册中自带的例子，其注册了两个事件，一个timeout事件，一个io事件，任何一个事件发生后都会调用回调函数并终止主循环。这也是事件驱动编程的标准模式——注册事件后等待其触发并调用回调函数。  </p>
+<p>代码中的注释已经十分详细，我就不再赘述。要编译这段代码(evtest.c)，首先在<a href="http://software.schmorp.de/pkg/libev.html" target="_blank" rel="external">Libev主页</a>下载Libev源码编译安装，然后使用<code>gcc evtest.c -libev</code>编译（记得ldconfig）。</p>
+<figure class="highlight c"><figcaption><span>evtest.c</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// a single header file is required</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;ev.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span> <span class="comment">// for puts</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// every watcher type has its own typedef'd struct</span></span><br><span class="line"><span class="comment">// with the name ev_TYPE</span></span><br><span class="line">ev_io stdin_watcher;</span><br><span class="line">ev_timer timeout_watcher;</span><br><span class="line"></span><br><span class="line"><span class="comment">// all watcher callbacks have a similar signature</span></span><br><span class="line"><span class="comment">// this callback is called when data is readable on stdin</span></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span></span><br><span class="line"><span class="title">stdin_cb</span> <span class="params">(EV_P_ ev_io *w, <span class="keyword">int</span> revents)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="built_in">puts</span> (<span class="string">"stdin ready"</span>);</span><br><span class="line">    <span class="comment">// for one-shot events, one must manually stop the watcher</span></span><br><span class="line">    <span class="comment">// with its corresponding stop function.</span></span><br><span class="line">    ev_io_stop (EV_A_ w);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// this causes all nested ev_run's to stop iterating</span></span><br><span class="line">    ev_break (EV_A_ EVBREAK_ALL);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// another callback, this time for a time-out</span></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span></span><br><span class="line"><span class="title">timeout_cb</span> <span class="params">(EV_P_ ev_timer *w, <span class="keyword">int</span> revents)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="built_in">puts</span> (<span class="string">"timeout"</span>);</span><br><span class="line">    <span class="comment">// this causes the innermost ev_run to stop iterating</span></span><br><span class="line">    ev_break (EV_A_ EVBREAK_ONE);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span></span><br><span class="line"><span class="title">main</span> <span class="params">(<span class="keyword">void</span>)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="comment">// use the default event loop unless you have special needs</span></span><br><span class="line">    <span class="keyword">struct</span> ev_loop *loop = EV_DEFAULT;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// initialise an io watcher, then start it</span></span><br><span class="line">    <span class="comment">// this one will watch for stdin to become readable</span></span><br><span class="line">    ev_io_init (&amp;stdin_watcher, stdin_cb, <span class="comment">/*STDIN_FILENO*/</span> <span class="number">0</span>, EV_READ);</span><br><span class="line">    ev_io_start (loop, &amp;stdin_watcher);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// initialise a timer watcher, then start it</span></span><br><span class="line">    <span class="comment">// simple non-repeating 5.5 second timeout</span></span><br><span class="line">    ev_timer_init (&amp;timeout_watcher, timeout_cb, <span class="number">5.5</span>, <span class="number">0.</span>);</span><br><span class="line">    ev_timer_start (loop, &amp;timeout_watcher);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// now wait for events to arrive</span></span><br><span class="line">    ev_run (loop, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// break was called, so exit</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Main-Structures"><a href="#Main-Structures" class="headerlink" title="Main Structures"></a><strong>Main Structures</strong></h2><h3 id="Wather"><a href="#Wather" class="headerlink" title="Wather"></a><strong>Wather</strong></h3><p>事件驱动库中，很重要的一部分就是对事件的封装。在Libev中，事件被封装在Watcher结构体中，通过注册Watcher并指定对应的回调函数等参数，就可以将事件添加到主循环中。  </p>
+<p>先解释一下<code>EV_P</code>，<code>EV_P_</code>，<code>EV_A</code>，<code>EV_A_</code>这几个宏，在代码中几乎随处可见，主要是为了简化单线程模式下的函数调用的接口，这几个宏定义如下。<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">if</span> EV_MULTIPLICITY</span></span><br><span class="line"><span class="keyword">struct</span> ev_loop;</span><br><span class="line"># define EV_P  <span class="keyword">struct</span> ev_loop *loop               <span class="comment">/* a loop as sole parameter in a declaration */</span></span><br><span class="line"># define EV_P_ EV_P,                              <span class="comment">/* a loop as first of multiple parameters */</span></span><br><span class="line"># define EV_A  loop                               <span class="comment">/* a loop as sole argument to a function call */</span></span><br><span class="line"># define EV_A_ EV_A,                              <span class="comment">/* a loop as first of multiple arguments */</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">else</span></span></span><br><span class="line"># define EV_P <span class="keyword">void</span></span><br><span class="line"># define EV_P_</span><br><span class="line"># define EV_A</span><br><span class="line"># define EV_A_</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br></pre></td></tr></table></figure></p>
+<p><code>ev_loop</code>是主循环，而<code>EV_MULTIPLICITY</code>是一个条件编译的宏，表明是否支持有多个<code>ev_loop</code>实例存在，一般来说，每个线程中有且仅有一个<code>ev_loop</code>实例。如果整个程序是单线程的，程序中使用全局默认的<code>ev_loop</code>即可，不需要在函数中传参。而在多线程中调用函数很多时候都要指定函数操作的loop。比如启动一个io事件，调用的函数是<code>void ev_io_start (EV_P_ ev_io *w)</code>，如果没有定义<code>EV_MULTIPLICITY</code>，将会编译成<code>ev_io_start(io *w)</code>，否则会编译成<code>ev_io_start(struct ev_loop *loop, ev_io *w)</code>。  </p>
+<p>对于每一种事件，都有结构体<code>ev_TYPE</code>与之对应，比如<code>ev_io</code>，<code>ev_timer</code>等。为了统一事件结构，libev在C中使用结构体布局实现了多态，可以将<code>ev_watcher</code>结构体看做所有<code>ev_TYPE</code>结构体的基类，它包含了所有<code>ev_TYPE</code>中相同的字段。  </p>
+<p>代码中对这些结构体的定义如下，为了便于理解，我对部分宏进行了还原。之所以只还原部分宏而不是全部，是因为这些宏体现了作者设计这些结构体的思路。  </p>
+<p>相关的宏<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//这个宏定义了所有ev_TYPE开头的部分</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> EV_WATCHER(type)            \</span><br><span class="line">  int active; <span class="comment">/* private */</span>         \</span><br><span class="line">  int pending; <span class="comment">/* private */</span>            \</span><br><span class="line">  int priority; <span class="comment">/* private */</span>        \</span><br><span class="line">  void *data; <span class="comment">/* rw */</span>                \</span><br><span class="line">  void (*cb)(EV_P_ struct type *w, int revents); <span class="comment">/* private */</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">//这个宏在EV_WATCHER的基础上加了一个时间戳，主要用来定义和定时器有关的ev</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> EV_WATCHER_TIME(type)     \</span><br><span class="line">  EV_WATCHER (type)       \</span><br><span class="line">  ev_tstamp at;     <span class="comment">/* private */</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">//这个宏在EV_WATCHER的内容后加了一个next以构成事件链表</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> EV_WATCHER_LIST(type)           \</span><br><span class="line">  EV_WATCHER (type)             \</span><br><span class="line">  struct ev_watcher_list *next; <span class="comment">/* private */</span></span></span><br></pre></td></tr></table></figure></p>
+<p>“基类”<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//内容就是EV_WATCHER宏的内容，可以理解为"基类"</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> ev_watcher</span><br><span class="line">&#123;</span><br><span class="line">  EV_WATCHER (ev_watcher)</span><br><span class="line">&#125; ev_watcher;</span><br><span class="line"></span><br><span class="line"><span class="comment">//内容就是EV_WATCHER_TIME宏的内容，也可以理解为"基类"</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> ev_watcher_time</span><br><span class="line">&#123;</span><br><span class="line">  EV_WATCHER_TIME (ev_watcher_time)</span><br><span class="line">&#125; ev_watcher_time;</span><br><span class="line"></span><br><span class="line"><span class="comment">//可以理解为一个带有next指针的基类</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> ev_watcher_list</span><br><span class="line">&#123;</span><br><span class="line">  EV_WATCHER_LIST (ev_watcher_list)</span><br><span class="line">&#125; ev_watcher_list;</span><br></pre></td></tr></table></figure></p>
+<p>“派生类”，这里只列举了<code>ev_io</code>，<code>ev_timer</code>和<code>ev_signal</code>，这三种是比较常用的事件，其它事件结构的代码都差不多，具体可以见源码。<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//ev_io 封装io事件的"派生类"，结构体前部就是宏EV_WATCHER_LIST，fd和events是"派生类"变量</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> ev_io</span><br><span class="line">&#123;</span><br><span class="line">  EV_WATCHER_LIST (ev_io)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">int</span> fd;     <span class="comment">/* ro */</span></span><br><span class="line">  <span class="keyword">int</span> events; <span class="comment">/* ro */</span></span><br><span class="line">&#125; ev_io;</span><br><span class="line"></span><br><span class="line"><span class="comment">//ev_signal 封装信号事件的"派生类"，同样也有signum是"派生类"变量</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> ev_signal</span><br><span class="line">&#123;</span><br><span class="line">  EV_WATCHER_LIST (ev_signal)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">int</span> signum; <span class="comment">/* ro */</span></span><br><span class="line">&#125; ev_signal;</span><br><span class="line"></span><br><span class="line"><span class="comment">//ev_timer 封装相对定时器事件的"派生类"，定时器用堆管理，不需要next指针</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> ev_timer</span><br><span class="line">&#123;</span><br><span class="line">  EV_WATCHER_TIME (ev_timer)</span><br><span class="line"></span><br><span class="line">  ev_tstamp repeat; <span class="comment">/* rw */</span></span><br><span class="line">&#125; ev_timer;</span><br><span class="line">```  </span><br><span class="line">从以上代码可以看出来，每个事件结构体中的共有字段表示了这个事件的状态，优先级，参数，以及回调函数，而私有字段则是该类型事件的特有信息，比如io事件有对应的fd、定时器事件有发生时间等。  </span><br><span class="line">  </span><br><span class="line">另外还有一个叫做ev_any_watcher的<span class="keyword">union</span>可以容纳所有的事件类型。</span><br><span class="line">```c</span><br><span class="line"><span class="keyword">union</span> ev_any_watcher</span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">struct</span> ev_watcher w;</span><br><span class="line">  <span class="keyword">struct</span> ev_watcher_list wl;</span><br><span class="line">  <span class="keyword">struct</span> ev_io io;</span><br><span class="line">  <span class="keyword">struct</span> ev_timer timer;</span><br><span class="line">  <span class="keyword">struct</span> ev_periodic periodic;</span><br><span class="line">  <span class="keyword">struct</span> ev_signal signal;</span><br><span class="line">  <span class="keyword">struct</span> ev_child child;</span><br><span class="line">  <span class="keyword">struct</span> ev_stat stat;</span><br><span class="line">  <span class="keyword">struct</span> ev_idle idle;</span><br><span class="line">  <span class="keyword">struct</span> ev_prepare prepare;</span><br><span class="line">  <span class="keyword">struct</span> ev_check check;</span><br><span class="line">  <span class="keyword">struct</span> ev_fork fork;</span><br><span class="line">  <span class="keyword">struct</span> ev_cleanup cleanup;</span><br><span class="line">  <span class="keyword">struct</span> ev_embed embed;</span><br><span class="line">  <span class="keyword">struct</span> ev_async async;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<h3 id="ev-loop"><a href="#ev-loop" class="headerlink" title="ev_loop"></a><strong>ev_loop</strong></h3><p><code>ev_loop</code>是个十分重要也非常庞大的结构体，可以称其为事件控制器，事件的调度基本都是由它控制的。  </p>
+<p>该结构体的定义十分晦涩，从下面的代码可以看出，代码会根据<code>EV_MULTIPLICITY</code>是否定义进行条件编译，在单线程环境下，因为只有一个loop，所以所有变量直接作为全局变量使用，而在多线程模式下会有多个loop实例，因此需要将变量封装在<code>ev_loop</code>结构体中，调用函数时要指定所操作的loop。这些变量定义在<code>ev_vars.h</code>中，通过include展开。    </p>
+<p>另外，在多线程模式下，定义了<code>ev_loop</code>结构体之后，还include了<code>ev_wrap.h</code>，这个文件中对<code>ev_vars.h</code>中的所有变量定义了一堆形如<code>#define anfds ((loop)-&gt;anfds)</code>的宏，这个宏的目的是为了统一代码的编写，在未开启<code>EV_MULTIPLICITY</code>时<code>anfds</code>表示的就是全局变量<code>anfds</code>，而在开启了<code>EV_MULTIPLICITY</code>后，函数一般会传一个<code>struct ev_loop *loop</code>，<br><code>anfds</code>也会展开成<code>((loop)-&gt;anfds)</code>。这使得代码中不用再写一堆的<code>#if #else #endif</code>，但也让代码变的更加晦涩难懂。  </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">if</span> EV_MULTIPLICITY</span></span><br><span class="line">  <span class="keyword">struct</span> ev_loop</span><br><span class="line">  &#123;</span><br><span class="line">    ev_tstamp ev_rt_now;</span><br><span class="line">    <span class="meta">#<span class="meta-keyword">define</span> ev_rt_now ((loop)-&gt;ev_rt_now)</span></span><br><span class="line">    <span class="meta">#<span class="meta-keyword">define</span> VAR(name,decl) decl;</span></span><br><span class="line">      <span class="meta">#<span class="meta-keyword">include</span> <span class="string">"ev_vars.h"</span></span></span><br><span class="line">    <span class="meta">#<span class="meta-keyword">undef</span> VAR</span></span><br><span class="line">  &#125;;</span><br><span class="line">  <span class="meta">#<span class="meta-keyword">include</span> <span class="string">"ev_wrap.h"</span></span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">static</span> <span class="keyword">struct</span> ev_loop default_loop_struct;</span><br><span class="line">  EV_API_DECL <span class="keyword">struct</span> ev_loop *ev_default_loop_ptr = <span class="number">0</span>; <span class="comment">/* needs to be initialised to make it a definition despite extern */</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">else</span></span></span><br><span class="line">  EV_API_DECL ev_tstamp ev_rt_now = <span class="number">0</span>; <span class="comment">/* needs to be initialised to make it a definition despite extern */</span></span><br><span class="line">  <span class="meta">#<span class="meta-keyword">define</span> VAR(name,decl) static decl;</span></span><br><span class="line">    <span class="meta">#<span class="meta-keyword">include</span> <span class="string">"ev_vars.h"</span></span></span><br><span class="line">  <span class="meta">#<span class="meta-keyword">undef</span> VAR</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">static</span> <span class="keyword">int</span> ev_default_loop_ptr;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+<h3 id="ANFD"><a href="#ANFD" class="headerlink" title="ANFD"></a><strong>ANFD</strong></h3><p>在管理io事件的时候，如何根据fd快速找到与其相关的事件，是一个需要考虑的问题。Libev的方法是用一个数组来存所有fd信息的结构体，然后以fd值为索引直接找到对应的结构体，这个结构体就是下面的ANFD结构体（省略了有关Windows系统的变量）。这种方法可以在O(1)复杂度内进行索引，问题是它占的空间有多少？假如我们同时开了一百万个fd，所占空间一共是<code>10^6*sizeof(ANFD)</code>，大约12M左右，这完全是可以接受的。 </p>
+<p>结构体中字段的含义在后面介绍Libev流程时会逐渐提到。<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> ev_watcher_list *WL;</span><br><span class="line"><span class="comment">/* file descriptor info structure */</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span></span><br><span class="line">&#123;</span><br><span class="line">  WL head;</span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">char</span> events; <span class="comment">/* the events watched for */</span></span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">char</span> reify;  <span class="comment">/* flag set when this ANFD needs reification (EV_ANFD_REIFY, EV__IOFDSET) */</span></span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">char</span> emask;  <span class="comment">/* the epoll backend stores the actual kernel mask in here */</span></span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">char</span> unused;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> EV_USE_EPOLL</span></span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">int</span> egen;    <span class="comment">/* generation counter to counter epoll bugs */</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">&#125; ANFD;</span><br></pre></td></tr></table></figure></p>
+<h2 id="How-it-works"><a href="#How-it-works" class="headerlink" title="How it works?"></a><strong>How it works?</strong></h2><p>这节主要介绍了libev的代码是怎样工作的，主要分为事件注册，事件调度与后台I/O复用三部分。</p>
+<h3 id="事件注册"><a href="#事件注册" class="headerlink" title="事件注册"></a><strong>事件注册</strong></h3><p>事件注册，也就是告诉事件驱动器程序要关注某个事件的发生。这里以io事件为例来分析怎样去注册以及销毁一个事件，其它事件的代码逻辑基本上都是一样的，就不再赘述。  </p>
+<p>从上面Sample里的代码中我们可以看到，启动一个io事件调用了了以下这两个函数：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ev_io stdin_watcher;</span><br><span class="line">ev_io_init (&amp;stdin_watcher, stdin_cb, <span class="comment">/*STDIN_FILENO*/</span> <span class="number">0</span>, EV_READ);</span><br><span class="line">ev_io_start (loop, &amp;stdin_watcher);</span><br></pre></td></tr></table></figure></p>
+<p>首先看一下<code>ev_io_init</code>,与其相关的代码主要有以下几个宏。基本就是初始化了<code>ev_io</code>结构体中各个字段的值，优先级会被初始化为0，如需改变需要单独调用<code>ev_set_priority</code>。上面的<code>ev_io_init</code>，实际上就是注册了一个关注读的IO事件，相应的fd为0也就是标准输入。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> ev_io_init(ev,cb,fd,events)          do &#123; ev_init ((ev), (cb)); ev_io_set ((ev),(fd),(events)); &#125; while (0)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> ev_init(ev,cb_) do &#123;      \</span><br><span class="line">  ((ev_watcher *)(void *)(ev))-&gt;active  = \</span><br><span class="line">  ((ev_watcher *)(void *)(ev))-&gt;pending = 0;  \</span><br><span class="line">  ev_set_priority ((ev), 0);      \</span><br><span class="line">  ev_set_cb ((ev), cb_);      \</span><br><span class="line">&#125; while (0)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> ev_io_set(ev,fd_,events_)            do &#123; (ev)-&gt;fd = (fd_); (ev)-&gt;events = (events_) | EV__IOFDSET; &#125; while (0)</span></span><br></pre></td></tr></table></figure>
+<p>然后是<code>ev_io_start</code>，核心工作就是将<code>ev_io</code>添加到相关fd的事件链表上去，下面是主要代码，我在代码中给出了较为详细的注释。其中noinline等都是作者因为编译器差异定义的一些宏，而<code>EV_FREQUENT_CHECK</code>也是为了验证程序正确性添加的宏，在生产环境下不会生成任何内容，这些宏现在都可以忽略，我们只关心主要逻辑。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> ev_watcher *W;</span><br><span class="line"><span class="keyword">typedef</span> ev_watcher_list *WL;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> noinline</span><br><span class="line"><span class="title">ev_io_start</span> <span class="params">(EV_P_ ev_io *w)</span> EV_THROW</span><br><span class="line"></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> fd = w-&gt;fd;</span><br><span class="line">  <span class="comment">//如果对一个ev_io已经调用过ev_io_start，不再重复调用</span></span><br><span class="line">  <span class="keyword">if</span> (expect_false (ev_is_active (w)))</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">  assert ((<span class="string">"libev: ev_io_start called with negative fd"</span>, fd &gt;= <span class="number">0</span>));</span><br><span class="line">  assert ((<span class="string">"libev: ev_io_start called with illegal event mask"</span>, !(w-&gt;events &amp; ~(EV__IOFDSET | EV_READ | EV_WRITE))));</span><br><span class="line"></span><br><span class="line">  EV_FREQUENT_CHECK;</span><br><span class="line">  </span><br><span class="line">  <span class="comment">//设置事件状态为启动</span></span><br><span class="line">  ev_start (EV_A_ (W)w, <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">  <span class="comment">//判断当前分配的fd数组是否能放该fd，若不能，分配更多的空间给fd数组(realloc)。</span></span><br><span class="line">  <span class="comment">//这是一个宏，anfds实际上就是loop-&gt;anfds，存储了和该loop关联的ANFD数组。</span></span><br><span class="line">  <span class="comment">//anfdmax是当前数组能放的最大fd，array_init_zero也是个宏，对新分配的空间memeset成0。</span></span><br><span class="line">  array_needsize (ANFD, anfds, anfdmax, fd + <span class="number">1</span>, array_init_zero);</span><br><span class="line">  </span><br><span class="line">  <span class="comment">//将该io事件添加到该fd对应结构体的事件链表里，使用头插法</span></span><br><span class="line">  wlist_add (&amp;anfds[fd].head, (WL)w);</span><br><span class="line"></span><br><span class="line">  <span class="comment">/* common bug, apparently */</span></span><br><span class="line">  assert ((<span class="string">"libev: ev_io_start called with corrupted watcher"</span>, ((WL)w)-&gt;next != (WL)w));</span><br><span class="line"></span><br><span class="line">  <span class="comment">//将该fd加到fdchanges数组里，fdchanges保存了事件监听状态改变的fd</span></span><br><span class="line">  <span class="comment">//事件驱动器会在合适的时候遍历fdchanges数组，根据使用的后台IO复用机制应用更改，比如epoll_ctl</span></span><br><span class="line">  fd_change (EV_A_ fd, w-&gt;events &amp; EV__IOFDSET | EV_ANFD_REIFY);</span><br><span class="line">  </span><br><span class="line">  <span class="comment">//start结束，取消该事件的IOFDSET标记（这个标记是在init时加的）</span></span><br><span class="line">  w-&gt;events &amp;= ~EV__IOFDSET;</span><br><span class="line"></span><br><span class="line">  EV_FREQUENT_CHECK;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//设置事件状态为启动</span></span><br><span class="line"><span class="function">inline_speed <span class="keyword">void</span></span><br><span class="line"><span class="title">ev_start</span> <span class="params">(EV_P_ W w, <span class="keyword">int</span> active)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">  <span class="comment">//调整优先级到合法范围</span></span><br><span class="line">  pri_adjust (EV_A_ w);</span><br><span class="line">  <span class="comment">//active==1表示已经启动</span></span><br><span class="line">  w-&gt;active = active;</span><br><span class="line">  <span class="comment">//增加该ev_loop的reference</span></span><br><span class="line">  ev_ref (EV_A);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//添加事件到对应的链表中</span></span><br><span class="line"><span class="function">inline_size <span class="keyword">void</span></span><br><span class="line"><span class="title">wlist_add</span> <span class="params">(WL *head, WL elem)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">  elem-&gt;next = *head;</span><br><span class="line">  *head = elem;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//标记fd监听状态有所更改</span></span><br><span class="line"><span class="function">inline_size <span class="keyword">void</span></span><br><span class="line"><span class="title">fd_change</span> <span class="params">(EV_P_ <span class="keyword">int</span> fd, <span class="keyword">int</span> flags)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">char</span> reify = anfds [fd].reify;</span><br><span class="line">  anfds [fd].reify |= flags;</span><br><span class="line">  <span class="comment">//reify之前是0，要将fd加到fdchanges数组中</span></span><br><span class="line">  <span class="keyword">if</span> (expect_true (!reify))</span><br><span class="line">    &#123;</span><br><span class="line">      ++fdchangecnt;</span><br><span class="line">      array_needsize (<span class="keyword">int</span>, fdchanges, fdchangemax, fdchangecnt, EMPTY2);</span><br><span class="line">      fdchanges [fdchangecnt - <span class="number">1</span>] = fd;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>最后看一下<code>ev_io_stop</code>，逻辑基本就是<code>ev_io_start</code>的反过程。<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> noinline</span><br><span class="line"><span class="title">ev_io_stop</span> <span class="params">(EV_P_ ev_io *w)</span> EV_THROW</span><br><span class="line"></span>&#123;</span><br><span class="line">  <span class="comment">//如果该事件正在pending(等待执行的事件)中，从pending列表中移除该事件。</span></span><br><span class="line">  <span class="comment">//这里的一个技巧是不用真的移除掉(数组删除复杂度O(n))，只要将pending列表对应位置的指针指向一个空事件就可以了。</span></span><br><span class="line">  clear_pending (EV_A_ (W)w);</span><br><span class="line">  <span class="keyword">if</span> (expect_false (!ev_is_active (w)))</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">  assert ((<span class="string">"libev: ev_io_stop called with illegal fd (must stay constant after start!)"</span>, w-&gt;fd &gt;= <span class="number">0</span> &amp;&amp; w-&gt;fd &lt; anfdmax));</span><br><span class="line"></span><br><span class="line">  EV_FREQUENT_CHECK;</span><br><span class="line">  <span class="comment">//从链表中删除一个节点，这里删除节点的方法也是Linus提倡的方法，不需要记录prev指针以及是否头节点什么的。</span></span><br><span class="line">  wlist_del (&amp;anfds[w-&gt;fd].head, (WL)w);</span><br><span class="line"></span><br><span class="line">  <span class="comment">//取消fd的active状态</span></span><br><span class="line">  ev_stop (EV_A_ (W)w);</span><br><span class="line"></span><br><span class="line">  <span class="comment">//将fd加到fdchanges数组中，只设置REIFY标记，表示有改动(若什么标记都不设置该fd不会放入fdchanges)</span></span><br><span class="line">  <span class="comment">//之后事件驱动器扫描fdchanges数组会发现该fd不再监听任何事件，作出相应操作</span></span><br><span class="line">  fd_change (EV_A_ w-&gt;fd, EV_ANFD_REIFY);</span><br><span class="line"></span><br><span class="line">  EV_FREQUENT_CHECK;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//从链表中删除一个节点，十分经典的方法</span></span><br><span class="line"><span class="function">inline_size <span class="keyword">void</span></span><br><span class="line"><span class="title">wlist_del</span> <span class="params">(WL *head, WL elem)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">  <span class="keyword">while</span> (*head)</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="keyword">if</span> (expect_true (*head == elem))</span><br><span class="line">        &#123;</span><br><span class="line">          *head = elem-&gt;next;</span><br><span class="line">          <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">      head = &amp;(*head)-&gt;next;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="Main-Loop"><a href="#Main-Loop" class="headerlink" title="Main Loop"></a><strong>Main Loop</strong></h2><p><code>ev_io</code>系列函数所做的操作基本就是填充<code>ev_io</code>结构体并将其放在对应fd的事件链表上，而将监听事件状态发生改变的fd存在fdchanges数组中，驱动控制器会根据该数组更改后台监听的事件，当事件发生时驱动控制器会自动调用相应事件的回调函数。在整个过程中，驱动控制器也就是<code>ev_loop</code>就像胶水一样将事件和后台复用机制粘在一起。  </p>
+<p>整个事件的调度过程基本都在函数<code>ev_run</code>中，整个函数较长，大概有两百多行，这里就不列出代码了，只把程序的主要逻辑写了出来。<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span></span><br><span class="line"><span class="title">ev_run</span> <span class="params">(EV_P_ <span class="keyword">int</span> flags)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">  ...</span><br><span class="line">  <span class="comment">//一直循环....</span></span><br><span class="line">  <span class="keyword">do</span></span><br><span class="line">    &#123;</span><br><span class="line">      ...</span><br><span class="line">      <span class="comment">//如果这个进程是新fork出来的，执行ev_fork事件的回调</span></span><br><span class="line">      ...</span><br><span class="line">      <span class="comment">//执行ev_prepare回调，也就是每次poll前执行的函数</span></span><br><span class="line">      ...</span><br><span class="line">      <span class="comment">//执行监听有改变的事件</span></span><br><span class="line">      ...</span><br><span class="line">      <span class="comment">//计算poll应该等待的时间,这个时间和设置以及定时器超时时间有关</span></span><br><span class="line">      ...</span><br><span class="line">      <span class="comment">//调用后台I/O复用端口等待事件触发</span></span><br><span class="line">      backend_poll (EV_A_ waittime);</span><br><span class="line">      ...</span><br><span class="line">      <span class="comment">//将定时器事件放入pending数组中</span></span><br><span class="line">      ...</span><br><span class="line">      <span class="comment">//将ev_check事件翻入pending数组中</span></span><br><span class="line">      ...</span><br><span class="line">      <span class="comment">//执行pending数组中所有的回调</span></span><br><span class="line">      EV_INVOKE_PENDING;</span><br><span class="line">    &#125;</span><br><span class="line">  <span class="keyword">while</span> (条件成立);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><code>ev_run</code>的逻辑可以说还是比较清晰的。程序首先会先执行一些需要在poll之前执行的回调，接着根据最先超时的计时器算出poll需要wait的时间，之后调用poll等待I/O事件发生，最后执行发生事件的回调。  </p>
+<p>具体的代码中，程序使用<code>queue_events</code>将要运行的事件放入一个叫做pending的二维数组中，其第一维是优先级，第二维是动态分配的，存放具体事件。之后程序会在适当的地方调用宏<code>EV_INVOKE_PENDING</code>，将pending数组中的事件按优先级从高到低依次执行。  </p>
+<h3 id="I-O复用"><a href="#I-O复用" class="headerlink" title="I/O复用"></a><strong>I/O复用</strong></h3><p>Libev使用函数指针来实现支持多种I/O复用机制，每种复用机制要实现init, modify, poll, destroy这几个函数，也就是初始化、修改关注事件、等待事件发生、销毁这几个功能。这部分代码我只看了epoll的实现，感觉实现的还是很巧妙的，读者可以根据自己熟悉的I/O复用机制去选择看哪部分代码。</p>
+<h2 id="More"><a href="#More" class="headerlink" title="More"></a><strong>More</strong></h2><p>至此，Libev的主要设计方法和实现思路基本介绍的差不多了，限于篇幅，还有很多细节无法在一篇文章中叙述完，如果有时间的话，我会尽量完善这篇文章。  </p>
+<p>作为一个事件库，Libev的设计可以说是十分精良，代码中的各种tips也让我受益良多。但是，Libev几乎不涉及网络编程，如果要在此基础上实现网络库，还是有大量工作要做的。</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/blog/2014/03/06/libev-study/">Libev事件库源码阅读笔记</a></p>
+        <p><span>文章作者:</span><a href="/" title="访问 Vimer Su 的个人博客">Vimer Su</a></p>
+        <p><span>发布时间:</span>2014年03月06日 - 22时52分</p>
+        <p><span>最后更新:</span>2016年06月04日 - 22时57分</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/blog/2014/03/06/libev-study/" title="Libev事件库源码阅读笔记">http://vimersu.win/blog/2014/03/06/libev-study/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://vimersu.win/blog/2014/03/06/libev-study/　　作者: Vimer Su" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script src="/js/clipboard.min.js"></script>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" title="中国大陆 (CC BY-NC-SA 3.0 CN)" target = "_blank">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+<nav id="article-nav">
+  
+    <a href="/blog/2014/03/12/heap-template/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          一个用宏实现的堆模板
+        
+      </div>
+    </a>
+  
+  
+    <a href="/blog/2014/03/04/linux-iconv/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">在Linux下使用iconv转换字符串编码</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Intro"><span class="toc-number">1.</span> <span class="toc-text">Intro</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Feature"><span class="toc-number">2.</span> <span class="toc-text">Feature</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Sample"><span class="toc-number">3.</span> <span class="toc-text">Sample</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Main-Structures"><span class="toc-number">4.</span> <span class="toc-text">Main Structures</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Wather"><span class="toc-number">4.1.</span> <span class="toc-text">Wather</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ev-loop"><span class="toc-number">4.2.</span> <span class="toc-text">ev_loop</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ANFD"><span class="toc-number">4.3.</span> <span class="toc-text">ANFD</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#How-it-works"><span class="toc-number">5.</span> <span class="toc-text">How it works?</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#事件注册"><span class="toc-number">5.1.</span> <span class="toc-text">事件注册</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Main-Loop"><span class="toc-number">6.</span> <span class="toc-text">Main Loop</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#I-O复用"><span class="toc-number">6.1.</span> <span class="toc-text">I/O复用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#More"><span class="toc-number">7.</span> <span class="toc-text">More</span></a></li></ol>
+</div>
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+        }
+    })
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+    }
+</script>
+
+
+
+
+
+
+
+    
+      <div class="duoshuo" id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="blog/2014/03/06/libev-study/" data-title="Libev事件库源码阅读笔记" data-url="http://vimersu.win/blog/2014/03/06/libev-study/"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:"c4fun"};
+    (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = '/js/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+    </script>
+    <!-- 多说公共JS代码 end -->
+</div>
+
+    
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/blog/2014/03/12/heap-template/" title="上一篇: 一个用宏实现的堆模板">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+        
+            <a href="/blog/2014/03/04/linux-iconv/" title="下一篇: 在Linux下使用iconv转换字符串编码">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/blog/2016/07/04/dx-lesson02-3dknowledge/">DirectX 3D学习笔记02——3D数学基础</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/07/03/dx-lesson01-window/">DirectX 3D学习笔记01——环境搭建与窗口创建</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2015/10/03/osx-xcode-opengl/">在OSX中进行OpenGL开发</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2015/06/23/xcode64-alactraz-bug/">Xcode6.4中Alcatraz无法启动</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2015/06/23/vim-base-operation/">Vim基础操作汇总</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2015/06/13/apache-reverse-proxy/">通过Apache反向代理访问本地Gogs服务</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2015/06/09/mac-another-screen/">Macbook修改外接显示器分辨率</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/12/12/how-to-use-define/">宏的拓展用法总结</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/12/06/cmockery/">C单元测试框架之Cmockery</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/10/10/maven-study/">Linux下Maven的安装与使用</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/05/06/python-threading/">python中的多线程</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/03/23/python-regular/">python正则表达式</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/03/20/leetcode-solution-02/">LeetCode题解整理版(二)</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/03/18/leetcode-solution-01/">LeetCode题解整理版(一) </a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/03/12/heap-template/">一个用宏实现的堆模板</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/03/06/libev-study/">Libev事件库源码阅读笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/03/04/linux-iconv/">在Linux下使用iconv转换字符串编码</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/03/03/use-hexo-blog/">使用Hexo搭建个人博客</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/01/30/common-makefile/">一个通用的C/C++ Makefile</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/01/23/gnu-make-study02/">GNU Make学习总结（二）</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/01/13/gnu-make-study01/">GNU Make学习总结（一）</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/01/11/struct-alignment/">C的结构体字节对齐</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/12/02/linuxdrivecode-cdev/">Linux设备驱动学习——简单字符设备驱动的实现</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/30/linux-sublimetext-chinese/">解决Linux下Sublime text 3的中文输入问题</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/25/start-leetcode-oj/">开始刷LeetCode OJ</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/24/octopress-generate-post-content/">让Octopress为文章自动生成目录</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/23/wlanconfig-tools-source/">wlanconfig工具分析</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/22/auto-aixiaochu-app/">Qt+BlueStack实现自动天天爱消除</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/21/binary-tree-nonrecursive-traversal/">另一种二叉树非递归遍历的实现</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/19/linux-io-reuse-interface/">Linux中的IO复用接口简介</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/19/linux-ap-by-madwifi/">Linux下使用无线网卡搭建AP</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/19/hello-octopress/">开启OctoPress之旅</a></li></ul>
+    <script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+    <script>
+        $(".post-list").addClass("toc-article");
+        $(".post-list-item a").attr("target","_blank");
+        $("#post-nav-button > a:nth-child(2)").click(function() {
+            $(".fa-bars, .fa-times").toggle();
+            $(".post-list").toggle(300);
+            if ($(".toc").length > 0) {
+                $("#toc, #tocButton").toggle(200, function() {
+                    if ($(".switch-area").is(":visible")) {
+                        $("#tocButton").attr("value", valueHide);
+                        }
+                    })
+            }
+            else {
+            }
+        })
+    </script>
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2016 Vimer Su
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/luuman/hexo-theme-spfk" target="_blank">spfk</a> by luuman
+            </div>
+        </div>
+        
+    </div>
+</footer>
+
+    </div>
+    <script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var backgroundnum = 24;
+            var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+            $("#mobile-nav").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+            $(".left-col").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    $(document).ready(function() {
+        if ($("#comments").length < 1) {
+            $("#scroll > a:nth-child(2)").hide();
+        };
+    })
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+  <script language="javascript">
+    $(function() {
+        $("a[title]").each(function() {
+            var a = $(this);
+            var title = a.attr('title');
+            if (title == undefined || title == "") return;
+            a.data('title', title).removeAttr('title').hover(
+
+            function() {
+                var offset = a.offset();
+                $("<div id=\"anchortitlecontainer\"></div>").appendTo($("body")).html(title).css({
+                    top: offset.top - a.outerHeight() - 15,
+                    left: offset.left + a.outerWidth()/2 + 1
+                }).fadeIn(function() {
+                    var pop = $(this);
+                    setTimeout(function() {
+                        pop.remove();
+                    }, pop.text().length * 800);
+                });
+            }, function() {
+                $("#anchortitlecontainer").remove();
+            });
+        });
+    });
+</script>
+
+
+  </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>

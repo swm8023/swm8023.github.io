@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>wlanconfig工具分析 | Coding 4 Fun</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="介绍了Madwifi中的wlanconfig工具，并对其源码进行剖析，了解它的运行过程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="wlanconfig工具分析">
+<meta property="og:url" content="http://vimersu.win/blog/2013/11/23/wlanconfig-tools-source/index.html">
+<meta property="og:site_name" content="Coding 4 Fun">
+<meta property="og:description" content="介绍了Madwifi中的wlanconfig工具，并对其源码进行剖析，了解它的运行过程">
+<meta property="og:updated_time" content="2016-06-04T14:57:29.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="wlanconfig工具分析">
+<meta name="twitter:description" content="介绍了Madwifi中的wlanconfig工具，并对其源码进行剖析，了解它的运行过程">
+  
+    <link rel="alternative" href="/atom.xml" title="Coding 4 Fun" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  
+  <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+      <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <!-- 加载特效 -->
+    <script src="/js/pace.js"></script>
+    <link href="/css/pace/pace-theme-flash.css" rel="stylesheet" />
+  <script>
+      var yiliaConfig = {
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false
+      }
+  </script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            
+            <img lazy-src="/avator.jpg" class="js-avatar">
+            
+        </a>
+
+        <hgroup>
+          <h1 class="header-author"><a href="/">Vimer Su</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">Dream it, Believe it, Do IT!</p>
+        
+        
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">博客首页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fl mail" target="_blank" href="mailto:swm8023@gmail.com" title="mail">mail</a>
+                            
+                                <a class="fl github" target="_blank" href="https://github.com/swm8023" title="github">github</a>
+                            
+                                <a class="fl rss" target="_blank" href="/atom.xml" title="rss">rss</a>
+                            
+                                <a class="fl douban" target="_blank" href="https://www.douban.com/people/swm8023/" title="douban">douban</a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/AP/" style="font-size: 10px;">AP</a> <a href="/tags/Alcatraz/" style="font-size: 10px;">Alcatraz</a> <a href="/tags/Algorithm/" style="font-size: 17.5px;">Algorithm</a> <a href="/tags/Apache/" style="font-size: 10px;">Apache</a> <a href="/tags/C/" style="font-size: 15px;">C</a> <a href="/tags/Cmockery/" style="font-size: 10px;">Cmockery</a> <a href="/tags/DirectX-3D/" style="font-size: 12.5px;">DirectX 3D</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/I-O复用/" style="font-size: 10px;">I/O复用</a> <a href="/tags/Leetcode-OJ/" style="font-size: 15px;">Leetcode OJ</a> <a href="/tags/Libev/" style="font-size: 10px;">Libev</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/MAC/" style="font-size: 10px;">MAC</a> <a href="/tags/Makefile/" style="font-size: 15px;">Makefile</a> <a href="/tags/Maven/" style="font-size: 10px;">Maven</a> <a href="/tags/OSX/" style="font-size: 10px;">OSX</a> <a href="/tags/Octopress/" style="font-size: 12.5px;">Octopress</a> <a href="/tags/OpenGL/" style="font-size: 10px;">OpenGL</a> <a href="/tags/Proxy/" style="font-size: 10px;">Proxy</a> <a href="/tags/Python/" style="font-size: 15px;">Python</a> <a href="/tags/Sublime-text3/" style="font-size: 10px;">Sublime text3</a> <a href="/tags/Tools/" style="font-size: 10px;">Tools</a> <a href="/tags/Vim/" style="font-size: 10px;">Vim</a> <a href="/tags/Xcode/" style="font-size: 10px;">Xcode</a> <a href="/tags/epoll/" style="font-size: 10px;">epoll</a> <a href="/tags/iconv/" style="font-size: 10px;">iconv</a> <a href="/tags/madwifi/" style="font-size: 12.5px;">madwifi</a> <a href="/tags/wlanconfig/" style="font-size: 10px;">wlanconfig</a> <a href="/tags/二叉树/" style="font-size: 10px;">二叉树</a> <a href="/tags/单元测试/" style="font-size: 10px;">单元测试</a> <a href="/tags/堆/" style="font-size: 10px;">堆</a> <a href="/tags/外接显示器/" style="font-size: 10px;">外接显示器</a> <a href="/tags/天天爱消除/" style="font-size: 10px;">天天爱消除</a> <a href="/tags/宏/" style="font-size: 10px;">宏</a> <a href="/tags/正则表达式/" style="font-size: 10px;">正则表达式</a> <a href="/tags/游戏开发/" style="font-size: 12.5px;">游戏开发</a> <a href="/tags/线程同步/" style="font-size: 10px;">线程同步</a> <a href="/tags/结构体/" style="font-size: 10px;">结构体</a> <a href="/tags/驱动程序/" style="font-size: 12.5px;">驱动程序</a>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/swm8023">swm8023@github</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://blog.csdn.net/swm8023">swm8023@csdn</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.cnblogs.com/swm8023/">swm8023@cnblogs</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.cnblogs.com/CSGrandeur/">CSGrandeur</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://hujiaweibujidao.github.io/">Hujiawei Bujidao</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://blog.chinaunix.net/uid/28387257.html">Henrystark&#39;s CU blog</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://oxoo.org">OxOo社</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.cnblogs.com/staginner/">Staginner</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://zhangxc.com/">张学程</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://yangha.github.io/">小阳Space</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">Hello World</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Vimer Su</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                
+                    <img lazy-src="/avator.jpg" class="js-avatar">
+                
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Vimer Su</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">Dream it, Believe it, Do IT!</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">博客首页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a class="mail" target="_blank" href="mailto:swm8023@gmail.com" title="mail">mail</a>
+                    
+                        <a class="github" target="_blank" href="https://github.com/swm8023" title="github">github</a>
+                    
+                        <a class="rss" target="_blank" href="/atom.xml" title="rss">rss</a>
+                    
+                        <a class="douban" target="_blank" href="https://www.douban.com/people/swm8023/" title="douban">douban</a>
+                    
+                </div>
+            </nav>
+        </header>                
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-wlanconfig-tools-source" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/blog/2013/11/23/wlanconfig-tools-source/" class="article-date">
+      <time datetime="2013-11-23T06:24:13.000Z" itemprop="datePublished">2013-11-23</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      wlanconfig工具分析
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/Linux/">Linux</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/madwifi/">madwifi</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/wlanconfig/">wlanconfig</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/驱动程序/">驱动程序</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h2 id="wlanconfig简介"><a href="#wlanconfig简介" class="headerlink" title="wlanconfig简介"></a><strong>wlanconfig简介</strong></h2><p>wlanconfig是madwifi无线网卡驱动中方便用户对VAP进行控制的工具。  </p>
+<p>madwifi无线网卡驱动可以基于一块物理无线网卡实现多AP或者AP/Station共存，每个Station实例或者AP实例都可以称作一个VAP，但是由于这些VAP共用了一块物理网卡，所以必须工作在同一个channel上，并且使用相同的物理层参数。用户可以通过wlanconfig工具来创建、销毁以及控制VAP。</p>
+<a id="more"></a>
+<h2 id="wlanconfig命令使用"><a href="#wlanconfig命令使用" class="headerlink" title="wlanconfig命令使用"></a><strong>wlanconfig命令使用</strong></h2><p>wlanconfig工具的命令使用十分简单，只有以下三种<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wlanconfig athX create [nounit] wlandev wifiY wlanmode [sta|adhoc|ap|monitor|wds|ahdemo] [bssid | -bssid] [nosbeacon]</span><br><span class="line">wlanconfig athX destroy</span><br><span class="line">wlanconfig athX list [active|ap|caps|chan|freq|keys|scan|sta|wme]</span><br></pre></td></tr></table></figure></p>
+<p>第一条命令用来创建VAP，athX是VAP名称，可以是一个设备名全称（例如ath0），也可以只是一个前缀（例如ath），后者在未使用nounit选项时内核会自动将前缀补全成一个完整设备名，否则直接使用该字符串作为VAP名。wifiX是真实的物理网卡名，通过iwconfig可以看到，bssid选项是指使用一个与wifiX不同的mac地址来创建athX，-bssid选项表示使用一个与wifiX相同的mac地址来创建athX，最后的nosbeacon选项是在已有AP存在时建立STA时需要加上的。<br>VAP模式可以是以下几种模式中的一种：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">ahdemo  Create the station in ad-hoc demo (aka pseudo IBSS) mode.</span><br><span class="line">adhoc   Create the station in ad-hoc mode.</span><br><span class="line">ap      Create the VAP in AP mode.</span><br><span class="line">monitor Create the station in monitor mode.</span><br><span class="line">sta     Create the VAP in station mode.</span><br><span class="line">wds     Create the station in WDS mode.</span><br></pre></td></tr></table></figure></p>
+<p>下面用几个实例来说明create命令的使用<br>使用以下命令可以创建一个名为athN的station(N位网络接口中未使用的athX中的最小X)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wlanconfig ath create wlandev wifi0 wlanmode sta</span><br></pre></td></tr></table></figure></p>
+<p>使用以下命令可以创建一个名为ath0的AP<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wlanconfig ath0 create wlandev wifi0 wlanmode ap</span><br></pre></td></tr></table></figure></p>
+<p>使用以下命令可以创建AP+station共存<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wlanconfig ath0 create wlandev wifi0 wlanmode ap</span><br><span class="line">wlanconfig ath1 create wlandev wifi0 wlanmode sta nosbeacon</span><br></pre></td></tr></table></figure></p>
+<p>使用以下命令创建一个WDS网桥<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">wlanconfig ath0 create wlandev wifi0 wlanmode ap</span><br><span class="line">wlanconfig ath1 create wlandev wifi0 wlanmode wds</span><br><span class="line">iwconfig ath0 essid &quot;madwifi&quot; channel 1</span><br><span class="line">iwpriv ath1 wds_add &lt;mac of the peer wds ap&gt;</span><br><span class="line">iwpriv ath1 wds 1</span><br><span class="line">ifconfig ath1 up</span><br><span class="line">ifconfig ath0 up</span><br><span class="line">brctl addbr br0</span><br><span class="line">brctl addif br0 ath1</span><br><span class="line">brctl addif br0 ath0</span><br><span class="line">ifconfig br0 up</span><br></pre></td></tr></table></figure></p>
+<p>第二条命令用来销毁VAP,必须使用设备全名。  </p>
+<p>第三条命令用来显示VAP的一些相关信息，注意如果参数和VAP类型不符合，是不会显示任何结果的。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">sta or no parameters.</span><br><span class="line">        Show information on associated stations.</span><br><span class="line">scan or ap</span><br><span class="line">        List all visible stations.</span><br><span class="line">chan or freq</span><br><span class="line">        List all channels and frequencies.</span><br><span class="line">active </span><br><span class="line">        List all available channels and frequencies.</span><br><span class="line">keys   </span><br><span class="line">        List all of the keys associated with the VAP</span><br><span class="line">caps   </span><br><span class="line">        List the capabilities of the given VAP.</span><br><span class="line">wme    </span><br><span class="line">        List WME (Wireless multimedia extensions, aka WMM) parameters.</span><br></pre></td></tr></table></figure></p>
+<h2 id="wlanconfig源码简析"><a href="#wlanconfig源码简析" class="headerlink" title="wlanconfig源码简析"></a><strong>wlanconfig源码简析</strong></h2><p>wlanconfig工具的源码只有1000行左右，基本就是配置参数然后调用ioctl。<br>以下先给出wlanconfig中可能用到的IOCTL宏，定义在<code>ieee80211_ioctl.h</code>中：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span>	IEEE80211_IOCTL_GETKEY		(SIOCDEVPRIVATE+3)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span>	IEEE80211_IOCTL_GETWPAIE	(SIOCDEVPRIVATE+4)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span>	IEEE80211_IOCTL_STA_STATS	(SIOCDEVPRIVATE+5)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span>	IEEE80211_IOCTL_STA_INFO	(SIOCDEVPRIVATE+6)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span>	SIOC80211IFCREATE		(SIOCDEVPRIVATE+7)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span>	SIOC80211IFDESTROY	 	(SIOCDEVPRIVATE+8)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span>	IEEE80211_IOCTL_SCAN_RESULTS	(SIOCDEVPRIVATE+9)   </span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span>	IEEE80211_IOCTL_SETPARAM	(SIOCIWFIRSTPRIV+0)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span>	IEEE80211_IOCTL_GETPARAM	(SIOCIWFIRSTPRIV+1)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span>	IEEE80211_IOCTL_SETMODE		(SIOCIWFIRSTPRIV+2)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span>	IEEE80211_IOCTL_GETMODE		(SIOCIWFIRSTPRIV+3)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span>	IEEE80211_IOCTL_SETWMMPARAMS	(SIOCIWFIRSTPRIV+4)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span>	IEEE80211_IOCTL_GETWMMPARAMS	(SIOCIWFIRSTPRIV+5)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span>	IEEE80211_IOCTL_SETCHANLIST	(SIOCIWFIRSTPRIV+6)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span>	IEEE80211_IOCTL_GETCHANLIST	(SIOCIWFIRSTPRIV+7)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span>	IEEE80211_IOCTL_CHANSWITCH	(SIOCIWFIRSTPRIV+8)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span>	IEEE80211_IOCTL_GET_APPIEBUF	(SIOCIWFIRSTPRIV+9)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span>	IEEE80211_IOCTL_SET_APPIEBUF	(SIOCIWFIRSTPRIV+10)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span>	IEEE80211_IOCTL_FILTERFRAME	(SIOCIWFIRSTPRIV+12)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span>	        	(SIOCIWFIRSTPRIV+13)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span>	IEEE80211_IOCTL_SETOPTIE	(SIOCIWFIRSTPRIV+14)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span>	IEEE80211_IOCTL_GETOPTIE	(SIOCIWFIRSTPRIV+15)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span>	IEEE80211_IOCTL_SETMLME		(SIOCIWFIRSTPRIV+16)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span>	IEEE80211_IOCTL_SETKEY		(SIOCIWFIRSTPRIV+18)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span>	IEEE80211_IOCTL_DELKEY		(SIOCIWFIRSTPRIV+20)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span>	IEEE80211_IOCTL_ADDMAC		(SIOCIWFIRSTPRIV+22)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span>	IEEE80211_IOCTL_DELMAC		(SIOCIWFIRSTPRIV+24)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span>	IEEE80211_IOCTL_WDSADDMAC	(SIOCIWFIRSTPRIV+26)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span>	IEEE80211_IOCTL_WDSDELMAC	(SIOCIWFIRSTPRIV+28)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span>	IEEE80211_IOCTL_KICKMAC		(SIOCIWFIRSTPRIV+30)</span></span><br><span class="line">```  </span><br><span class="line">对于`SIOCDEVPRIVATE`到`SIOCDEVPRIVATE+<span class="number">15</span>`之间的宏，内核会调用dev-&gt;do_ioctl函数，而`do_ioctl`是由驱动来实现的，在madwifi中，如果调用设备是物理设备，则`dev-&gt;do_ioctl = ath_ioctl`，而如果调用设备是VAP，则`dev-&gt;do_ioctl = ieee80211_ioctl`。  </span><br><span class="line">  </span><br><span class="line">对于`SIOCIWFIRSTPRIV`到`SIOCIWFIRSTPRIV+<span class="number">31</span>`之间的宏，madwifi在`ieee80211_priv_handlers`数组中定义了每个宏对应的处理函数，这里就不深入去说了。</span><br><span class="line"></span><br><span class="line">根据以上这些，我们基本上可以根据一个在wlanconfig中出现的ioctl操作，找到它在madwifi驱动中的处理函数了。    </span><br><span class="line"></span><br><span class="line">### **create**</span><br><span class="line">首先看create操作，create操作主要填充了两个结构体：`<span class="keyword">struct</span> ifreq req`和`<span class="keyword">struct</span> ieee80211_clone_params cp`，`ifreq`由`ifr_name`和`ifr_data`两部分组成，其中`ifr_name`存的是物理设备的名字，比如`wifi0`，而`ifr_data`中放的就是结构体cp，该结构体定义在ieee80211_ioctl.h中，如下：</span><br><span class="line">```c</span><br><span class="line"><span class="keyword">struct</span> ieee80211_clone_params &#123;</span><br><span class="line">	<span class="keyword">char</span> icp_name[IFNAMSIZ];		<span class="comment">/* device name */</span></span><br><span class="line">	<span class="keyword">u_int16_t</span> icp_opmode;			<span class="comment">/* operating mode */</span></span><br><span class="line">	<span class="keyword">u_int16_t</span> icp_flags;			<span class="comment">/* see below */</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span>	IEEE80211_CLONE_BSSID	0x0001		<span class="comment">/* allocate unique mac/bssid */</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span>	IEEE80211_NO_STABEACONS	0x0002		<span class="comment">/* Do not setup the station beacon timers */</span></span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>icp_name是VAP名，如果未设定nounit选项并且最后一位不是数字，会先打开<code>/proc/net/dev</code>文件，找到一个最小的可用数字构成VAP名，icp_opmode和icp_flags分别是VAP模式和输入选项标志。  </p>
+<p>最后程序调用<code>ioctl(s, SIOC80211IFCREATE, ifr)</code>创建VAP，这里顺便简单提一下创建VAP的过程。</p>
+<p>对于宏<code>SIOC80211IFCREATE</code>，驱动会进入<code>ath_ioctl</code>函数，我们可以在该函数中找到创建VAP的代码。<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">case</span> SIOC80211IFCREATE:</span><br><span class="line">        error = ieee80211_ioctl_create_vap(ic, ifr, dev); </span><br><span class="line">        <span class="keyword">break</span>;</span><br></pre></td></tr></table></figure></p>
+<p>在<code>ath_ioctl</code>中调用了<code>ieee80211_ioctl_create_vap</code>函数，该函数对参数进行解析并最终调用<code>ic-&gt;ic_vap_create</code>函数来创建VAP。在该函数中可以看到，<code>ifr_name</code>被设置为最终建立的VAP名后返回，wlanconfig程序调用完ioctl之后将使用<code>ifr_name</code>打印VAP名。<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span></span><br><span class="line"><span class="title">ieee80211_ioctl_create_vap</span><span class="params">(<span class="keyword">struct</span> ieee80211com *ic, <span class="keyword">struct</span> ifreq *ifr, <span class="keyword">struct</span> net_device *mdev)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="keyword">struct</span> ieee80211_clone_params cp;</span><br><span class="line">	<span class="keyword">struct</span> ieee80211vap *vap;</span><br><span class="line">	<span class="keyword">char</span> name[IFNAMSIZ];</span><br><span class="line">	<span class="keyword">int</span> unit;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (!capable(CAP_NET_ADMIN))</span><br><span class="line">		<span class="keyword">return</span> -EPERM;</span><br><span class="line">	<span class="keyword">if</span> (copy_from_user(&amp;cp, ifr-&gt;ifr_data, <span class="keyword">sizeof</span>(cp)))</span><br><span class="line">		<span class="keyword">return</span> -EFAULT;</span><br><span class="line"></span><br><span class="line">	unit = ieee80211_new_wlanunit();</span><br><span class="line">	<span class="keyword">if</span> (unit == <span class="number">-1</span>)</span><br><span class="line">		<span class="keyword">return</span> -EIO;		<span class="comment">/* XXX */</span></span><br><span class="line">	<span class="built_in">strncpy</span>(name, cp.icp_name, <span class="keyword">sizeof</span>(name));</span><br><span class="line">	</span><br><span class="line">	vap = ic-&gt;ic_vap_create(ic, name, unit, cp.icp_opmode, cp.icp_flags, mdev);</span><br><span class="line">	<span class="keyword">if</span> (vap == <span class="literal">NULL</span>) &#123;</span><br><span class="line">		ieee80211_delete_wlanunit(unit);</span><br><span class="line">		<span class="keyword">return</span> -EIO;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">/* return final device name */</span></span><br><span class="line">	<span class="built_in">strncpy</span>(ifr-&gt;ifr_name, vap-&gt;iv_dev-&gt;name, IFNAMSIZ);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="destroy"><a href="#destroy" class="headerlink" title="destroy"></a><strong>destroy</strong></h3><p>destroy操作几乎就是直接调用了<code>ioctl(s, SIOC80211IFDESTROY, &amp;ifr)</code>函数，但它调用的并不是<code>ath_ioctl</code>函数，因为create操作中的ifr_name的是wifiX，也就是真实物理设备，而destroy操作中的ifr_name是athX，是VAP设备，也就是说destroy的具体过程在<code>ieee80211_ioctl</code>函数中。<br>在<code>ieee80211_ioctl.c</code>中停用并删除VAP的代码如下<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">case</span> SIOC80211IFDESTROY:</span><br><span class="line">        <span class="keyword">if</span> (!capable(CAP_NET_ADMIN))</span><br><span class="line">        <span class="keyword">return</span> -EPERM;</span><br><span class="line">        ieee80211_stop(vap-&gt;iv_dev);	<span class="comment">/* force state before cleanup */</span></span><br><span class="line">        vap-&gt;iv_ic-&gt;ic_vap_delete(vap);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br></pre></td></tr></table></figure></p>
+<h3 id="list"><a href="#list" class="headerlink" title="list"></a><strong>list</strong></h3><p>首先看list sta，该操作最终调用了<code>ioctl(s, IEEE80211_IOCTL_STA_INFO, &amp;iwr)</code>，这里的ioctl传的是<code>iwreq</code>结构体，其实它和<code>ifreq</code>结构体是一样的，只是在ifi_data部分进行了细化，定义在<code>wireless_copy.h</code>中：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span>	iwreq </span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">union</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">char</span>	ifrn_name[IFNAMSIZ];	<span class="comment">/* if name, e.g. "eth0" */</span></span><br><span class="line">	&#125; ifr_ifrn;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/* Data part (defined just above) */</span></span><br><span class="line">	<span class="keyword">union</span>	iwreq_data	u;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">union</span>	iwreq_data</span><br><span class="line">&#123;</span><br><span class="line">	<span class="comment">/* Config - generic */</span></span><br><span class="line">	<span class="keyword">char</span>		name[IFNAMSIZ];</span><br><span class="line">	<span class="comment">/* Name : used to verify the presence of  wireless extensions.</span><br><span class="line">	 * Name of the protocol/provider... */</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">struct</span> iw_point	essid;		<span class="comment">/* Extended network name */</span></span><br><span class="line">	<span class="keyword">struct</span> iw_param	nwid;		<span class="comment">/* network id (or domain - the cell) */</span></span><br><span class="line">	<span class="keyword">struct</span> iw_freq	freq;		<span class="comment">/* frequency or channel :</span><br><span class="line">					 * 0-1000 = channel</span><br><span class="line">					 * &gt; 1000 = frequency in Hz */</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">struct</span> iw_param	sens;		<span class="comment">/* signal level threshold */</span></span><br><span class="line">	<span class="keyword">struct</span> iw_param	bitrate;	<span class="comment">/* default bit rate */</span></span><br><span class="line">	<span class="keyword">struct</span> iw_param	txpower;	<span class="comment">/* default transmit power */</span></span><br><span class="line">	<span class="keyword">struct</span> iw_param	rts;		<span class="comment">/* RTS threshold threshold */</span></span><br><span class="line">	<span class="keyword">struct</span> iw_param	frag;		<span class="comment">/* Fragmentation threshold */</span></span><br><span class="line">	__u32		mode;		<span class="comment">/* Operation mode */</span></span><br><span class="line">	<span class="keyword">struct</span> iw_param	retry;		<span class="comment">/* Retry limits &amp; lifetime */</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">struct</span> iw_point	encoding;	<span class="comment">/* Encoding stuff : tokens */</span></span><br><span class="line">	<span class="keyword">struct</span> iw_param	power;		<span class="comment">/* PM duration/timeout */</span></span><br><span class="line">	<span class="keyword">struct</span> iw_quality qual;		<span class="comment">/* Quality part of statistics */</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">struct</span> sockaddr	ap_addr;	<span class="comment">/* Access point address */</span></span><br><span class="line">	<span class="keyword">struct</span> sockaddr	addr;		<span class="comment">/* Destination address (hw/mac) */</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">struct</span> iw_param	param;		<span class="comment">/* Other small parameters */</span></span><br><span class="line">	<span class="keyword">struct</span> iw_point	data;		<span class="comment">/* Other large parameters */</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>对于宏<code>IEEE80211_IOCTL_STA_INFO</code>的处理，可以在<code>ieee80211_ioctl</code>函数中可以找到<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">case</span> IEEE80211_IOCTL_STA_INFO:</span><br><span class="line">        <span class="keyword">return</span> ieee80211_ioctl_getstainfo(dev, (<span class="keyword">struct</span> iwreq *) ifr);</span><br></pre></td></tr></table></figure></p>
+<p>具体获得站点信息的过程可以去看<code>ieee80211_ioctl_getstainfo</code>函数，该函数将站点信息填充在ifr-&gt;u.data中后返回给ioctl调用。  </p>
+<p>以下几个list操作不再详细介绍，只给出对应的IOCTL宏，对应的处理函数可以根据一开始说的方法以在madwifi驱动中找到<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">scan or ap      IEEE80211_IOCTL_SCAN_RESULTS</span><br><span class="line">chan or freq    IEEE80211_IOCTL_GETCHANINFO</span><br><span class="line">active          IEEE80211_IOCTL_GETCHANINFO + IEEE80211_IOCTL_GETCHANLIST      </span><br><span class="line">wme             IEEE80211_IOCTL_GETWMMPARAMS</span><br><span class="line">caps            IEEE80211_IOCTL_GETPARAM</span><br></pre></td></tr></table></figure></p>
+<p>最后剩下的list keys操作实际上是调用了<code>iwlist athX key</code>命令  </p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/blog/2013/11/23/wlanconfig-tools-source/">wlanconfig工具分析</a></p>
+        <p><span>文章作者:</span><a href="/" title="访问 Vimer Su 的个人博客">Vimer Su</a></p>
+        <p><span>发布时间:</span>2013年11月23日 - 14时24分</p>
+        <p><span>最后更新:</span>2016年06月04日 - 22时57分</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/blog/2013/11/23/wlanconfig-tools-source/" title="wlanconfig工具分析">http://vimersu.win/blog/2013/11/23/wlanconfig-tools-source/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://vimersu.win/blog/2013/11/23/wlanconfig-tools-source/　　作者: Vimer Su" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script src="/js/clipboard.min.js"></script>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" title="中国大陆 (CC BY-NC-SA 3.0 CN)" target = "_blank">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+<nav id="article-nav">
+  
+    <a href="/blog/2013/11/24/octopress-generate-post-content/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          让Octopress为文章自动生成目录
+        
+      </div>
+    </a>
+  
+  
+    <a href="/blog/2013/11/22/auto-aixiaochu-app/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Qt+BlueStack实现自动天天爱消除</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#wlanconfig简介"><span class="toc-number">1.</span> <span class="toc-text">wlanconfig简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#wlanconfig命令使用"><span class="toc-number">2.</span> <span class="toc-text">wlanconfig命令使用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#wlanconfig源码简析"><span class="toc-number">3.</span> <span class="toc-text">wlanconfig源码简析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#destroy"><span class="toc-number">3.1.</span> <span class="toc-text">destroy</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#list"><span class="toc-number">3.2.</span> <span class="toc-text">list</span></a></li></ol></li></ol>
+</div>
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+        }
+    })
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+    }
+</script>
+
+
+
+
+
+
+
+    
+      <div class="duoshuo" id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="blog/2013/11/23/wlanconfig-tools-source/" data-title="wlanconfig工具分析" data-url="http://vimersu.win/blog/2013/11/23/wlanconfig-tools-source/"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:"c4fun"};
+    (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = '/js/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+    </script>
+    <!-- 多说公共JS代码 end -->
+</div>
+
+    
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/blog/2013/11/24/octopress-generate-post-content/" title="上一篇: 让Octopress为文章自动生成目录">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+        
+            <a href="/blog/2013/11/22/auto-aixiaochu-app/" title="下一篇: Qt+BlueStack实现自动天天爱消除">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/blog/2016/07/04/dx-lesson02-3dknowledge/">DirectX 3D学习笔记02——3D数学基础</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/07/03/dx-lesson01-window/">DirectX 3D学习笔记01——环境搭建与窗口创建</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2015/10/03/osx-xcode-opengl/">在OSX中进行OpenGL开发</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2015/06/23/xcode64-alactraz-bug/">Xcode6.4中Alcatraz无法启动</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2015/06/23/vim-base-operation/">Vim基础操作汇总</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2015/06/13/apache-reverse-proxy/">通过Apache反向代理访问本地Gogs服务</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2015/06/09/mac-another-screen/">Macbook修改外接显示器分辨率</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/12/12/how-to-use-define/">宏的拓展用法总结</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/12/06/cmockery/">C单元测试框架之Cmockery</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/10/10/maven-study/">Linux下Maven的安装与使用</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/05/06/python-threading/">python中的多线程</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/03/23/python-regular/">python正则表达式</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/03/20/leetcode-solution-02/">LeetCode题解整理版(二)</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/03/18/leetcode-solution-01/">LeetCode题解整理版(一) </a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/03/12/heap-template/">一个用宏实现的堆模板</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/03/06/libev-study/">Libev事件库源码阅读笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/03/04/linux-iconv/">在Linux下使用iconv转换字符串编码</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/03/03/use-hexo-blog/">使用Hexo搭建个人博客</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/01/30/common-makefile/">一个通用的C/C++ Makefile</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/01/23/gnu-make-study02/">GNU Make学习总结（二）</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/01/13/gnu-make-study01/">GNU Make学习总结（一）</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/01/11/struct-alignment/">C的结构体字节对齐</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/12/02/linuxdrivecode-cdev/">Linux设备驱动学习——简单字符设备驱动的实现</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/30/linux-sublimetext-chinese/">解决Linux下Sublime text 3的中文输入问题</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/25/start-leetcode-oj/">开始刷LeetCode OJ</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/24/octopress-generate-post-content/">让Octopress为文章自动生成目录</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/23/wlanconfig-tools-source/">wlanconfig工具分析</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/22/auto-aixiaochu-app/">Qt+BlueStack实现自动天天爱消除</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/21/binary-tree-nonrecursive-traversal/">另一种二叉树非递归遍历的实现</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/19/linux-io-reuse-interface/">Linux中的IO复用接口简介</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/19/linux-ap-by-madwifi/">Linux下使用无线网卡搭建AP</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/19/hello-octopress/">开启OctoPress之旅</a></li></ul>
+    <script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+    <script>
+        $(".post-list").addClass("toc-article");
+        $(".post-list-item a").attr("target","_blank");
+        $("#post-nav-button > a:nth-child(2)").click(function() {
+            $(".fa-bars, .fa-times").toggle();
+            $(".post-list").toggle(300);
+            if ($(".toc").length > 0) {
+                $("#toc, #tocButton").toggle(200, function() {
+                    if ($(".switch-area").is(":visible")) {
+                        $("#tocButton").attr("value", valueHide);
+                        }
+                    })
+            }
+            else {
+            }
+        })
+    </script>
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2016 Vimer Su
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/luuman/hexo-theme-spfk" target="_blank">spfk</a> by luuman
+            </div>
+        </div>
+        
+    </div>
+</footer>
+
+    </div>
+    <script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var backgroundnum = 24;
+            var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+            $("#mobile-nav").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+            $(".left-col").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    $(document).ready(function() {
+        if ($("#comments").length < 1) {
+            $("#scroll > a:nth-child(2)").hide();
+        };
+    })
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+  <script language="javascript">
+    $(function() {
+        $("a[title]").each(function() {
+            var a = $(this);
+            var title = a.attr('title');
+            if (title == undefined || title == "") return;
+            a.data('title', title).removeAttr('title').hover(
+
+            function() {
+                var offset = a.offset();
+                $("<div id=\"anchortitlecontainer\"></div>").appendTo($("body")).html(title).css({
+                    top: offset.top - a.outerHeight() - 15,
+                    left: offset.left + a.outerWidth()/2 + 1
+                }).fadeIn(function() {
+                    var pop = $(this);
+                    setTimeout(function() {
+                        pop.remove();
+                    }, pop.text().length * 800);
+                });
+            }, function() {
+                $("#anchortitlecontainer").remove();
+            });
+        });
+    });
+</script>
+
+
+  </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>

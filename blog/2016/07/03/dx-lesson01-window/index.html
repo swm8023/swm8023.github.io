@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>DirectX 3D学习笔记01——环境搭建与窗口创建 | Coding 4 Fun</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="本文介绍如何创建DirectX 3D开发环境以及创建绘制窗口">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DirectX 3D学习笔记01——环境搭建与窗口创建">
+<meta property="og:url" content="http://vimersu.win/blog/2016/07/03/dx-lesson01-window/index.html">
+<meta property="og:site_name" content="Coding 4 Fun">
+<meta property="og:description" content="本文介绍如何创建DirectX 3D开发环境以及创建绘制窗口">
+<meta property="og:image" content="https://o887blpta.qnssl.com/146730302601intro.png">
+<meta property="og:image" content="https://o887blpta.qnssl.com/146730339101dir.png">
+<meta property="og:updated_time" content="2016-07-06T06:38:41.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="DirectX 3D学习笔记01——环境搭建与窗口创建">
+<meta name="twitter:description" content="本文介绍如何创建DirectX 3D开发环境以及创建绘制窗口">
+<meta name="twitter:image" content="https://o887blpta.qnssl.com/146730302601intro.png">
+  
+    <link rel="alternative" href="/atom.xml" title="Coding 4 Fun" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  
+  <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+      <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <!-- 加载特效 -->
+    <script src="/js/pace.js"></script>
+    <link href="/css/pace/pace-theme-flash.css" rel="stylesheet" />
+  <script>
+      var yiliaConfig = {
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false
+      }
+  </script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            
+            <img lazy-src="/avator.jpg" class="js-avatar">
+            
+        </a>
+
+        <hgroup>
+          <h1 class="header-author"><a href="/">Vimer Su</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">Dream it, Believe it, Do IT!</p>
+        
+        
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">博客首页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fl mail" target="_blank" href="mailto:swm8023@gmail.com" title="mail">mail</a>
+                            
+                                <a class="fl github" target="_blank" href="https://github.com/swm8023" title="github">github</a>
+                            
+                                <a class="fl rss" target="_blank" href="/atom.xml" title="rss">rss</a>
+                            
+                                <a class="fl douban" target="_blank" href="https://www.douban.com/people/swm8023/" title="douban">douban</a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/AP/" style="font-size: 10px;">AP</a> <a href="/tags/Alcatraz/" style="font-size: 10px;">Alcatraz</a> <a href="/tags/Algorithm/" style="font-size: 17.5px;">Algorithm</a> <a href="/tags/Apache/" style="font-size: 10px;">Apache</a> <a href="/tags/C/" style="font-size: 15px;">C</a> <a href="/tags/Cmockery/" style="font-size: 10px;">Cmockery</a> <a href="/tags/DirectX-3D/" style="font-size: 12.5px;">DirectX 3D</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/I-O复用/" style="font-size: 10px;">I/O复用</a> <a href="/tags/Leetcode-OJ/" style="font-size: 15px;">Leetcode OJ</a> <a href="/tags/Libev/" style="font-size: 10px;">Libev</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/MAC/" style="font-size: 10px;">MAC</a> <a href="/tags/Makefile/" style="font-size: 15px;">Makefile</a> <a href="/tags/Maven/" style="font-size: 10px;">Maven</a> <a href="/tags/OSX/" style="font-size: 10px;">OSX</a> <a href="/tags/Octopress/" style="font-size: 12.5px;">Octopress</a> <a href="/tags/OpenGL/" style="font-size: 10px;">OpenGL</a> <a href="/tags/Proxy/" style="font-size: 10px;">Proxy</a> <a href="/tags/Python/" style="font-size: 15px;">Python</a> <a href="/tags/Sublime-text3/" style="font-size: 10px;">Sublime text3</a> <a href="/tags/Tools/" style="font-size: 10px;">Tools</a> <a href="/tags/Vim/" style="font-size: 10px;">Vim</a> <a href="/tags/Xcode/" style="font-size: 10px;">Xcode</a> <a href="/tags/epoll/" style="font-size: 10px;">epoll</a> <a href="/tags/iconv/" style="font-size: 10px;">iconv</a> <a href="/tags/madwifi/" style="font-size: 12.5px;">madwifi</a> <a href="/tags/wlanconfig/" style="font-size: 10px;">wlanconfig</a> <a href="/tags/二叉树/" style="font-size: 10px;">二叉树</a> <a href="/tags/单元测试/" style="font-size: 10px;">单元测试</a> <a href="/tags/堆/" style="font-size: 10px;">堆</a> <a href="/tags/外接显示器/" style="font-size: 10px;">外接显示器</a> <a href="/tags/天天爱消除/" style="font-size: 10px;">天天爱消除</a> <a href="/tags/宏/" style="font-size: 10px;">宏</a> <a href="/tags/正则表达式/" style="font-size: 10px;">正则表达式</a> <a href="/tags/游戏开发/" style="font-size: 12.5px;">游戏开发</a> <a href="/tags/线程同步/" style="font-size: 10px;">线程同步</a> <a href="/tags/结构体/" style="font-size: 10px;">结构体</a> <a href="/tags/驱动程序/" style="font-size: 12.5px;">驱动程序</a>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/swm8023">swm8023@github</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://blog.csdn.net/swm8023">swm8023@csdn</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.cnblogs.com/swm8023/">swm8023@cnblogs</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.cnblogs.com/CSGrandeur/">CSGrandeur</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://hujiaweibujidao.github.io/">Hujiawei Bujidao</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://blog.chinaunix.net/uid/28387257.html">Henrystark&#39;s CU blog</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://oxoo.org">OxOo社</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.cnblogs.com/staginner/">Staginner</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://zhangxc.com/">张学程</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://yangha.github.io/">小阳Space</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">Hello World</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Vimer Su</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                
+                    <img lazy-src="/avator.jpg" class="js-avatar">
+                
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Vimer Su</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">Dream it, Believe it, Do IT!</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">博客首页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a class="mail" target="_blank" href="mailto:swm8023@gmail.com" title="mail">mail</a>
+                    
+                        <a class="github" target="_blank" href="https://github.com/swm8023" title="github">github</a>
+                    
+                        <a class="rss" target="_blank" href="/atom.xml" title="rss">rss</a>
+                    
+                        <a class="douban" target="_blank" href="https://www.douban.com/people/swm8023/" title="douban">douban</a>
+                    
+                </div>
+            </nav>
+        </header>                
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-dx-lesson01-window" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/blog/2016/07/03/dx-lesson01-window/" class="article-date">
+      <time datetime="2016-07-02T16:05:51.000Z" itemprop="datePublished">2016-07-03</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      DirectX 3D学习笔记01——环境搭建与窗口创建
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/OpenGL-D3D/">OpenGL&D3D</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/DirectX-3D/">DirectX 3D</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/游戏开发/">游戏开发</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h2 id="Intro"><a href="#Intro" class="headerlink" title="Intro"></a>Intro</h2><p><strong>本系列笔记不只是通过DirectX 3D实现一些简单的功能，而是通过对DirectX 3D接口的封装，一步步完善一个简单的图形库<code>LibDX</code>。旨在可以通过该库快速的创建一个图形渲染程序。</strong></p>
+<p>本文介绍了如何搭建DirectX开发环境，并使用DirectX 3D绘制了一个简单窗口。</p>
+<p><img src="https://o887blpta.qnssl.com/146730302601intro.png" alt=""></p>
+<h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><p>DirectX是Microsoft开的一套功能丰富的底层API，功能包括2D/3D图形加速支持、各种输入设备控制、声音和音乐输出的混音和采样、多玩家网络游戏控制等等。而Direct 3D是其一个十分核心的子集，负责图形的绘制及渲染。</p>
+<p>使用DirectX开发需要<code>DirectX SDK</code>环境,首先下载<code>DirectX SDK</code>并安装。</p>
+<p><a href="https://www.microsoft.com/en-us/download/details.aspx?id=6812" target="_blank" rel="external">DirectX SDK下载地址</a></p>
+<blockquote>
+<p>我安装在 C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)<br>以下遇到与DirectX SDK安装路径相关的配置请按照本地安装路径进行相应修改</p>
+</blockquote>
+<p>开发工具为<code>Visual Studio 2015</code>。</p>
+<h2 id="创建工程"><a href="#创建工程" class="headerlink" title="创建工程"></a>创建工程</h2><p>在学习DirectX 3D(<strong>以下简称D3DX</strong>)过程中，我们会使用D3DX一步步完善一个简单的图形库<code>LibDX</code>。<code>LibDX</code>中对D3DX的底层接口进行了封装，用于快速的创建图形渲染程序。</p>
+<p>使用VS2015创建一个新的解决方案，并在其中创建两个VC++空项目<code>LibDX</code>、<code>Lesson01-createWindow</code></p>
+<h3 id="配置解决方案"><a href="#配置解决方案" class="headerlink" title="配置解决方案"></a>配置解决方案</h3><p>设置<code>Lesson01-createWindow</code>依赖于<code>LibDX</code>，并将前者设为启动项目</p>
+<h3 id="配置LibDX"><a href="#配置LibDX" class="headerlink" title="配置LibDX"></a>配置LibDX</h3><p><code>常规/配置类型</code> =&gt; 静态库(.lib)</p>
+<p><code>VC++目录/包含目录</code> 添加 </p>
+<ul>
+<li>C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include</li>
+</ul>
+<h3 id="配置Lesson01-createWindow"><a href="#配置Lesson01-createWindow" class="headerlink" title="配置Lesson01-createWindow"></a>配置Lesson01-createWindow</h3><p><code>VC++目录/包含目录</code> 添加   </p>
+<ul>
+<li>$(SolutionDir)</li>
+<li>C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include</li>
+</ul>
+<p><code>VC++目录/库目录</code>添加 </p>
+<ul>
+<li>$(OutDir)</li>
+<li>C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib</li>
+</ul>
+<p><code>链接器/输入/附加依赖项</code> 添加 </p>
+<ul>
+<li>LibDX.lib</li>
+<li>d3d9.lib</li>
+<li>d3dx9d.lib</li>
+<li>winmm.lib</li>
+</ul>
+<h2 id="绘制窗口"><a href="#绘制窗口" class="headerlink" title="绘制窗口"></a>绘制窗口</h2><p>在<code>LibDX</code>中创建以下文件</p>
+<p><img src="https://o887blpta.qnssl.com/146730339101dir.png" alt=""></p>
+<h3 id="日志"><a href="#日志" class="headerlink" title="日志"></a>日志</h3><p>log.h中定义了Message和Console两个方法，用于输出提示信息，调用方法与printf相同。这两个函数的区别在于前者通过弹窗提示，会使程序阻塞，主要用于程序报错；后者在控制台输出，不会阻塞程序，主要用于调试（win32程序不能直接在VS中输出信息，需要单独创建一个控制台进行输出）。</p>
+<p>log.h<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">pragma</span> once</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> dx &#123;</span><br><span class="line">    <span class="comment">// 通过弹窗提示</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Message</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *fmt, ...)</span></span>;</span><br><span class="line">    <span class="comment">// 打印在控制台提示</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Console</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *fmt, ...)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>log.cpp<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdarg.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;Windows.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="string">"log.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> dx;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> dx::Message(<span class="keyword">const</span> <span class="keyword">char</span> *fmt, ...) &#123;</span><br><span class="line">    <span class="keyword">char</span> buf[<span class="number">4096</span>];</span><br><span class="line"></span><br><span class="line">    va_list args;</span><br><span class="line">    va_start(args, fmt);</span><br><span class="line">    <span class="keyword">int</span> n = vsnprintf(buf, <span class="number">4096</span>, fmt, args);</span><br><span class="line">    buf[n] = <span class="number">0</span>;</span><br><span class="line">    va_end(args);</span><br><span class="line">    <span class="comment">// 调用Win32的MessageBox弹窗提示</span></span><br><span class="line">    ::MessageBoxA(<span class="number">0</span>, buf, <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> dx::Console(<span class="keyword">const</span> <span class="keyword">char</span>*fmt, ...) &#123;</span><br><span class="line">    <span class="keyword">char</span> buf[<span class="number">4096</span>];</span><br><span class="line"></span><br><span class="line">    va_list args;</span><br><span class="line">    va_start(args, fmt);</span><br><span class="line">    <span class="keyword">int</span> n = vsnprintf(buf, <span class="number">4096</span>, fmt, args);</span><br><span class="line">    buf[n] = <span class="number">0</span>;</span><br><span class="line">    va_end(args);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 打开控制台，输出调试信息</span></span><br><span class="line">    AllocConsole();</span><br><span class="line">    FILE *stream = <span class="literal">NULL</span>;</span><br><span class="line">    freopen_s(&amp;stream, <span class="string">"CONOUT$"</span>, <span class="string">"w"</span>, <span class="built_in">stdout</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%s\n"</span>, buf);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="DxWindow类"><a href="#DxWindow类" class="headerlink" title="DxWindow类"></a>DxWindow类</h3><p>DxWindows类对整个窗口的生命周期进行了封装，主要成员函数如下</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">函数</th>
+<th style="text-align:left">功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">DxWindow(…)</td>
+<td style="text-align:left">构造方法，传入窗口参数</td>
+</tr>
+<tr>
+<td style="text-align:left">bool Initialize()</td>
+<td style="text-align:left">初始化窗口资源，创建窗口</td>
+</tr>
+<tr>
+<td style="text-align:left">void Release()</td>
+<td style="text-align:left">销毁窗口资源</td>
+</tr>
+<tr>
+<td style="text-align:left">void Run()</td>
+<td style="text-align:left">进入窗口事件循环</td>
+</tr>
+<tr>
+<td style="text-align:left">void Present()</td>
+<td style="text-align:left">使用Direct3D在窗口中绘制</td>
+</tr>
+</tbody>
+</table>
+<p>此外，在类的外面定义了一个WndProc()函数，作为窗口过程的回调函数，处理各种窗口事件。</p>
+<p>dxwindow.h<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">pragma</span> once</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;d3dx9.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;d3d.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> dx &#123;</span><br><span class="line">    <span class="keyword">class</span> DxWindow &#123;</span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">        DxWindow(HINSTANCE instance, <span class="built_in">std</span>::<span class="built_in">string</span> tiltle, </span><br><span class="line">            <span class="keyword">int</span> width, <span class="keyword">int</span> height, <span class="keyword">bool</span> windowed);</span><br><span class="line">        <span class="function"><span class="keyword">bool</span> <span class="title">Initialize</span><span class="params">()</span></span>;</span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">Release</span><span class="params">()</span></span>;</span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">Run</span><span class="params">()</span></span>;</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">protected</span>:</span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">Present</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">        HWND m_hwnd;                <span class="comment">// 窗口句柄</span></span><br><span class="line">        HINSTANCE m_hInstance;      <span class="comment">// 实例句柄</span></span><br><span class="line">        LPDIRECT3D9 m_pD3D9;        <span class="comment">// Direct3D接口对象</span></span><br><span class="line">        LPDIRECT3DDEVICE9 m_pDevice;<span class="comment">// Direct3D设备对象</span></span><br><span class="line"></span><br><span class="line">        <span class="built_in">std</span>::<span class="built_in">string</span> m_strTitle;     <span class="comment">// 窗口标题</span></span><br><span class="line">        <span class="keyword">int</span> m_iWidth;               <span class="comment">// 窗口宽</span></span><br><span class="line">        <span class="keyword">int</span> m_iHeight;              <span class="comment">// 窗口长</span></span><br><span class="line">        <span class="keyword">int</span> m_bWindowed;            <span class="comment">// 是否窗口化显示</span></span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="function">LRESULT CALLBACK <span class="title">WndProc</span><span class="params">(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="构造函数"><a href="#构造函数" class="headerlink" title="构造函数"></a>构造函数</h3><p>构造函数没有什么可说的，主要就是对DxWindow的成员变量进行初始化，各成员变量的含义可见上面头文件中的注释。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">DxWindow::DxWindow(HINSTANCE instance, <span class="built_in">std</span>::<span class="built_in">string</span> title, <span class="keyword">int</span> width, <span class="keyword">int</span> height, <span class="keyword">bool</span> windowed) </span><br><span class="line">    : m_hwnd(<span class="literal">NULL</span>),</span><br><span class="line">    m_pD3D9(<span class="literal">NULL</span>),</span><br><span class="line">    m_pDevice(<span class="literal">NULL</span>),</span><br><span class="line">    m_hInstance(instance),</span><br><span class="line">    m_strTitle(title),</span><br><span class="line">    m_iWidth(width),</span><br><span class="line">    m_iHeight(height),</span><br><span class="line">    m_bWindowed(windowed)</span><br><span class="line">    &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h3><p>初始化窗口的函数比较长，过程主要分为以下几步</p>
+<ol>
+<li>填充Win32窗口参数</li>
+<li>注册、创建、显示Win32窗口</li>
+<li>初始化D3DX接口指针</li>
+<li>读取显卡信息</li>
+<li>填充D3DX绘制参数</li>
+<li>创建D3DX设备指针</li>
+</ol>
+<p>我们不关注Win32窗口的相关函数，接下来主要介绍和D3DX有关的过程。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">bool</span> DxWindow::Initialize() &#123;</span><br><span class="line">    <span class="comment">// 初始化窗口</span></span><br><span class="line">    WNDCLASSEX wc;</span><br><span class="line">    wc.style         = CS_HREDRAW | CS_VREDRAW;</span><br><span class="line">    wc.lpfnWndProc   = dx::WndProc;</span><br><span class="line">    wc.cbSize        = <span class="keyword">sizeof</span>(WNDCLASSEX);</span><br><span class="line">    wc.cbClsExtra    = <span class="number">0</span>;</span><br><span class="line">    wc.cbWndExtra    = <span class="number">0</span>;</span><br><span class="line">    wc.hInstance     = m_hInstance;</span><br><span class="line">    wc.hIcon         = LoadIcon(m_hInstance, IDI_APPLICATION);</span><br><span class="line">    wc.hIconSm       = LoadIcon(m_hInstance, IDI_APPLICATION);</span><br><span class="line">    wc.hCursor       = LoadCursor(<span class="literal">NULL</span>, IDC_ARROW);</span><br><span class="line">    wc.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);</span><br><span class="line">    wc.lpszMenuName  = <span class="literal">NULL</span>;</span><br><span class="line">    wc.lpszClassName = m_strTitle.c_str();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 注册窗口</span></span><br><span class="line">    <span class="keyword">if</span> (!RegisterClassEx(&amp;wc)) &#123;</span><br><span class="line">        Message(<span class="string">"RegisterClassEx Failed!"</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建窗口</span></span><br><span class="line">    m_hwnd = CreateWindowEx(<span class="literal">NULL</span>, m_strTitle.c_str(), m_strTitle.c_str(), WS_OVERLAPPEDWINDOW | WS_VISIBLE,</span><br><span class="line">        <span class="number">0</span>, <span class="number">0</span>, m_iWidth, m_iHeight, <span class="number">0</span>, <span class="number">0</span>, m_hInstance, <span class="number">0</span>);</span><br><span class="line">    <span class="keyword">if</span> (!m_hwnd) &#123;</span><br><span class="line">        Message(<span class="string">"CreateWindowEx Failed!"</span>);</span><br><span class="line">        Release();</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 显示并更新窗口</span></span><br><span class="line">    ShowWindow(m_hwnd, SW_SHOW);</span><br><span class="line">    UpdateWindow(m_hwnd);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 初始化Dierte3D指针</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="literal">NULL</span> == (m_pD3D9 = Direct3DCreate9(D3D_SDK_VERSION))) &#123;</span><br><span class="line">        Message(<span class="string">"Direct3DCreate9 Failed!"</span>);</span><br><span class="line">        Release();</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 判断显卡是否支持硬件定点处理</span></span><br><span class="line">    D3DCAPS9 caps;</span><br><span class="line">    DWORD vp = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span> (FAILED(m_pD3D9-&gt;GetDeviceCaps(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, &amp;caps))) &#123;</span><br><span class="line">        Message(<span class="string">"GetDeviceCaps Failed!"</span>);</span><br><span class="line">        Release();</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (caps.VertexProcessingCaps) &#123;</span><br><span class="line">        vp = D3DCREATE_HARDWARE_VERTEXPROCESSING;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        vp = D3DCREATE_SOFTWARE_VERTEXPROCESSING;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 填充DXD3的绘制参数</span></span><br><span class="line">    D3DPRESENT_PARAMETERS d3dpp;</span><br><span class="line">    ZeroMemory(&amp;d3dpp, <span class="keyword">sizeof</span>(d3dpp));</span><br><span class="line">    d3dpp.BackBufferWidth            = m_iWidth;</span><br><span class="line">    d3dpp.BackBufferHeight           = m_iHeight;</span><br><span class="line">    d3dpp.BackBufferFormat           = D3DFMT_A8R8G8B8;</span><br><span class="line">    d3dpp.BackBufferCount            = <span class="number">1</span>;</span><br><span class="line">    d3dpp.MultiSampleType            = D3DMULTISAMPLE_NONE;</span><br><span class="line">    d3dpp.MultiSampleQuality         = <span class="number">0</span>;</span><br><span class="line">    d3dpp.SwapEffect                 = D3DSWAPEFFECT_DISCARD;</span><br><span class="line">    d3dpp.hDeviceWindow              = m_hwnd;</span><br><span class="line">    d3dpp.Windowed                   = m_bWindowed;</span><br><span class="line">    d3dpp.EnableAutoDepthStencil     = <span class="literal">true</span>;</span><br><span class="line">    d3dpp.AutoDepthStencilFormat     = D3DFMT_D24S8;</span><br><span class="line">    d3dpp.Flags                      = <span class="number">0</span>;</span><br><span class="line">    d3dpp.FullScreen_RefreshRateInHz = D3DPRESENT_RATE_DEFAULT;</span><br><span class="line">    d3dpp.PresentationInterval       = D3DPRESENT_INTERVAL_DEFAULT;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建Dierect3D设备对象</span></span><br><span class="line">    <span class="keyword">if</span> (FAILED(m_pD3D9-&gt;CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, m_hwnd,</span><br><span class="line">        vp, &amp;d3dpp, &amp;m_pDevice))) &#123;</span><br><span class="line">        Message(<span class="string">"CreateDevice Failed!"</span>);</span><br><span class="line">        Release();</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="读取设备信息"><a href="#读取设备信息" class="headerlink" title="读取设备信息"></a>读取设备信息</h3><p>GetDeviceCaps用于获得设备的一些特定信息,函数的原型如下，其中Adapter指的是显卡设备，一般使用D3DADAPTER_DEFAULT，而D3DDEVTYPE是一个枚举类型，指定了D3DX的渲染方式，常用的选项有D3DDEVTYPE_HAL(硬件渲染)、D3DDEVTYPE_REF(软件渲染)，其中软件渲染比硬件渲染慢，但可以模拟一些本机硬件不支持的特性。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">HRESULT <span class="title">GetDeviceCaps</span><span class="params">(</span><br><span class="line">  [in]  UINT       Adapter,</span><br><span class="line">  [in]  D3DDEVTYPE DeviceType,</span><br><span class="line">  [out] D3DCAPS9   *pCaps</span><br><span class="line">)</span></span>;</span><br></pre></td></tr></table></figure></p>
+<p>这里主要使用该函数判断硬件是否支持硬件顶点处理，并据此设置变量vp，该变量在之后创建D3DX设备指针中会用到。</p>
+<h3 id="填充绘制参数"><a href="#填充绘制参数" class="headerlink" title="填充绘制参数"></a>填充绘制参数</h3><p>填充绘制参数主要就是填充<a href="https://msdn.microsoft.com/en-us/library/windows/desktop/bb172588(v=vs.85).aspx" target="_blank" rel="external">D3DPRESENT_PARAMETER结构体</a>，该结构体的成员变量及解释如下</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">变量名</th>
+<th style="text-align:left">解释</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">BackBufferWidth</td>
+<td style="text-align:left">窗口宽度，窗口模式下可为0，全屏模式通过EnumAdapterModes获得</td>
+</tr>
+<tr>
+<td style="text-align:left">BackBufferHeight</td>
+<td style="text-align:left">窗口高度，同上</td>
+</tr>
+<tr>
+<td style="text-align:left">BackBufferFormat</td>
+<td style="text-align:left">缓存格式，可通过GetDisplayMode 获得，这里D3DFMT_A8R8G8B8表示alpha,blue,green,red通道各8位</td>
+</tr>
+<tr>
+<td style="text-align:left">BackBufferCount</td>
+<td style="text-align:left">后台缓存数量，使用双缓冲技术一边绘制一边显示</td>
+</tr>
+<tr>
+<td style="text-align:left">MultiSampleType</td>
+<td style="text-align:left">多采样类型，必须设置为D3DMULTISAMPLE_NONE除非SwapEffect设置为D3DSWAPEFFECT_DISCARD</td>
+</tr>
+<tr>
+<td style="text-align:left">MultiSampleQuality</td>
+<td style="text-align:left">多采样质量</td>
+</tr>
+<tr>
+<td style="text-align:left">SwapEffect</td>
+<td style="text-align:left">指定缓冲区的交换方式，有Copy和Flip两种方式，而Discard是由程序自动选择</td>
+</tr>
+<tr>
+<td style="text-align:left">hDeviceWindow</td>
+<td style="text-align:left">窗口句柄</td>
+</tr>
+<tr>
+<td style="text-align:left">Windowed</td>
+<td style="text-align:left">是否窗口化</td>
+</tr>
+<tr>
+<td style="text-align:left">EnableAutoDepthStencil</td>
+<td style="text-align:left">是否应用深度缓存</td>
+</tr>
+<tr>
+<td style="text-align:left">AutoDepthStencilFormat</td>
+<td style="text-align:left">深度缓存格式</td>
+</tr>
+<tr>
+<td style="text-align:left">Flags</td>
+<td style="text-align:left">绘制参数</td>
+<td style="text-align:left">;</td>
+</tr>
+<tr>
+<td style="text-align:left">FullScreen_RefreshRateInHz</td>
+<td style="text-align:left">FPS，窗口模式必须为0，全屏模式通过EnumAdapterModes获得</td>
+</tr>
+<tr>
+<td style="text-align:left">PresentationInterval</td>
+<td style="text-align:left">交换链中后台缓存切换到前台缓存的最大速率，详见<a href="https://msdn.microsoft.com/en-us/library/windows/desktop/bb172585\(v=vs.85\" target="_blank" rel="external">D3DPRESENT</a>.aspx)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="创建设备指针"><a href="#创建设备指针" class="headerlink" title="创建设备指针"></a>创建设备指针</h3><p>最后一步就是通过<a href="https://msdn.microsoft.com/en-us/library/windows/desktop/bb174313(v=vs.85).aspx" target="_blank" rel="external">CreateDevice</a>创建设备指针，创建成功后，就可以通过该指针进行绘制了。CreateDevice的函数原型如下。其中BehaviorFlags使用的值就是前面读取设备信息创建的变量vp，其他几个参数很容易理解或已经介绍过，这里就不再赘述。<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">HRESULT <span class="title">CreateDevice</span><span class="params">(</span><br><span class="line">  [in]          UINT                  Adapter, </span><br><span class="line">  [in]          D3DDEVTYPE            DeviceType,</span><br><span class="line">  [in]          HWND                  hFocusWindow,</span><br><span class="line">  [in]          DWORD                 BehaviorFlags,</span><br><span class="line">  [in, out]     D3DPRESENT_PARAMETERS *pPresentationParameters,</span><br><span class="line">  [out, retval] IDirect3DDevice9      **ppReturnedDeviceInterface</span><br><span class="line">)</span></span>;</span><br></pre></td></tr></table></figure></p>
+<h3 id="消息循环"><a href="#消息循环" class="headerlink" title="消息循环"></a>消息循环</h3><p>消息循环是Windows编程中比较基础的一个概念，在循环中不断查看是否有事件发生，如果有事件发生就对事件进行处理，否则调用绘制函数进行绘制。<br>消息循环在收到WM_QUIT消息后退出。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> DxWindow::Run() &#123;</span><br><span class="line">    MSG msg;</span><br><span class="line">    ZeroMemory(&amp;msg, <span class="keyword">sizeof</span>(msg));</span><br><span class="line">    <span class="keyword">while</span> (msg.message != WM_QUIT) &#123;</span><br><span class="line">        <span class="keyword">if</span> (PeekMessage(&amp;msg, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, PM_REMOVE)) &#123;</span><br><span class="line">            <span class="comment">// 分发事件</span></span><br><span class="line">            TranslateMessage(&amp;msg);</span><br><span class="line">            DispatchMessage(&amp;msg);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// 调用绘制函数，对窗口进行渲染</span></span><br><span class="line">            Present();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="事件响应"><a href="#事件响应" class="headerlink" title="事件响应"></a>事件响应</h3><p>事件的回调函数在创建窗口时指定,当前只对用户退出窗口的行为做出了响应。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">LRESULT CALLBACK dx::WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) &#123;</span><br><span class="line">    <span class="keyword">switch</span> (msg) &#123;</span><br><span class="line">    <span class="keyword">case</span> WM_CLOSE:</span><br><span class="line">    <span class="keyword">case</span> WM_DESTROY:</span><br><span class="line">        PostQuitMessage(<span class="number">0</span>);</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> WM_KEYDOWN:</span><br><span class="line">        <span class="keyword">if</span> (wParam == VK_ESCAPE) &#123;</span><br><span class="line">            PostQuitMessage(<span class="number">0</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">default</span>:</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> DefWindowProc(hwnd, msg, wParam, lParam);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="渲染"><a href="#渲染" class="headerlink" title="渲染"></a>渲染</h3><p>在成员函数Present中使用D3DX设备接口对窗口进行渲染。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> DxWindow::Present() &#123;</span><br><span class="line">    <span class="keyword">if</span> (m_pDevice == <span class="literal">NULL</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    m_pDevice-&gt;Clear(<span class="number">0</span>, <span class="number">0</span>, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER | D3DCLEAR_STENCIL, D3DCOLOR_XRGB(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0xFF</span>), <span class="number">1.0f</span>, <span class="number">0L</span>);</span><br><span class="line">    m_pDevice-&gt;BeginScene();</span><br><span class="line">    m_pDevice-&gt;EndScene();</span><br><span class="line">    m_pDevice-&gt;Present(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>首先调用<a href="https://msdn.microsoft.com/en-us/library/windows/desktop/bb174352(v=vs.85).aspx" target="_blank" rel="external">Clear</a>清空后台缓存，Clear的函数原型如下。其中Count指的是第二个参数pRects数组的长度，如果pRects是NULL的话Count必须为0；pRects是需要Clear的区域数组，为NULL时表示清空整个屏幕区域；Flags表示清空的目标，可以包括D3DCLEAR_TARGET(颜色缓存)、D3DCLEAR_STENCIL(模板缓存)、D3DCLEAR_ZBUFFER(深度缓存)，而接下来三个参数则分别指定Clear的颜色、深度与模板值。这里我们将颜色设置为蓝色。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">HRESULT <span class="title">Clear</span><span class="params">(</span><br><span class="line">  [in]       DWORD    Count,</span><br><span class="line">  [in] <span class="keyword">const</span> D3DRECT  *pRects,</span><br><span class="line">  [in]       DWORD    Flags,</span><br><span class="line">  [in]       D3DCOLOR Color,</span><br><span class="line">  [in]       <span class="keyword">float</span>    Z,</span><br><span class="line">  [in]       DWORD    Stencil</span><br><span class="line">)</span></span>;</span><br></pre></td></tr></table></figure></p>
+<p>接下来调用<a href="https://msdn.microsoft.com/en-us/library/windows/desktop/bb174423(v=vs.85).aspx" target="_blank" rel="external">Present</a>进行渲染，其函数原型如下。其中除了第三个参外都涉及到交换链，通常指定为NULL即可；第三个参数指的是窗口句柄，设定为NULL时会使用填充绘制参数时设定的窗口句柄。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">HRESULT <span class="title">Present</span><span class="params">(</span><br><span class="line">  [in] <span class="keyword">const</span> RECT    *pSourceRect,</span><br><span class="line">  [in] <span class="keyword">const</span> RECT    *pDestRect,</span><br><span class="line">  [in]       HWND    hDestWindowOverride,</span><br><span class="line">  [in] <span class="keyword">const</span> RGNDATA *pDirtyRegion</span><br><span class="line">)</span></span>;</span><br></pre></td></tr></table></figure></p>
+<h3 id="销毁"><a href="#销毁" class="headerlink" title="销毁"></a>销毁</h3><p>释放在初始化过程中申请的资源，包括Win32窗口、D3DX接口指针，D3DX设备指针等。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> DxWindow::Release() &#123;</span><br><span class="line">    <span class="keyword">if</span> (m_pDevice) &#123;</span><br><span class="line">        m_pDevice-&gt;Release();</span><br><span class="line">        m_pDevice = <span class="literal">NULL</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (m_pD3D9) &#123;</span><br><span class="line">        m_pD3D9-&gt;Release();</span><br><span class="line">        m_pD3D9 = <span class="literal">NULL</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (m_hwnd) &#123;</span><br><span class="line">        DestroyWindow(m_hwnd);</span><br><span class="line">        m_hwnd = <span class="literal">NULL</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    UnregisterClass(m_strTitle.c_str(), m_hInstance);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h2><p>在项目<code>Lesson01-createWindow</code>中新建main.cpp文件，并添加以下内容，在WinMain函数中，我们创建了一个DxWindow类，并依次调用了Initialize、Run、Release这几个方法，即完成了一个窗口的初始化到渲染、再到释放的整个过程。</p>
+<p>点击运行，即可看到本文开头的运行效果。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;Windows.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;LibDX/dxwindow.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> dx;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> WINAPI <span class="title">WinMain</span><span class="params">(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdline, <span class="keyword">int</span> showCmd)</span> </span>&#123;</span><br><span class="line">    DxWindow *dw = <span class="keyword">new</span> DxWindow(hInstance, <span class="string">"Lesson 01-Window"</span>, <span class="number">800</span>, <span class="number">600</span>, <span class="literal">true</span>);</span><br><span class="line">    <span class="keyword">if</span> (dw-&gt;Initialize()) &#123;</span><br><span class="line">        dw-&gt;Run();</span><br><span class="line">        dw-&gt;Release();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/blog/2016/07/03/dx-lesson01-window/">DirectX 3D学习笔记01——环境搭建与窗口创建</a></p>
+        <p><span>文章作者:</span><a href="/" title="访问 Vimer Su 的个人博客">Vimer Su</a></p>
+        <p><span>发布时间:</span>2016年07月03日 - 00时05分</p>
+        <p><span>最后更新:</span>2016年07月06日 - 14时38分</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/blog/2016/07/03/dx-lesson01-window/" title="DirectX 3D学习笔记01——环境搭建与窗口创建">http://vimersu.win/blog/2016/07/03/dx-lesson01-window/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://vimersu.win/blog/2016/07/03/dx-lesson01-window/　　作者: Vimer Su" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script src="/js/clipboard.min.js"></script>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" title="中国大陆 (CC BY-NC-SA 3.0 CN)" target = "_blank">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+<nav id="article-nav">
+  
+    <a href="/blog/2016/07/04/dx-lesson02-3dknowledge/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          DirectX 3D学习笔记02——3D数学基础
+        
+      </div>
+    </a>
+  
+  
+    <a href="/blog/2015/10/03/osx-xcode-opengl/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">在OSX中进行OpenGL开发</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Intro"><span class="toc-number">1.</span> <span class="toc-text">Intro</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#环境搭建"><span class="toc-number">2.</span> <span class="toc-text">环境搭建</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#创建工程"><span class="toc-number">3.</span> <span class="toc-text">创建工程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#配置解决方案"><span class="toc-number">3.1.</span> <span class="toc-text">配置解决方案</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#配置LibDX"><span class="toc-number">3.2.</span> <span class="toc-text">配置LibDX</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#配置Lesson01-createWindow"><span class="toc-number">3.3.</span> <span class="toc-text">配置Lesson01-createWindow</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#绘制窗口"><span class="toc-number">4.</span> <span class="toc-text">绘制窗口</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#日志"><span class="toc-number">4.1.</span> <span class="toc-text">日志</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DxWindow类"><span class="toc-number">4.2.</span> <span class="toc-text">DxWindow类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#构造函数"><span class="toc-number">4.3.</span> <span class="toc-text">构造函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#初始化"><span class="toc-number">4.4.</span> <span class="toc-text">初始化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#读取设备信息"><span class="toc-number">4.5.</span> <span class="toc-text">读取设备信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#填充绘制参数"><span class="toc-number">4.6.</span> <span class="toc-text">填充绘制参数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#创建设备指针"><span class="toc-number">4.7.</span> <span class="toc-text">创建设备指针</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#消息循环"><span class="toc-number">4.8.</span> <span class="toc-text">消息循环</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#事件响应"><span class="toc-number">4.9.</span> <span class="toc-text">事件响应</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#渲染"><span class="toc-number">4.10.</span> <span class="toc-text">渲染</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#销毁"><span class="toc-number">4.11.</span> <span class="toc-text">销毁</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#运行"><span class="toc-number">5.</span> <span class="toc-text">运行</span></a></li></ol>
+</div>
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+        }
+    })
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+    }
+</script>
+
+
+
+
+
+
+
+    
+      <div class="duoshuo" id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="blog/2016/07/03/dx-lesson01-window/" data-title="DirectX 3D学习笔记01——环境搭建与窗口创建" data-url="http://vimersu.win/blog/2016/07/03/dx-lesson01-window/"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:"c4fun"};
+    (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = '/js/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+    </script>
+    <!-- 多说公共JS代码 end -->
+</div>
+
+    
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/blog/2016/07/04/dx-lesson02-3dknowledge/" title="上一篇: DirectX 3D学习笔记02——3D数学基础">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+        
+            <a href="/blog/2015/10/03/osx-xcode-opengl/" title="下一篇: 在OSX中进行OpenGL开发">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/blog/2016/07/04/dx-lesson02-3dknowledge/">DirectX 3D学习笔记02——3D数学基础</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/07/03/dx-lesson01-window/">DirectX 3D学习笔记01——环境搭建与窗口创建</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2015/10/03/osx-xcode-opengl/">在OSX中进行OpenGL开发</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2015/06/23/xcode64-alactraz-bug/">Xcode6.4中Alcatraz无法启动</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2015/06/23/vim-base-operation/">Vim基础操作汇总</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2015/06/13/apache-reverse-proxy/">通过Apache反向代理访问本地Gogs服务</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2015/06/09/mac-another-screen/">Macbook修改外接显示器分辨率</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/12/12/how-to-use-define/">宏的拓展用法总结</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/12/06/cmockery/">C单元测试框架之Cmockery</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/10/10/maven-study/">Linux下Maven的安装与使用</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/05/06/python-threading/">python中的多线程</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/03/23/python-regular/">python正则表达式</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/03/20/leetcode-solution-02/">LeetCode题解整理版(二)</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/03/18/leetcode-solution-01/">LeetCode题解整理版(一) </a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/03/12/heap-template/">一个用宏实现的堆模板</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/03/06/libev-study/">Libev事件库源码阅读笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/03/04/linux-iconv/">在Linux下使用iconv转换字符串编码</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/03/03/use-hexo-blog/">使用Hexo搭建个人博客</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/01/30/common-makefile/">一个通用的C/C++ Makefile</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/01/23/gnu-make-study02/">GNU Make学习总结（二）</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/01/13/gnu-make-study01/">GNU Make学习总结（一）</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2014/01/11/struct-alignment/">C的结构体字节对齐</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/12/02/linuxdrivecode-cdev/">Linux设备驱动学习——简单字符设备驱动的实现</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/30/linux-sublimetext-chinese/">解决Linux下Sublime text 3的中文输入问题</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/25/start-leetcode-oj/">开始刷LeetCode OJ</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/24/octopress-generate-post-content/">让Octopress为文章自动生成目录</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/23/wlanconfig-tools-source/">wlanconfig工具分析</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/22/auto-aixiaochu-app/">Qt+BlueStack实现自动天天爱消除</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/21/binary-tree-nonrecursive-traversal/">另一种二叉树非递归遍历的实现</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/19/linux-io-reuse-interface/">Linux中的IO复用接口简介</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/19/linux-ap-by-madwifi/">Linux下使用无线网卡搭建AP</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2013/11/19/hello-octopress/">开启OctoPress之旅</a></li></ul>
+    <script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+    <script>
+        $(".post-list").addClass("toc-article");
+        $(".post-list-item a").attr("target","_blank");
+        $("#post-nav-button > a:nth-child(2)").click(function() {
+            $(".fa-bars, .fa-times").toggle();
+            $(".post-list").toggle(300);
+            if ($(".toc").length > 0) {
+                $("#toc, #tocButton").toggle(200, function() {
+                    if ($(".switch-area").is(":visible")) {
+                        $("#tocButton").attr("value", valueHide);
+                        }
+                    })
+            }
+            else {
+            }
+        })
+    </script>
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2016 Vimer Su
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/luuman/hexo-theme-spfk" target="_blank">spfk</a> by luuman
+            </div>
+        </div>
+        
+    </div>
+</footer>
+
+    </div>
+    <script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var backgroundnum = 24;
+            var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+            $("#mobile-nav").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+            $(".left-col").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    $(document).ready(function() {
+        if ($("#comments").length < 1) {
+            $("#scroll > a:nth-child(2)").hide();
+        };
+    })
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+  <script language="javascript">
+    $(function() {
+        $("a[title]").each(function() {
+            var a = $(this);
+            var title = a.attr('title');
+            if (title == undefined || title == "") return;
+            a.data('title', title).removeAttr('title').hover(
+
+            function() {
+                var offset = a.offset();
+                $("<div id=\"anchortitlecontainer\"></div>").appendTo($("body")).html(title).css({
+                    top: offset.top - a.outerHeight() - 15,
+                    left: offset.left + a.outerWidth()/2 + 1
+                }).fadeIn(function() {
+                    var pop = $(this);
+                    setTimeout(function() {
+                        pop.remove();
+                    }, pop.text().length * 800);
+                });
+            }, function() {
+                $("#anchortitlecontainer").remove();
+            });
+        });
+    });
+</script>
+
+
+  </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>
